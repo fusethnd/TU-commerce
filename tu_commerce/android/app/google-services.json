@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "168066737042",
+    "project_id": "tu-commerce",
+    "storage_bucket": "tu-commerce.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:168066737042:android:b9d668bc53815f2021974b",
+        "android_client_info": {
+          "package_name": "com.example.tu_commerce"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCnsp4-NDZxA7zePl__TJMI4iQ9MV6l3k8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
