@@ -40,6 +40,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
     return Scaffold(
       appBar: AppBar(
         title: Text("Home"),
@@ -52,5 +53,21 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ),
     );
+=======
+    return DefaultTabController(
+        length: 2,
+        child: Scaffold(
+          body: TabBarView(
+            children: [RegisterScreen(), DisplayScreen()],
+          ),
+          backgroundColor: Colors.greenAccent,
+          bottomNavigationBar: TabBar(tabs: [
+            Tab(text: "Add Score"),
+            Tab(
+              text: "Student List",
+            )
+          ]),
+        ));
+>>>>>>> 1084715b29a5da28ed34c993060954a779c06874
   }
 }
