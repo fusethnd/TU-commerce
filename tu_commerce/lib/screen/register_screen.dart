@@ -12,14 +12,24 @@ class RegisterScreen extends StatefulWidget {
 class _RegisterScreenState extends State<RegisterScreen> {
   final _formKey = GlobalKey<FormState>();
   final _emailController = TextEditingController();
+  final _fnameController = TextEditingController();
+  final _lnameController = TextEditingController();
+  final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-  final _nameController = TextEditingController(); // Add if you want to store a name
+  final _confirmPasswordController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
 
   @override
   void dispose() {
     _emailController.dispose();
+    _fnameController.dispose();
+    _lnameController.dispose();
     _passwordController.dispose();
-    _nameController.dispose();
+    _confirmPasswordController.dispose();
+    _phoneController.dispose();
+    _addressController.dispose();
+    _fnameController.dispose();
     super.dispose();
   }
 
@@ -31,17 +41,20 @@ class _RegisterScreenState extends State<RegisterScreen> {
           password: _passwordController.text.trim(),
         );
 
-        // Store additional user data in Firestore
         await FirebaseFirestore.instance.collection('users').doc().set({
           'email': _emailController.text.trim(),
-          'name': _nameController.text.trim(),
-          // Add other fields as needed
+          'fname': _fnameController.text.trim(),
+          'lname': _lnameController.text.trim(),
+          'username' : _usernameController.text.trim(),
+          'phone' : _phoneController.text.trim(),
+          'address' : _addressController.text.trim()
         });
 
-        // Success! (e.g., Navigate to the home screen)
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Registration Successful')),
         );
+
+        Navigator.pop(context);
 
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
@@ -57,33 +70,62 @@ class _RegisterScreenState extends State<RegisterScreen> {
       appBar: AppBar(title: const Text('Register')),
       body: Form(
         key: _formKey,
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              TextFormField( // Add a name field if you want
-                controller: _nameController,
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) => value!.isEmpty ? 'Enter your name' : null,
-              ),
-              TextFormField(
-                controller: _emailController,
-                decoration: const InputDecoration(labelText: 'Email'),
-                validator: (value) => value!.isEmpty ? 'Enter your email' : null,
-              ),
-              TextFormField(
-                controller: _passwordController,
-                obscureText: true,
-                decoration: const InputDecoration(labelText: 'Password'),
-                validator: (value) => value!.length < 6
-                    ? 'Password must be at least 6 characters'
-                    : null,
-              ),
-              ElevatedButton(
-                onPressed: _registerUser,
-                child: const Text('Register'),
-              ),
-            ],
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.all(20.0),
+            child: Column(
+              children: [
+                TextFormField(
+                  controller: _emailController,
+                  decoration: const InputDecoration(labelText: 'Email'),
+                  validator: (value) => value!.isEmpty ? 'Enter your email' : null,
+                ),
+                TextFormField(
+                  controller: _fnameController,
+                  decoration: const InputDecoration(labelText: 'First name'),
+                  validator: (value) => value!.isEmpty ? 'Enter your first name' : null,
+                ),TextFormField(
+                  controller: _lnameController,
+                  decoration: const InputDecoration(labelText: 'Last name'),
+                  validator: (value) => value!.isEmpty ? 'Enter your last name' : null,
+                ),TextFormField(
+                  controller: _usernameController,
+                  decoration: const InputDecoration(labelText: 'User name'),
+                  validator: (value) => value!.isEmpty ? 'Enter your username' : null,
+                ),
+                TextFormField(
+                  controller: _passwordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(labelText: 'Password'),
+                  validator: (value) => value!.length < 6
+                      ? 'Password must be at least 6 characters'
+                      : null,
+                ),
+                TextFormField(
+                  controller: _confirmPasswordController,
+                  obscureText: true,
+                  decoration: const InputDecoration(labelText: 'Confirm Password'),
+                  validator: (value) => value != _passwordController.text
+                      ? 'Passwords do not match'
+                      : null,
+                ),
+                TextFormField(
+                  controller: _phoneController,
+                  decoration: const InputDecoration(labelText: 'Phone Number'),
+                  validator: (value) => value!.isEmpty ? 'Enter your phone number' : null,
+                  keyboardType: TextInputType.phone,
+                ),
+                TextFormField(
+                  controller: _addressController,
+                  decoration: const InputDecoration(labelText: 'Address'),
+                  validator: (value) => value!.isEmpty ? 'Enter your address' : null,
+                ),
+                ElevatedButton(
+                  onPressed: _registerUser,
+                  child: const Text('Register'),
+                ),
+              ],
+            ),
           ),
         ),
       ),
