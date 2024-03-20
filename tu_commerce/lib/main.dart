@@ -2,10 +2,11 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/screen/display.dart';
 import 'package:tu_commerce/screen/formscreen.dart';
+import 'package:tu_commerce/screen/register_screen.dart';
 
 import 'firebase_options.dart';
 
-void main() async{
+void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
   runApp(const MyApp());
@@ -39,19 +40,17 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          body: TabBarView(
-            children: [FormScreen(), DisplayScreen()],
-          ),
-          backgroundColor: Colors.greenAccent,
-          bottomNavigationBar: TabBar(tabs: [
-            Tab(text: "Add Score"),
-            Tab(
-              text: "Student List",
-            )
-          ]),
-        ));
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Home"),
+      ),
+      body: Center(
+        child: Column(
+          children: [
+            TextButton(onPressed: (){Navigator.push(context, MaterialPageRoute(builder: (context)=> RegisterScreen()));}, child: Text("Register"))
+          ],
+        ),
+      ),
+    );
   }
 }
