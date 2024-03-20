@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tu_commerce/screen/login.dart';
+
+import 'login.dart';
+import 'register_screen.dart';
 
 class HomeScreen extends StatelessWidget {
   const HomeScreen({super.key});
@@ -14,7 +16,11 @@ class HomeScreen extends StatelessWidget {
             SizedBox(
               child: ElevatedButton.icon(onPressed: ()
               {
-
+                Navigator.push(
+                  context,MaterialPageRoute(builder: (context){
+                    return const RegisterScreen();
+                  })
+                );
               }, 
               icon: const Icon(Icons.add), 
               label: const Text("Register")),
@@ -24,7 +30,7 @@ class HomeScreen extends StatelessWidget {
               {
                 Navigator.push(
                   context,MaterialPageRoute(builder: (context){
-                    return const Login();
+                    return Login();
                   })
                 );
               }, 

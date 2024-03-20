@@ -2,9 +2,10 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/screen/display.dart';
 import 'package:tu_commerce/screen/formscreen.dart';
-import 'package:tu_commerce/screen/home.dart';
+import 'package:tu_commerce/screen/register_screen.dart';
 
 import 'firebase_options.dart';
+import 'screen/home.dart';
 
 void main() async{
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,6 +24,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.blue,
       ),
       home: const HomeScreen()
+      
     );
   }
 }
