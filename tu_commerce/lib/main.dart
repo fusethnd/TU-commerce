@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/screen/display.dart';
 import 'package:tu_commerce/screen/formscreen.dart';
+import 'package:tu_commerce/screen/home.dart';
 
 import 'firebase_options.dart';
 
@@ -19,39 +20,38 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
+        primarySwatch: Colors.blue,
       ),
-      home: const MyHomePage(title: 'Flutter Demo Home Page'),
+      home: const HomeScreen()
     );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
+// class MyHomePage extends StatefulWidget {
+//   const MyHomePage({super.key, required this.title});
 
-  final String title;
+//   final String title;
 
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
+//   @override
+//   State<MyHomePage> createState() => _MyHomePageState();
+// }
 
-class _MyHomePageState extends State<MyHomePage> {
-  @override
-  Widget build(BuildContext context) {
-    return DefaultTabController(
-        length: 2,
-        child: Scaffold(
-          body: TabBarView(
-            children: [FormScreen(), DisplayScreen()],
-          ),
-          backgroundColor: Colors.greenAccent,
-          bottomNavigationBar: TabBar(tabs: [
-            Tab(text: "Add Score"),
-            Tab(
-              text: "Student List",
-            )
-          ]),
-        ));
-  }
-}
+// class _MyHomePageState extends State<MyHomePage> {
+//   @override
+//   Widget build(BuildContext context) {
+//     return DefaultTabController(
+//         length: 2,
+//         child: Scaffold(
+//           body: TabBarView(
+//             children: [FormScreen(), DisplayScreen()],
+//           ),
+//           backgroundColor: Colors.greenAccent,
+//           bottomNavigationBar: TabBar(tabs: [
+//             Tab(text: "Add Score"),
+//             Tab(
+//               text: "Student List",
+//             )
+//           ]),
+//         ));
+//   }
+// }
