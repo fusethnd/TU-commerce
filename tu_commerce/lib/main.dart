@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/screen/display.dart';
 import 'package:tu_commerce/screen/formscreen.dart';
+import 'package:tu_commerce/screen/register_screen.dart';
 
 import 'firebase_options.dart';
 
@@ -43,7 +44,7 @@ class _MyHomePageState extends State<MyHomePage> {
         length: 2,
         child: Scaffold(
           body: TabBarView(
-            children: [FormScreen(), DisplayScreen()],
+            children: [RegisterScreen(), DisplayScreen()],
           ),
           backgroundColor: Colors.greenAccent,
           bottomNavigationBar: TabBar(tabs: [
