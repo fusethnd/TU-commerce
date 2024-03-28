@@ -29,7 +29,6 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _confirmPasswordController.dispose();
     _phoneController.dispose();
     _addressController.dispose();
-    _fnameController.dispose();
     super.dispose();
   }
 
@@ -54,6 +53,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
           const SnackBar(content: Text('Registration Successful')),
         );
 
+        _formKey.currentState!.reset();
         Navigator.pop(context);
 
       } on FirebaseAuthException catch (e) {
