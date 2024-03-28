@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:tu_commerce/firebase_options.dart';
 import 'package:tu_commerce/screen/customerHome.dart';
+import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/sellerHome.dart';
 
 class Login extends StatefulWidget {
   Login({super.key});
@@ -51,7 +53,6 @@ class _LoginState extends State<Login> {
               child: Column(
                 children: 
                 [
-
                   const Text("E mail"), // Block ข้อความ Email
                   TextFormField(
                     controller: _emailController, // กำหนัดตัวแปร email เอาไว้ใช้เช็คตอน FirebaseAuth
@@ -84,7 +85,7 @@ class _LoginState extends State<Login> {
                             _formKey.currentState!.reset(); // reset state
                             Navigator.pushReplacement(  // ลิ้งไปหน้า Customer Home
                               context,MaterialPageRoute(builder: (context){
-                                return const CustomerHome();
+                                return Navigation();
                               })
                             );
                           });
