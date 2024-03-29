@@ -1,10 +1,12 @@
 import 'dart:io';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 import 'package:path/path.dart' as path;
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 import 'package:uuid/uuid.dart'; 
@@ -25,14 +27,8 @@ class _AddProductState extends State<AddProduct> {
   Product product = Product(category: 'normal'); // class prodcut  จากใน model
   final _formKey = GlobalKey<FormState>(); // เอาไว update status ของ TextFormField
   File? _image; // hold image path
-  String uuid = Uuid().v4(); // Generate a random UUID 
+  String uuid = const Uuid().v4(); // Generate a random UUID 
   
-  void _generateNewUuid() { 
-    setState(() { 
-      uuid = Uuid().v4(); // Generate a new random UUID 
-    }); 
-  } 
-
   Future pickImageFromGallery() async { //ฟังชั่นเรียกใช้ file ในเครื่อง
     final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery); // เรียกจาก gallery
     if(returnedImage == null) return;
@@ -41,7 +37,7 @@ class _AddProductState extends State<AddProduct> {
     });
   }
   // upload to FireStore 
-  Future uploadImageToFirebase(BuildContext context) async{
+  Future<void> uploadImageToFirebase(BuildContext context) async{
     if (_image == null) {
       return;
     }
@@ -52,11 +48,15 @@ class _AddProductState extends State<AddProduct> {
       ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Upload')));
     });
 
+    // setState(() {
+    //   product.imageUrl = filename;
+    // });
   }
 
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(title: const Text("Add Product"),),
       body: Form(
@@ -72,9 +72,13 @@ class _AddProductState extends State<AddProduct> {
             // ----------- ช่องใส่ product name ---------
             const Text("product name"),
             TextFormField(
+              validator: RequiredValidator(errorText: "Need product name").call,
               onSaved: (name) {
                 product.prodName = name!;
+                product.imageUrl = "${product.prodName}.png";
                 product.seller = widget.username!; // แอบ save Username ไปด้วย
+                product.prodID = uuid;
+                product.instock = true;
               },
             ),
             // ---------- จบช้อง product name -------------
@@ -82,6 +86,7 @@ class _AddProductState extends State<AddProduct> {
             // ---------- ช่องใส่ describtion -------------
             const Text("product describtion"),
             TextFormField(
+              validator: RequiredValidator(errorText: "Need describtion").call,
               onSaved: (describ) {
                 product.details = describ!;
               },
@@ -106,6 +111,7 @@ class _AddProductState extends State<AddProduct> {
             // ---------- ช่องใส่ ราคา ------------
             const Text("Price"),
             TextFormField(
+              validator: RequiredValidator(errorText: "Need Price").call,
               onSaved: (price) {
                 product.price = double.parse(price!);
               },
@@ -113,11 +119,17 @@ class _AddProductState extends State<AddProduct> {
             // ---------- จบ ช่องใส่ ราคา ------------
             // ---------- ปุ่ม เซฟ      -------------
             ElevatedButton(
-              onPressed: () {
-                _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
-                // print(product.prodName);
-                uploadImageToFirebase(context);
-                Navigator.pop(context);
+              onPressed: () async {
+                if (_formKey.currentState!.validate()) {
+                  _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
+                  
+                  uploadImageToFirebase(context);
+                  print('------------ url -------------');
+                  print(product.imageUrl);
+                  saveProductDB(product);
+                  _formKey.currentState!.reset();
+                  Navigator.pop(context);
+                }
               }, 
               child: const Text('Save'),
             )
@@ -125,6 +137,8 @@ class _AddProductState extends State<AddProduct> {
           ],
         ),
       ),
-    );
+    );   
   }
+
+
 }

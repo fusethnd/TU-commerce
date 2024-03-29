@@ -10,7 +10,7 @@ import 'package:tu_commerce/screen/stockscreen.dart';
 import 'package:tu_commerce/screen/historySeller.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
-import 'package:tu_commerce/function/getUser.dart';
+import 'package:tu_commerce/function/Firebase.dart';
 
 class SellerHome extends StatefulWidget {
 
@@ -72,6 +72,7 @@ class _SellerHomeState extends State<SellerHome> {
                     ],
                   ),
                 ),
+                //-------------- จบ container แรก -------------------
                 Container( // ทำตัวลิ้ง ไป stock กับอื่นแต่ตอนนี้ลิ้งมั่วนะ 
                   child: Row(
                     children: [
@@ -129,6 +130,8 @@ class _SellerHomeState extends State<SellerHome> {
                     ],
                   ),
                 ),
+                // จบ---- container 3 ปุ่ม-----------
+                
                 Container(
                   child: const Column(
                     children: [

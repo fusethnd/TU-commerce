@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:tu_commerce/function/getUser.dart';
+import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/addProduct.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 
