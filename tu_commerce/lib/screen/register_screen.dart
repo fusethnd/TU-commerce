@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:form_field_validator/form_field_validator.dart';
 
 class RegisterScreen extends StatefulWidget {
-  const RegisterScreen({Key? key}) : super(key: key);
+  const RegisterScreen({super.key});
 
   @override
   _RegisterScreenState createState() => _RegisterScreenState();
@@ -25,6 +26,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     _emailController.dispose();
     _fnameController.dispose();
     _lnameController.dispose();
+    _usernameController.dispose();
     _passwordController.dispose();
     _confirmPasswordController.dispose();
     _phoneController.dispose();
@@ -32,30 +34,44 @@ class _RegisterScreenState extends State<RegisterScreen> {
     super.dispose();
   }
 
+  Future<bool> usernameIsExist(username) async {
+    var data = await FirebaseFirestore.instance
+        .collection('users')
+        .where("username",isEqualTo: username).get();
+    return data.size > 0;
+  }
+
   Future<void> _registerUser() async {
     if (_formKey.currentState!.validate()) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-          email: _emailController.text.trim(),
-          password: _passwordController.text.trim(),
-        );
+        bool check = await usernameIsExist(_usernameController.text.trim());
 
-        await FirebaseFirestore.instance.collection('users').doc().set({
-          'email': _emailController.text.trim(),
-          'fname': _fnameController.text.trim(),
-          'lname': _lnameController.text.trim(),
-          'username' : _usernameController.text.trim(),
-          'phone' : _phoneController.text.trim(),
-          'address' : _addressController.text.trim()
-        });
+        if (check) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text("Username is already used")),
+          );
+        } else {
+          await FirebaseAuth.instance.createUserWithEmailAndPassword(
+            email: _emailController.text.trim(),
+            password: _passwordController.text.trim(),
+          );
 
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Registration Successful')),
-        );
+          await FirebaseFirestore.instance.collection('users').doc().set({
+            'email': _emailController.text.trim(),
+            'fname': _fnameController.text.trim(),
+            'lname': _lnameController.text.trim(),
+            'username': _usernameController.text.trim(),
+            'phone': _phoneController.text.trim(),
+            'address': _addressController.text.trim()
+          });
 
-        _formKey.currentState!.reset();
-        Navigator.pop(context);
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Registration Successful')),
+          );
 
+          _formKey.currentState!.reset();
+          Navigator.pop(context);
+        }
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message ?? 'Registration Failed')),
@@ -78,20 +94,28 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _emailController,
                   decoration: const InputDecoration(labelText: 'Email'),
-                  validator: (value) => value!.isEmpty ? 'Enter your email' : null,
+                  validator: MultiValidator([
+                    RequiredValidator(errorText: "Enter your email"),
+                    EmailValidator(errorText: "Please use correct email")
+                  ]),
                 ),
                 TextFormField(
                   controller: _fnameController,
                   decoration: const InputDecoration(labelText: 'First name'),
-                  validator: (value) => value!.isEmpty ? 'Enter your first name' : null,
-                ),TextFormField(
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your first name' : null,
+                ),
+                TextFormField(
                   controller: _lnameController,
                   decoration: const InputDecoration(labelText: 'Last name'),
-                  validator: (value) => value!.isEmpty ? 'Enter your last name' : null,
-                ),TextFormField(
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your last name' : null,
+                ),
+                TextFormField(
                   controller: _usernameController,
                   decoration: const InputDecoration(labelText: 'User name'),
-                  validator: (value) => value!.isEmpty ? 'Enter your username' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your username' : null,
                 ),
                 TextFormField(
                   controller: _passwordController,
@@ -104,7 +128,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _confirmPasswordController,
                   obscureText: true,
-                  decoration: const InputDecoration(labelText: 'Confirm Password'),
+                  decoration:
+                      const InputDecoration(labelText: 'Confirm Password'),
                   validator: (value) => value != _passwordController.text
                       ? 'Passwords do not match'
                       : null,
@@ -112,13 +137,15 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 TextFormField(
                   controller: _phoneController,
                   decoration: const InputDecoration(labelText: 'Phone Number'),
-                  validator: (value) => value!.isEmpty ? 'Enter your phone number' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your phone number' : null,
                   keyboardType: TextInputType.phone,
                 ),
                 TextFormField(
                   controller: _addressController,
                   decoration: const InputDecoration(labelText: 'Address'),
-                  validator: (value) => value!.isEmpty ? 'Enter your address' : null,
+                  validator: (value) =>
+                      value!.isEmpty ? 'Enter your address' : null,
                 ),
                 ElevatedButton(
                   onPressed: _registerUser,
