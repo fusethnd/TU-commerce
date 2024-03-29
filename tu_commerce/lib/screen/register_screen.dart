@@ -66,8 +66,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             'username': user.username,
             'phone': user.phone,
             'address': user.address,
-            'shoppingMode' : user.shoppingmode,
-          });
+            'shoppingMode' : user.shoppingmode}
+          );
+
 
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Registration Successful')),
@@ -109,10 +110,10 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 TextFormField(
-                  controller: _fnameController,
+                  controller: _lnameController,
                   decoration: const InputDecoration(labelText: 'First name'),
                   validator: (value) =>
-                      value!.isEmpty ? 'Enter your first name' : null,
+                  value!.isEmpty ? 'Enter your first name' : null,
                   onSaved: (String? fname){
                     user.fname = fname!;
                   },
