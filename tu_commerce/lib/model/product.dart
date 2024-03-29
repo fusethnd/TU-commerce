@@ -9,7 +9,7 @@ class Product{
   late String details;
   String category;
   late String imageUrl;
-  late Bool instock;
+  late bool instock;
   late Map<String, dynamic>? seller;
 
   Product({required this.category});
