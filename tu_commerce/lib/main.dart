@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 import 'firebase_options.dart';
 import 'screen/home.dart';
@@ -47,7 +48,7 @@ class _MyAppState extends State<MyApp> {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: isLogin ? const Navigation() : const HomeScreen()
+      home: const HomeScreen()
 
     );
   }

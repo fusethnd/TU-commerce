@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 
 class Login extends StatefulWidget {
@@ -36,7 +37,7 @@ class _LoginState extends State<Login> {
           _formKey.currentState!.reset();
           Navigator.pushAndRemoveUntil(
             context,
-            MaterialPageRoute(builder: (context) => const Navigation()),
+            MaterialPageRoute(builder: (context) => NavigationCustomer(email: email)),
                 (Route<dynamic> route) => false,
           );
         }

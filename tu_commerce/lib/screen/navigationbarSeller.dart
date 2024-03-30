@@ -1,31 +1,55 @@
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
+import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/screen/addProduct.dart';
+import 'package:tu_commerce/screen/editProfile.dart';
+import 'package:tu_commerce/screen/historySeller.dart';
 import 'package:tu_commerce/screen/inboxScreen.dart';
+import 'package:tu_commerce/screen/noticeSeller.dart';
 import 'package:tu_commerce/screen/profileScreen.dart';
 import 'package:tu_commerce/screen/sellerHome.dart';
 import 'package:tu_commerce/screen/stockscreen.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
 class Navigation extends StatefulWidget {
-  const Navigation({super.key});
+
+  final Map<String, dynamic> email;
+  final int temp;
+  
+  Navigation({Key? key, required this.email,this.temp = 2}) : super(key: key);
+  // const Navigation({super.key});
 
   @override
   State<Navigation> createState() => _NavigationState();
 }
 
 class _NavigationState extends State<Navigation> {
-  int _selectedIndex = 2;  
+  late int _selectedIndex ;
 
-  
-  static final List<Widget> _widgetOptions = <Widget>[
-    const StockScreen(), // Define your screens here
+  late List<Widget> _widgetOptions;
+
+
+  @override
+  void initState()  {
+    // TODO: implement initState
+    super.initState();
+    _selectedIndex = widget.temp;
+
+    _widgetOptions = <Widget>[
+    StockScreen(email: widget.email,), // Define your screens here
     const WalletScreen(),
-    const SellerHome(),
+    SellerHome(email: widget.email),
     const InboxScreen(),
-    const Profile(),
+    const NoticeSeller(),
+    AddProduct(username:widget.email),
+    HistorySeller(),
+    
   ];
+  }
+  
 
 
   @override
@@ -58,7 +82,7 @@ class _NavigationState extends State<Navigation> {
             // text: 'Inbox',
           ),
           GButton(
-            icon: Icons.account_box,
+            icon: Icons.notifications,
             // text: 'account',
           ),
           

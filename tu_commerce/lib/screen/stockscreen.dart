@@ -5,7 +5,10 @@ import 'package:tu_commerce/screen/addProduct.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 
 class StockScreen extends StatefulWidget {
-  const StockScreen({super.key});
+  final Map<String, dynamic> email;
+  
+  StockScreen({Key? key, required this.email}) : super(key: key);
+  // const Profile({super.key});
 
   @override
   State<StockScreen> createState() => _StockScreenState();
@@ -13,38 +16,18 @@ class StockScreen extends StatefulWidget {
 
 class _StockScreenState extends State<StockScreen> {
 
-  late Map<String, dynamic> userData;
-  bool isLoading = true; 
-
-  Future getData(String email) async{
-    Map<String, dynamic> temp = await getUserByEmail(email) as Map<String, dynamic>;
-    setState(() {
-      userData = temp;
-      isLoading = false;
-    });
-  }
-  
-  @override
-  void initState() {
-    super.initState();
-    User? user = FirebaseAuth.instance.currentUser;
-    String? email = user!.email;
-    print(email);
-    getData(email!);
-  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Stock'),),
 
-      body: isLoading ? const Center(child: CircularProgressIndicator()) 
-      :ElevatedButton(
+      body: ElevatedButton(
         onPressed: (){
-          Navigator.push(context, MaterialPageRoute(builder: (context){
-              return AddProduct(username: userData);
+          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+              return Navigation(email: widget.email, temp: 5);
           }
-        ));
+        ),(Route<dynamic> route) => false);
         }, 
         child: const Text('add')
       )

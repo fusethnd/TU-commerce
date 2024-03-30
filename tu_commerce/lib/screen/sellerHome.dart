@@ -4,6 +4,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/screen/addProduct.dart';
 import 'package:tu_commerce/screen/inboxScreen.dart';
+import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 import 'package:tu_commerce/screen/profileScreen.dart';
 import 'package:tu_commerce/screen/stockscreen.dart';
@@ -13,8 +14,9 @@ import 'package:tu_commerce/screen/walletscreen.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 
 class SellerHome extends StatefulWidget {
-
-  const SellerHome({super.key});
+  final Map<String, dynamic> email;
+  
+  SellerHome({Key? key, required this.email}) : super(key: key);
 
   @override
   State<SellerHome> createState() => _SellerHomeState();
@@ -63,7 +65,7 @@ class _SellerHomeState extends State<SellerHome> {
                           Navigator.push(
                             context, MaterialPageRoute(
                               builder: (context){
-                                return WalletScreen();
+                                return Navigation(email: widget.email,temp: 1);
                               }
                             )
                           );
@@ -81,11 +83,11 @@ class _SellerHomeState extends State<SellerHome> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => StockScreen(),
-                                  ),
+                                    builder: (context) => Navigation(email: widget.email,temp: 0),
+                                  ),(Route<dynamic> route) => false
                                 );
                               },
                               child: const Text('TO SHIP'),
@@ -98,11 +100,11 @@ class _SellerHomeState extends State<SellerHome> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HistorySeller(),
-                                  ),
+                                    builder: (context) => Navigation(email: widget.email,temp: 6),
+                                  ),(Route<dynamic> route) => false
                                 );
                               },
                               child: const Text('HISTORY'),
@@ -115,11 +117,11 @@ class _SellerHomeState extends State<SellerHome> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
-                                Navigator.push(
+                                Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => StockScreen(),
-                                  ),
+                                    builder: (context) => NavigationCustomer(email:widget.email['email'],temp: 4,),
+                                  ),(Route<dynamic> route) => false
                                 );
                               },
                               child: const Text('SHOPPING MODE'),
@@ -138,7 +140,8 @@ class _SellerHomeState extends State<SellerHome> {
                       Text('Shopping List')
                     ],
                   ),
-                )
+                ),
+
               ],
             ),
     );
