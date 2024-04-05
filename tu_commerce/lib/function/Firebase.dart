@@ -29,6 +29,8 @@ Future<void> saveProductDB(Product prod) async {
       'imageUrl':prod.imageUrl,
       'instock' :prod.instock,
       'seller':prod.seller,
+      'time':prod.time,
+      'link':prod.linkUrl
     }
   );
   print('------------------------------------------');

@@ -1,3 +1,4 @@
+import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -13,7 +14,7 @@ import 'package:uuid/uuid.dart';
 import 'package:file_picker/file_picker.dart';
 
 class AddProduct extends StatefulWidget {
-  final Map<String, dynamic>?  username;
+  final Map<String, dynamic>  username;
   
   AddProduct({Key? key, required this.username}) : super(key: key);
 
@@ -28,13 +29,21 @@ class _AddProductState extends State<AddProduct> {
   final _formKey = GlobalKey<FormState>(); // เอาไว update status ของ TextFormField
   File? _image; // hold image path
   String uuid = const Uuid().v4(); // Generate a random UUID 
-  
+  late BuildContext scaffoldContext;
+  UploadTask? uploadTask;
+  String url = '';
+
   Future pickImageFromGallery() async { //ฟังชั่นเรียกใช้ file ในเครื่อง
     final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery); // เรียกจาก gallery
     if(returnedImage == null) return;
     setState(() {
       _image = File(returnedImage.path); // save path ที่เจอลง _image เป็น global variable
     });
+    print(_image);
+  }
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    scaffoldContext = context; // Save scaffold's context
   }
   // upload to FireStore 
   Future<void> uploadImageToFirebase(BuildContext context) async{
@@ -43,14 +52,21 @@ class _AddProductState extends State<AddProduct> {
     }
     String filename = "${product.prodName}.png";
     Reference ref = FirebaseStorage.instance.ref().child('product/$filename');
-    UploadTask uploadTask = ref.putFile(_image!);
-    await uploadTask.whenComplete(() {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Upload')));
-    });
-
-    // setState(() {
-    //   product.imageUrl = filename;
-    // });
+    uploadTask = ref.putFile(_image!);
+    final snapshot = await uploadTask;
+    print('----complete---');
+    print(snapshot);
+    String? urlCheck = await snapshot?.ref.getDownloadURL();
+    // print('pass');
+    // print(product.linkUrl);
+    // print('Dowload link: $url');
+    if (mounted){
+      print('pass mounted------------');
+      setState(() {
+          // url = urlCheck!;
+        product.linkUrl = urlCheck!;
+      });
+    }
   }
 
 
@@ -67,18 +83,21 @@ class _AddProductState extends State<AddProduct> {
             ElevatedButton(
               onPressed: pickImageFromGallery, // เรียฟังชั่นเลือกภาพ
               child: const Text('Select Image')
+              
             ),
-
+            
             // ----------- ช่องใส่ product name ---------
             const Text("product name"),
             TextFormField(
               validator: RequiredValidator(errorText: "Need product name").call,
               onSaved: (name) {
                 product.prodName = name!;
-                product.imageUrl = "${product.prodName}.png";
-                product.seller = widget.username!; // แอบ save Username ไปด้วย
+                product.imageUrl = "product/${product.prodName}.png";
+                product.seller = widget.username; // แอบ save Username ไปด้วย
                 product.prodID = uuid;
                 product.instock = true;
+                product.time = DateTime.now();
+                
               },
             ),
             // ---------- จบช้อง product name -------------
@@ -121,14 +140,22 @@ class _AddProductState extends State<AddProduct> {
             ElevatedButton(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
+                  
                   _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
                   
-                  uploadImageToFirebase(context);
+                  await uploadImageToFirebase(context);
+                  // _formKey.currentState!.save();
+                  // product.linkUrl = url;
                   print('------------ url -------------');
                   print(product.imageUrl);
-                  saveProductDB(product);
+                  print('-------------link url --------');
+                  print(product.linkUrl);
+                  await saveProductDB(product);
                   _formKey.currentState!.reset();
-                  Navigator.pop(context);
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                      return Navigation(email: widget.username, temp: 0);
+                  }
+                ),(Route<dynamic> route) => false);
                 }
               }, 
               child: const Text('Save'),
