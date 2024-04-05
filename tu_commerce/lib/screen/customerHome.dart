@@ -135,7 +135,7 @@ class CustomerHomeState extends State<CustomerHome> {
                       child: Image.network(imageUrl!),
                     ),
                     title: Text(searchItem[index]['prodName'].toString()),
-                    subtitle: Text(searchItem[index]['category'].toString()),
+                    subtitle: Text(searchItem[index]['price'].toString()),
                   ),
                 );
               }
