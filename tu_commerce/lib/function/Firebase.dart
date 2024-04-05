@@ -17,24 +17,36 @@ Future<Map<String, dynamic>?> getUserByEmail(String email) async {
   return null;
 }
 
+Future<String?> getUserIDByEmail(String email) async {
+  var querySnapshot = await FirebaseFirestore.instance
+      .collection("users")
+      .where('email', isEqualTo: email)
+      .get();
+  if (querySnapshot.docs.isNotEmpty) {
+    String documentId = querySnapshot.docs.first.id;
+    return documentId;
+  }
+  return null;
+}
+
 Future<void> saveProductDB(Product prod) async {
   try {
     await FirebaseFirestore.instance.collection('Product').add(
-    {
-      'prodName':prod.prodName,
-      'price':prod.price,
-      'prodID':prod.prodID,
-      'details':prod.details,
-      'category':prod.category,
-      'imageUrl':prod.imageUrl,
-      'instock' :prod.instock,
-      'seller':prod.seller,
-      'time':prod.time,
-      'link':prod.linkUrl
-    }
-  );
-  print('------------------------------------------');
-  print('Product save successfull');
+        {
+          'prodName':prod.prodName,
+          'price':prod.price,
+          'prodID':prod.prodID,
+          'details':prod.details,
+          'category':prod.category,
+          'imageUrl':prod.imageUrl,
+          'instock' :prod.instock,
+          'seller':prod.seller,
+          'time':prod.time,
+          'link':prod.linkUrl
+        }
+    );
+    print('------------------------------------------');
+    print('Product save successfull');
   } catch (e) {
     print('---------------- Error ------------- ');
     print(e);
@@ -43,7 +55,7 @@ Future<void> saveProductDB(Product prod) async {
 
 Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic>? product,String status) async {
   List<dynamic>? favorites;
-  
+
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
@@ -60,12 +72,12 @@ Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic
         } else if (product != null) {
           favorites = [product];
         }
-      }      
+      }
 
       await doc.reference.update({
         'address': user['address'],
         'email': user['email'],
-        'favorite': favorites, 
+        'favorite': favorites,
         'fname': user['fname'],
         'lname': user['lname'],
         'phone': user['phone'],
@@ -78,55 +90,55 @@ Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic
     print('---------------- Error ------------- ');
     print(e);
   }
-  
+
   return favorites;
 }
-  bool isFavorite(Map<String, dynamic>? name,List<dynamic>? fav) {
-    if (fav == null) {
-      return false;
+bool isFavorite(Map<String, dynamic>? name,List<dynamic>? fav) {
+  if (fav == null) {
+    return false;
+  } else {
+    for (var item in fav!) {
+      if (item is Map<String, dynamic> && item['prodName'] == name!['prodName']) {
+        return true;
+      }
+    }
+    return false;
+  }
+}
+
+
+Future<bool> isEmailVerified() async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  try {
+    User? user = auth.currentUser;
+
+    if (user != null) {
+      await user.reload();
+      return user.emailVerified;
     } else {
-      for (var item in fav!) {
-        if (item is Map<String, dynamic> && item['prodName'] == name!['prodName']) {
-          return true;
-        }
-      }
       return false;
     }
+  } catch (e) {
+    print('Error checking email verification status: $e');
+    return false;
   }
+}
 
+Future<void> sendEmailVerification() async {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  try {
+    User? user = auth.currentUser;
 
-  Future<bool> isEmailVerified() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    try {
-      User? user = auth.currentUser;
-
-      if (user != null) {
-        await user.reload();
-        return user.emailVerified;
-      } else {
-        return false;
-      }
-    } catch (e) {
-      print('Error checking email verification status: $e');
-      return false;
+    if (user != null) {
+      await user.sendEmailVerification();
+      print('Verification email sent.');
+    } else {
+      print('No user signed in.');
     }
+  } catch (e) {
+    print('Error sending verification email: $e');
   }
-
-  Future<void> sendEmailVerification() async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    try {
-      User? user = auth.currentUser;
-
-      if (user != null) {
-        await user.sendEmailVerification();
-        print('Verification email sent.');
-      } else {
-        print('No user signed in.');
-      }
-    } catch (e) {
-      print('Error sending verification email: $e');
-    }
-  }
+}
 Future<List<DocumentSnapshot>> getProducts() async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('Product')

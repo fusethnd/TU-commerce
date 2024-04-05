@@ -85,7 +85,6 @@ class _NavigationState extends State<Navigation> {
             icon: Icons.notifications,
             // text: 'account',
           ),
-          
         ],
       ),
     );
