@@ -2,10 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tu_commerce/model/product.dart';
+import 'package:tu_commerce/screen/navigationbarCustomer.dart';
+import 'package:tu_commerce/screen/searchPage.dart';
 
 class CustomerHome extends StatefulWidget {
-  const CustomerHome({super.key});
+  final Map<String, dynamic>  username;
+  
+  CustomerHome({Key? key, required this.username}) : super(key: key);
 
   @override
   State<CustomerHome> createState() => CustomerHomeState();
@@ -17,6 +22,8 @@ class CustomerHomeState extends State<CustomerHome> {
   late FirebaseFirestore query;
   final storage = FirebaseStorage.instance;
   List<DocumentSnapshot> searchItem = [];
+  TextEditingController searchController = TextEditingController();
+  bool isSearchEmpty = true;
 
   Future<List<DocumentSnapshot>> getProducts() async {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
@@ -47,10 +54,16 @@ class CustomerHomeState extends State<CustomerHome> {
       searchItem = items;
     });
   }
+  void search(String query){
+    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
+  }
   void filterItem(String query){
     List<DocumentSnapshot> filteredItems = [];
     if (query.isEmpty) {
       filteredItems = newItem;
+      setState(() {
+        isSearchEmpty = true;
+      });
     }
     else{
       for (DocumentSnapshot item in newItem){
@@ -60,31 +73,23 @@ class CustomerHomeState extends State<CustomerHome> {
           filteredItems.add(item);
         }
       }
+      setState(() {
+        isSearchEmpty = false;
+      });
     }
     setState(() {
       searchItem = filteredItems;
     });
   }
 
-  void filterCategory(String query){
-    List<DocumentSnapshot> filteredItems = [];
 
-    for (DocumentSnapshot item in newItem){
-        String itemName = item['category'].toString().toLowerCase();
-
-        if (itemName.contains(query.toLowerCase())){
-          filteredItems.add(item);
-        }
-    }
-    setState(() {
-      searchItem = filteredItems;
-    });
-  }
   @override
   Widget build(BuildContext context) {
     print('-------- start app');
     print(searchItem);
     print(newItem);
+    
+
     return Scaffold(
       appBar: AppBar(title: Text('Home'),),
       body: Column(
@@ -97,18 +102,19 @@ class CustomerHomeState extends State<CustomerHome> {
               ),
             )
           ),
-          Container(
+          Visibility(
+              visible: isSearchEmpty,
               child: Row(
                 children: [
                   ElevatedButton(
                     onPressed: (){
-                      filterCategory('normal');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'Normal',allItem: newItem,)));
                     }, 
                     child: const Text('Normal Category')
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      filterCategory('electric');
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'electric',allItem: newItem)));
                     }, 
                     child: const Text('Electric Category')
                   )
@@ -116,29 +122,27 @@ class CustomerHomeState extends State<CustomerHome> {
               ),
           ),
           Text("Product"),
-          Container(
-            child: Expanded(
-              
-              child: ListView.builder(
-                itemCount: searchItem.length,
-                itemBuilder: (context,index){
-                  print('----------');
-                  print(searchItem);
-                  String? imageUrl = searchItem[index]['link'];
-                  return Card(
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        child: Image.network(imageUrl!),
-                      ),
-                      title: Text(searchItem[index]['prodName'].toString()),
-                      subtitle: Text(searchItem[index]['category'].toString()),
+          Expanded(
+            child: ListView.builder(
+              itemCount: searchItem.length,
+              itemBuilder: (context,index){
+                print('----------');
+                print(searchItem);
+                String? imageUrl = searchItem[index]['link'];
+                return Card(
+                  child: ListTile(
+                    leading: CircleAvatar(
+                      child: Image.network(imageUrl!),
                     ),
-                  );
-                }
-              ),
-            
-            )
+                    title: Text(searchItem[index]['prodName'].toString()),
+                    subtitle: Text(searchItem[index]['category'].toString()),
+                  ),
+                );
+              }
+            ),
+          
           )
+
         ],
       )
     );

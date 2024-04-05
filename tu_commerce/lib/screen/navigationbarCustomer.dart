@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tu_commerce/function/Firebase.dart';
@@ -8,14 +9,17 @@ import 'package:tu_commerce/screen/favorite.dart';
 import 'package:tu_commerce/screen/inboxScreen.dart';
 import 'package:tu_commerce/screen/profileScreen.dart';
 import 'package:tu_commerce/screen/sellerHome.dart';
+import 'package:tu_commerce/screen/showCategory.dart';
 import 'package:tu_commerce/screen/stockscreen.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
 class NavigationCustomer extends StatefulWidget {
   final String email;
   final int temp;
+  final String category;
+  final List<DocumentSnapshot>? allItem;
 
-  NavigationCustomer({Key? key, required this.email,this.temp=2}) : super(key: key);
+  NavigationCustomer({Key? key, required this.email,this.temp=2,this.category = '',this.allItem,}) : super(key: key);
   // const NavigationCustomer ({super.key});
 
   @override
@@ -27,6 +31,7 @@ class _NavigationState extends State<NavigationCustomer> {
 
   List<Widget> _widgetOptions  = <Widget>[
     Container(), // Add default values here or any other appropriate Widget
+    Container(),
     Container(),
     Container(),
     Container(),
@@ -52,10 +57,11 @@ void _initializeUserData() async {
       _widgetOptions = <Widget>[
         const WalletScreen(),
         const Favorite(),
-        const CustomerHome(),
+        CustomerHome(username: user,),
         const InboxScreen(),
         Profile(email: user),
         EditProfile(user: user),
+        ShowCategory(category: widget.category,allItem: widget.allItem,)
       ];
       print('---------------');
       print(userData);
