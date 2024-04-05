@@ -7,5 +7,6 @@ class UserModel{
   String? phone;
   String? address;
   bool shoppingmode;
+  Map<String, dynamic>? favorite;
   UserModel({required this.shoppingmode});
 }

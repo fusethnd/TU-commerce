@@ -56,7 +56,7 @@ void _initializeUserData() async {
       userData = user;
       _widgetOptions = <Widget>[
         const WalletScreen(),
-        const Favorite(),
+        Favorite(username: user),
         CustomerHome(username: user,),
         const InboxScreen(),
         Profile(email: user),

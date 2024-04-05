@@ -59,7 +59,13 @@ class _ShowCategoryState extends State<ShowCategory> {
                   child: Image.network(imageUrl!),
                 ),
                 title: Text(categoryItem[index]['prodName'].toString()),
-                subtitle: Text(categoryItem[index]['price'].toString()),
+                subtitle: Row(
+                  children: [
+                    Text(categoryItem[index]['price'].toString()),
+                    SizedBox(width: 8,),
+                    ElevatedButton(onPressed: (){}, child: Icon(Icons.favorite),)
+                  ],
+                ),
               ),
             );
           }

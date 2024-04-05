@@ -3,6 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/searchPage.dart';
@@ -24,38 +25,25 @@ class CustomerHomeState extends State<CustomerHome> {
   List<DocumentSnapshot> searchItem = [];
   TextEditingController searchController = TextEditingController();
   bool isSearchEmpty = true;
+  List<dynamic>? fav;
 
-  Future<List<DocumentSnapshot>> getProducts() async {
-    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-        .collection('Product')
-        .orderBy('time')
-        .get();
-    
-    print('----------');
-    print(querySnapshot.docs);
-    return querySnapshot.docs;
-  }
 
   @override
   void initState() {
     super.initState();
     _initializeData();
-    // setState(() {
-    //   searchItem = newItem;
-    // });
-
   }
+
+
+
+
   Future<void> _initializeData() async {
     List<DocumentSnapshot> items = await getProducts();
-    print('---- item ----');
-    print(items);
     setState(() {
       newItem = items;
       searchItem = items;
+      fav = widget.username['favorite'];
     });
-  }
-  void search(String query){
-    Navigator.push(context, MaterialPageRoute(builder: (context) => SearchPage()));
   }
   void filterItem(String query){
     List<DocumentSnapshot> filteredItems = [];
@@ -64,9 +52,10 @@ class CustomerHomeState extends State<CustomerHome> {
       setState(() {
         isSearchEmpty = true;
       });
-    }
+    } 
     else{
       for (DocumentSnapshot item in newItem){
+
         String itemName = item['prodName'].toString().toLowerCase();
 
         if (itemName.contains(query.toLowerCase())){
@@ -82,14 +71,24 @@ class CustomerHomeState extends State<CustomerHome> {
     });
   }
 
+  void updateFavoriteStatus(int index) async {
+    List<dynamic>? favorites;
+
+    if (isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav)) {
+      favorites = await updateUser(widget.username, searchItem[index].data() as Map<String, dynamic>?,'remove');
+    } else {
+      favorites = await updateUser(widget.username, searchItem[index].data() as Map<String, dynamic>?,'update');
+    }
+
+    setState(() {
+      fav = favorites;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    print('-------- start app');
-    print(searchItem);
-    print(newItem);
-    
 
+    
     return Scaffold(
       appBar: AppBar(title: Text('Home'),),
       body: Column(
@@ -126,23 +125,40 @@ class CustomerHomeState extends State<CustomerHome> {
             child: ListView.builder(
               itemCount: searchItem.length,
               itemBuilder: (context,index){
-                print('----------');
-                print(searchItem);
+                
+                bool favorite = isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav);
                 String? imageUrl = searchItem[index]['link'];
+                // print('item------');
+                // print(searchItem[index].data() as Map<String, dynamic>?);
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
                       child: Image.network(imageUrl!),
                     ),
                     title: Text(searchItem[index]['prodName'].toString()),
-                    subtitle: Text(searchItem[index]['price'].toString()),
+                    subtitle: Row(
+                      children: [
+                        Expanded(child: Text(searchItem[index]['price'].toString()),),
+                        Expanded(
+                          child: ElevatedButton(
+                            onPressed: () async {
+
+                              updateFavoriteStatus(index);
+                                //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                                //       return NavigationCustomer(email: widget.username['email'],);
+                                //   }
+                                // ),(Route<dynamic> route) => false);
+                            }, 
+                            child: Icon(Icons.favorite,color: favorite ? Colors.pink : Colors.black,),
+                          )
+                        )
+                      ],
+                    ),
                   ),
                 );
               }
             ),
-          
           )
-
         ],
       )
     );

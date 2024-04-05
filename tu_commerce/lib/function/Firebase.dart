@@ -40,6 +40,61 @@ Future<void> saveProductDB(Product prod) async {
     print(e);
   }
 }
+
+Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic>? product,String status) async {
+  List<dynamic>? favorites;
+  
+  try {
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('users')
+        .where('username', isEqualTo: user['username']).get();
+    querySnapshot.docs.forEach((doc) async {
+      // Get the existing favorites from the document data //remove
+      favorites = user['favorite'] as List<dynamic>?;
+
+      if (status == 'remove' && favorites != null && product != null){
+        favorites!.removeWhere((item) => item['prodID'] == product['prodID']);
+      }else {
+        if (favorites != null && product != null) {
+          favorites!.add(product);
+        } else if (product != null) {
+          favorites = [product];
+        }
+      }      
+
+      await doc.reference.update({
+        'address': user['address'],
+        'email': user['email'],
+        'favorite': favorites, 
+        'fname': user['fname'],
+        'lname': user['lname'],
+        'phone': user['phone'],
+        'shoppingMode': true,
+        'username': user['username'],
+      });
+    });
+    print('------ success ----');
+  } catch (e) {
+    print('---------------- Error ------------- ');
+    print(e);
+  }
+  
+  return favorites;
+}
+  bool isFavorite(Map<String, dynamic>? name,List<dynamic>? fav) {
+    if (fav == null) {
+      return false;
+    } else {
+      for (var item in fav!) {
+        if (item is Map<String, dynamic> && item['prodName'] == name!['prodName']) {
+          return true;
+        }
+      }
+      return false;
+    }
+  }
+
+
   Future<bool> isEmailVerified() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     try {
@@ -72,7 +127,13 @@ Future<void> saveProductDB(Product prod) async {
       print('Error sending verification email: $e');
     }
   }
-
+Future<List<DocumentSnapshot>> getProducts() async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('Product')
+      .orderBy('time')
+      .get();
+  return querySnapshot.docs;
+}
 // class GetData {
 //   late String email;
 //   late Map<String, dynamic> userData;

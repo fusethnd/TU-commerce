@@ -99,11 +99,13 @@ class _EditProfileState extends State<EditProfile> {
                         {
                           'address':widget.user['address'],
                           'email':widget.user['email'],
+                          'favorite':widget.user['favorite'],
                           'fname':widget.user['fname'],
                           'lname':widget.user['lname'],
                           'phone':widget.user['phone'],
                           'shoppingMode':true,
                           'username':widget.user['username'],
+                          
                         }
                       );
                       

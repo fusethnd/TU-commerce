@@ -66,7 +66,8 @@ class _RegisterScreenState extends State<RegisterScreen> {
             'username': user.username,
             'phone': user.phone,
             'address': user.address,
-            'shoppingMode' : user.shoppingmode}
+            'shoppingMode' : user.shoppingmode,
+            'favorite': []}
           );
 
 
@@ -110,7 +111,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                   },
                 ),
                 TextFormField(
-                  controller: _lnameController,
+                  controller: _fnameController,
                   decoration: const InputDecoration(labelText: 'First name'),
                   validator: (value) =>
                   value!.isEmpty ? 'Enter your first name' : null,
