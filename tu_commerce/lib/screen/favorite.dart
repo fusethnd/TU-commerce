@@ -12,12 +12,9 @@ class Favorite extends StatefulWidget {
 
 class _FavoriteState extends State<Favorite> {
 
-  void updateFavoriteStatus(int index,) async {
+  void updateFavoriteStatus(int index,) async { //เอาไว้ลบตอนกดหัวใจ
     List<dynamic>? favorites;
-
-
-    favorites = await updateUser(widget.username, widget.username['favorite'][index],'remove');
-
+    favorites = await updateUser(widget.username, widget.username['favorite'][index],'remove'); 
     setState(() {
       widget.username['favorite'] = favorites;
     });
@@ -30,22 +27,20 @@ class _FavoriteState extends State<Favorite> {
       body: ListView.builder(
           itemCount: widget.username['favorite'].length,
           itemBuilder: (context,index){
-
-            String? imageUrl = widget.username['favorite'][index]['link'];
-            print(imageUrl);
+            String? imageUrl = widget.username['favorite'][index]['link']; // เอาลิ้ง image มาจากตอน init
             return Card(
               child: ListTile(
                 leading: CircleAvatar(
-                  child: Image.network(imageUrl!),
+                  child: Image.network(imageUrl!), // โชว์ภาพไว้ใน circle
                 ),
-                title: Text(widget.username['favorite'][index]['prodName'].toString()),
+                title: Text(widget.username['favorite'][index]['prodName'].toString()), 
                 subtitle: Row(
                   children: [
                     Text(widget.username['favorite'][index]['price'].toString()),
                     SizedBox(width: 8,),
                     ElevatedButton(
                       onPressed: (){
-                        updateFavoriteStatus(index);
+                        updateFavoriteStatus(index); //ถ้ากดหัวใจจะเข้าคำสั่งนี้
                       }, 
                       child: Icon(Icons.favorite),)
                   ],

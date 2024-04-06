@@ -47,13 +47,13 @@ Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic
   try {
     QuerySnapshot querySnapshot = await FirebaseFirestore.instance
         .collection('users')
-        .where('username', isEqualTo: user['username']).get();
+        .where('username', isEqualTo: user['username']).get(); // query data
     querySnapshot.docs.forEach((doc) async {
       // Get the existing favorites from the document data //remove
       favorites = user['favorite'] as List<dynamic>?;
-
+      // check ก่อนว่าที่ส่งมาเป็น type ไหน remove หรือ update 
       if (status == 'remove' && favorites != null && product != null){
-        favorites!.removeWhere((item) => item['prodID'] == product['prodID']);
+        favorites!.removeWhere((item) => item['prodID'] == product['prodID']); 
       }else {
         if (favorites != null && product != null) {
           favorites!.add(product);
@@ -61,7 +61,7 @@ Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic
           favorites = [product];
         }
       }      
-
+      // save
       await doc.reference.update({
         'address': user['address'],
         'email': user['email'],
@@ -81,12 +81,12 @@ Future<List<dynamic>?> updateUser(Map<String, dynamic> user, Map<String, dynamic
   
   return favorites;
 }
-  bool isFavorite(Map<String, dynamic>? name,List<dynamic>? fav) {
+  bool isFavorite(Map<String, dynamic>? name,List<dynamic>? fav) { // check ว่ามี item นี้อยุ่แล้วมั้ย 
     if (fav == null) {
       return false;
     } else {
       for (var item in fav!) {
-        if (item is Map<String, dynamic> && item['prodName'] == name!['prodName']) {
+        if (item is Map<String, dynamic> && item['prodID'] == name!['prodID']) { // productID ใช้ check
           return true;
         }
       }

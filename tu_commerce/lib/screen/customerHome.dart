@@ -19,7 +19,7 @@ class CustomerHome extends StatefulWidget {
 
 class CustomerHomeState extends State<CustomerHome> {
   var cate = ['normal','electric'];
-  List<DocumentSnapshot> newItem = [];
+  List<DocumentSnapshot> allItem = [];
   late FirebaseFirestore query;
   final storage = FirebaseStorage.instance;
   List<DocumentSnapshot> searchItem = [];
@@ -34,49 +34,44 @@ class CustomerHomeState extends State<CustomerHome> {
     _initializeData();
   }
 
-
-
-
-  Future<void> _initializeData() async {
-    List<DocumentSnapshot> items = await getProducts();
+  Future<void> _initializeData() async { // 
+    List<DocumentSnapshot> items = await getProducts();// query prodcut ทั้งหมด
     setState(() {
-      newItem = items;
-      searchItem = items;
-      fav = widget.username['favorite'];
+      allItem = items; // ตัว hold ไว้เฉยๆ
+      searchItem = items; // ใช้ตัวนี้ในการโชว์
+      fav = widget.username['favorite']; // เก็บแค่ favorite เอามาจาก init
     });
   }
-  void filterItem(String query){
-    List<DocumentSnapshot> filteredItems = [];
-    if (query.isEmpty) {
-      filteredItems = newItem;
+  void filterItem(String query){ // คำสั่ง search 
+    List<DocumentSnapshot> filteredItems = []; // ที่เก็บทุกตัวที่ตรงตามชื่อที่ search
+    if (query.isEmpty) { // โชว์ทั้งหมดตอนที่ไม่ได้เขียนอะไร หมายถึงหลังจากเขียนแล้วลบ
+      filteredItems = allItem; // set ให้เป็น Item ทั้งหมด
       setState(() {
-        isSearchEmpty = true;
+        isSearchEmpty = true; // ถ้าเกิดโล่งก็โชว์ค่าว่างไว้
       });
     } 
-    else{
-      for (DocumentSnapshot item in newItem){
-
+    else{ // กรณี มีคำทิ้งไว้ในที่ search
+      for (DocumentSnapshot item in allItem){
         String itemName = item['prodName'].toString().toLowerCase();
-
         if (itemName.contains(query.toLowerCase())){
-          filteredItems.add(item);
+          filteredItems.add(item); // add ทั้งหมดเข้า
         }
       }
       setState(() {
-        isSearchEmpty = false;
+        isSearchEmpty = false; //set ว่าไม่ False เพื่อจะได้ไม่โชว์ทั้งหมด
       });
     }
     setState(() {
-      searchItem = filteredItems;
+      searchItem = filteredItems; // setค่า
     });
   }
 
   void updateFavoriteStatus(int index) async {
     List<dynamic>? favorites;
 
-    if (isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav)) {
+    if (isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav)) { // กรณีที่หัวใจที่กดมันซ้ำก็จะถือว่าลบ
       favorites = await updateUser(widget.username, searchItem[index].data() as Map<String, dynamic>?,'remove');
-    } else {
+    } else { // กรณีที่หัวใจยังไม่ได้กดก็จะถือว่าให้เพิ่ม
       favorites = await updateUser(widget.username, searchItem[index].data() as Map<String, dynamic>?,'update');
     }
 
@@ -101,19 +96,19 @@ class CustomerHomeState extends State<CustomerHome> {
               ),
             )
           ),
-          Visibility(
+          Visibility( // เอาไว้ใช้ตอน search ถ้าเกิด search อยู่จะไม่โชว์ 2 ปุ่มนี้
               visible: isSearchEmpty,
               child: Row(
                 children: [
                   ElevatedButton(
-                    onPressed: (){
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'Normal',allItem: newItem,)));
+                    onPressed: (){ // โชว์ถาม category
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'Normal',allItem: allItem,)));
                     }, 
                     child: const Text('Normal Category')
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'electric',allItem: newItem)));
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'electric',allItem: allItem)));
                     }, 
                     child: const Text('Electric Category')
                   )
@@ -122,14 +117,13 @@ class CustomerHomeState extends State<CustomerHome> {
           ),
           Text("Product"),
           Expanded(
-            child: ListView.builder(
+            child: ListView.builder( // โชว์ product ทั้งหมด เรียงตามวันที่สร้าง
               itemCount: searchItem.length,
               itemBuilder: (context,index){
                 
-                bool favorite = isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav);
-                String? imageUrl = searchItem[index]['link'];
-                // print('item------');
-                // print(searchItem[index].data() as Map<String, dynamic>?);
+                bool favorite = isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav); // check ว่าตอนนี้กดปุ่มหรือยังเอาไว้โชว์ สี
+                String? imageUrl = searchItem[index]['link']; // link image
+
                 return Card(
                   child: ListTile(
                     leading: CircleAvatar(
@@ -142,12 +136,7 @@ class CustomerHomeState extends State<CustomerHome> {
                         Expanded(
                           child: ElevatedButton(
                             onPressed: () async {
-
                               updateFavoriteStatus(index);
-                                //   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
-                                //       return NavigationCustomer(email: widget.username['email'],);
-                                //   }
-                                // ),(Route<dynamic> route) => false);
                             }, 
                             child: Icon(Icons.favorite,color: favorite ? Colors.pink : Colors.black,),
                           )
