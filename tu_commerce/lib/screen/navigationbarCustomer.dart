@@ -3,6 +3,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/screen/chat.dart';
+import 'package:tu_commerce/screen/checkout.dart';
 import 'package:tu_commerce/screen/customerHome.dart';
 import 'package:tu_commerce/screen/editProfile.dart';
 import 'package:tu_commerce/screen/favorite.dart';
@@ -11,6 +13,7 @@ import 'package:tu_commerce/screen/profileScreen.dart';
 import 'package:tu_commerce/screen/sellerHome.dart';
 import 'package:tu_commerce/screen/showCategory.dart';
 import 'package:tu_commerce/screen/stockscreen.dart';
+import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
 class NavigationCustomer extends StatefulWidget {
@@ -18,8 +21,10 @@ class NavigationCustomer extends StatefulWidget {
   final int temp;
   final String category;
   final List<DocumentSnapshot>? allItem;
+  final Map<String, dynamic>? product;
 
-  NavigationCustomer({Key? key, required this.email,this.temp=2,this.category = '',this.allItem,}) : super(key: key);
+  NavigationCustomer({Key? key, required this.email,this.temp=2,
+                this.category = '',this.allItem,this.product}) : super(key: key);
   // const NavigationCustomer ({super.key});
 
   @override
@@ -31,6 +36,9 @@ class _NavigationState extends State<NavigationCustomer> {
  // ทุกครั้งที่อยากได้ new navbar ให้เข้ามาหน้านี้แล้วสร้าง  Container() เพิ่มอีกอัน ละอ่านต่อข้างล่าง
   List<Widget> _widgetOptions  = <Widget>[
     Container(), // Add default values here or any other appropriate Widget
+    Container(),
+    Container(),
+    Container(),
     Container(),
     Container(),
     Container(),
@@ -59,10 +67,13 @@ void _initializeUserData() async {
         const WalletScreen(),
         Favorite(username: user),
         CustomerHome(username: user,),
-        const InboxScreen(),
+        InboxScreen(username: user),
         Profile(email: user),
         EditProfile(user: user),
-        ShowCategory(category: widget.category,allItem: widget.allItem,)
+        ShowCategory(category: widget.category,allItem: widget.allItem,),
+        CheckOut(username: user,product: widget.product,),
+        ChatScreen(username: user,product: widget.product,),
+        ToShipScreen(username: user)
       ];
       print('---------------');
       print(userData);

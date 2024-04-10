@@ -12,14 +12,15 @@ import 'package:tu_commerce/screen/noticeSeller.dart';
 import 'package:tu_commerce/screen/profileScreen.dart';
 import 'package:tu_commerce/screen/sellerHome.dart';
 import 'package:tu_commerce/screen/stockscreen.dart';
+import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
 class Navigation extends StatefulWidget {
 
-  final Map<String, dynamic> email;
+  final Map<String, dynamic> username;
   final int temp;
   
-  Navigation({Key? key, required this.email,this.temp = 2}) : super(key: key);
+  Navigation({Key? key, required this.username,this.temp = 2}) : super(key: key);
   // const Navigation({super.key});
 
   @override
@@ -37,16 +38,16 @@ class _NavigationState extends State<Navigation> {
     // TODO: implement initState
     super.initState();
     _selectedIndex = widget.temp;
-
+    widget.username['shoppingMode'] = false;
     _widgetOptions = <Widget>[
-    StockScreen(email: widget.email,), // Define your screens here
+    StockScreen(email: widget.username,), // Define your screens here
     const WalletScreen(),
-    SellerHome(email: widget.email),
-    const InboxScreen(),
+    SellerHome(username: widget.username),
+    InboxScreen(username: widget.username,),
     const NoticeSeller(),
-    AddProduct(username:widget.email),
+    AddProduct(username:widget.username),
     HistorySeller(),
-    
+    ToShipScreen(username:widget.username),
   ];
   }
   
@@ -85,7 +86,6 @@ class _NavigationState extends State<Navigation> {
             icon: Icons.notifications,
             // text: 'account',
           ),
-          
         ],
       ),
     );

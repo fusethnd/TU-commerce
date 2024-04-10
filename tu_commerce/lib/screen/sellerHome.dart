@@ -14,9 +14,9 @@ import 'package:tu_commerce/screen/walletscreen.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 
 class SellerHome extends StatefulWidget {
-  final Map<String, dynamic> email;
+  final Map<String, dynamic> username;
   
-  SellerHome({Key? key, required this.email}) : super(key: key);
+  SellerHome({Key? key, required this.username}) : super(key: key);
 
   @override
   State<SellerHome> createState() => _SellerHomeState();
@@ -34,6 +34,7 @@ class _SellerHomeState extends State<SellerHome> {
     setState(() {
       userData = temp;
       isLoading = false;
+      
     });
   }
   
@@ -44,6 +45,7 @@ class _SellerHomeState extends State<SellerHome> {
     String? email = user!.email;
     super.initState();
     getData(email!);
+    print(widget.username['shoppingMode']);
   }
   // ใส่ container เข้าไป
   @override
@@ -65,7 +67,7 @@ class _SellerHomeState extends State<SellerHome> {
                           Navigator.push(
                             context, MaterialPageRoute(
                               builder: (context){
-                                return Navigation(email: widget.email,temp: 1);
+                                return Navigation(username: widget.username,temp: 1);
                               }
                             )
                           );
@@ -83,10 +85,12 @@ class _SellerHomeState extends State<SellerHome> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
+
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Navigation(email: widget.email,temp: 0),
+                                    
+                                    builder: (context) => Navigation(username: widget.username,temp: 7),
                                   ),(Route<dynamic> route) => false
                                 );
                               },
@@ -103,7 +107,7 @@ class _SellerHomeState extends State<SellerHome> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Navigation(email: widget.email,temp: 6),
+                                    builder: (context) => Navigation(username: widget.username,temp: 6),
                                   ),(Route<dynamic> route) => false
                                 );
                               },
@@ -116,11 +120,12 @@ class _SellerHomeState extends State<SellerHome> {
                         child: Column(
                           children: [
                             ElevatedButton(
-                              onPressed: () {
+                              onPressed: () async {
+
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => NavigationCustomer(email:widget.email['email'],temp: 4,),
+                                    builder: (context) => NavigationCustomer(email:widget.username['email'],temp: 4,),
                                   ),(Route<dynamic> route) => false
                                 );
                               },

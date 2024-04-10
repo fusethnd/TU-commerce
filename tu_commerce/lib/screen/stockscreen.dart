@@ -25,7 +25,7 @@ class _StockScreenState extends State<StockScreen> {
       body: ElevatedButton(
         onPressed: (){
           Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
-              return Navigation(email: widget.email, temp: 5);
+              return Navigation(username: widget.email, temp: 5);
           }
         ),(Route<dynamic> route) => false);
         }, 

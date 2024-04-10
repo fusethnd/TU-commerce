@@ -153,7 +153,7 @@ class _AddProductState extends State<AddProduct> {
                   await saveProductDB(product);
                   _formKey.currentState!.reset();
                   Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
-                      return Navigation(email: widget.username, temp: 0);
+                      return Navigation(username: widget.username, temp: 0);
                   }
                 ),(Route<dynamic> route) => false);
                 }

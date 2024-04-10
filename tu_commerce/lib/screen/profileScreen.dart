@@ -5,6 +5,7 @@ import 'package:tu_commerce/screen/historyCustomer.dart';
 import 'package:tu_commerce/screen/home.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
 class Profile extends StatefulWidget {
@@ -78,7 +79,7 @@ class _ProfileState extends State<Profile> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => WalletScreen(),
+                                    builder: (context) => NavigationCustomer(email: widget.email['email'],temp: 9,),
                                   ),(Route<dynamic> route) => false
                                 );
                               },
@@ -112,7 +113,7 @@ class _ProfileState extends State<Profile> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => Navigation(email: widget.email),
+                                    builder: (context) => Navigation(username: widget.email),
                                   ),(Route<dynamic> route) => false
                                 );
                               },
