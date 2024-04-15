@@ -61,7 +61,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
       {
         'sender':message.sender,
         'reciever':message.reciever,
-        'time':message.time,
+        'time':FieldValue.serverTimestamp(),
         'message':message.message,
         'link':null,
         'latitude': null,
@@ -88,7 +88,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
       {
         'sender':message.sender,
         'reciever':message.reciever,
-        'time':FieldValue.serverTimestamp() as DateTime?,
+        'time':FieldValue.serverTimestamp(),
         'message':null,
         'link':null,
         'latitude': position.latitude,
