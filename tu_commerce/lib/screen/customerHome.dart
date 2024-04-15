@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
@@ -7,6 +8,8 @@ import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/searchPage.dart';
+import 'package:http/http.dart' as http;
+import '../model/noticeApi.dart';
 
 class CustomerHome extends StatefulWidget {
   final Map<String, dynamic>  username;
@@ -27,7 +30,7 @@ class CustomerHomeState extends State<CustomerHome> {
   bool isSearchEmpty = true;
   List<dynamic>? fav;
 
-
+  final NotificationService _notificationService = NotificationService();
   @override
   void initState() {
     super.initState();
@@ -35,14 +38,27 @@ class CustomerHomeState extends State<CustomerHome> {
     print(widget.username['shoppingMode']);
   }
 
+
+
   Future<void> _initializeData() async { // 
     List<DocumentSnapshot> items = await getProducts();// query prodcut ทั้งหมด
+    // String? token = await FirebaseApi().initNotifications();
+    // print(token);
+
+    if (widget.username.containsKey('tokenNotice')){
+      await _notificationService.requestNotificationPermissions();
+      // print("Token: " + widget.username['tokenNotice']);
+      await sendNotificationToUser(widget.username['tokenNotice'], "New Message", "You have a new message!");
+      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+
+    }
     setState(() {
       allItem = items; // ตัว hold ไว้เฉยๆ
       searchItem = items; // ใช้ตัวนี้ในการโชว์
       fav = widget.username['favorite']; // เก็บแค่ favorite เอามาจาก init
     });
   }
+
   void filterItem(String query){ // คำสั่ง search 
     List<DocumentSnapshot> filteredItems = []; // ที่เก็บทุกตัวที่ตรงตามชื่อที่ search
     if (query.isEmpty) { // โชว์ทั้งหมดตอนที่ไม่ได้เขียนอะไร หมายถึงหลังจากเขียนแล้วลบ

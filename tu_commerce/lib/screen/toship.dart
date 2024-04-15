@@ -50,6 +50,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
                         " " +
                         order['product']['seller']['lname'])
                     : order['username']['fname'] + " " + order['username']['lname'];
+//  String nameRoom = widget.username['username'] + '-' + widget.product!['seller']['username']; // เซฟแชทรูม // ชื่อแชท buyer-seller ใช้ username
+                String nameRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
                 print(widget.username['shoppingMode']);
                 return Card(
                   child: Column(
@@ -91,6 +93,16 @@ class _ToShipScreenState extends State<ToShipScreen> {
                               IgnorePointer(
                                 ignoring: (status > 1 ) || (widget.username['shoppingMode'] == true),
                                 child: IconButton(onPressed: () async {
+                                    // ส่งข้อความเข้าแชท
+                                    await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
+                                        'sender': widget.username['username'],
+                                        'reciever': order['username']['username'],
+                                        'time':DateTime.now(),
+                                        'message': 'On The Way', // แก้ข้อความตรงนี้นะ
+                                        'link': null,
+                                        'latitude': null,
+                                        'longitude': null,
+                                    });
                                     await updateStatus(order,1,index);
                                     setState(() {
                                       _initializeData();
@@ -100,6 +112,16 @@ class _ToShipScreenState extends State<ToShipScreen> {
                               IgnorePointer(
                                 ignoring: ((status > 2 || status < 1) || (widget.username['shoppingMode'] == true)),
                                 child: IconButton(onPressed: ()async {
+                                    // ส่งข้อความเข้าแชท
+                                    await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
+                                        'sender': widget.username['username'],
+                                        'reciever': order['username']['username'],
+                                        'time':DateTime.now(), 
+                                        'message': 'At Place', // แก้ข้อความตรงนี้นะ
+                                        'link': null, 
+                                        'latitude': null,
+                                        'longitude': null,
+                                    });
                                     await updateStatus(order,2,index);
                                     setState(() {
                                       _initializeData();
@@ -144,6 +166,16 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     }
                                   }
                                   else {
+                                    // ส่งข้อความเข้าแชท
+                                    await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
+                                        'sender': widget.username['username'],
+                                        'reciever': order['username']['username'],
+                                        'time':DateTime.now(), 
+                                        'message': 'Finish', // แก้ข้อความตรงนี้นะ
+                                        'link': null, 
+                                        'latitude': null,
+                                        'longitude': null,
+                                    });
                                     // ถ้าเกิดคนกดเป็นคือคนขายก็จะถือว่า updata status ปกติ
                                     await updateStatus(order,3,index);
                                   }

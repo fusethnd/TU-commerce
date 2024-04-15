@@ -1,3 +1,4 @@
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -21,6 +22,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
   final _confirmPasswordController = TextEditingController();
   final _phoneController = TextEditingController();
   final _addressController = TextEditingController();
+ final _firebaseMessage = FirebaseMessaging.instance;
 
   @override
   void dispose() {
@@ -67,7 +69,9 @@ class _RegisterScreenState extends State<RegisterScreen> {
             'phone': user.phone,
             'address': user.address,
             'shoppingMode' : user.shoppingmode,
-            'favorite': []}
+            'favorite': [],
+            'tokenNotice': await _firebaseMessage.getToken(),
+            }
           );
 
 

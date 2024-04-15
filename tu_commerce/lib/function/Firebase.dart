@@ -1,5 +1,7 @@
+import 'dart:convert';
 import 'dart:io';
-
+import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:http/http.dart' as http;
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -282,3 +284,52 @@ Future<Map<String, dynamic>> getHistory(String id) async {
   return historyData;
 }
 
+Future<void> sendNotificationToUser(tokenCustomer, String notificationTitle, String notificationBody) async {
+  // Retrieve the recipient's device token from your backend database
+  String recipientDeviceToken = tokenCustomer;
+  print('in----------');
+  // Send the notification using the recipient's device token
+  if (recipientDeviceToken != null) {
+    const String serverKey = 'AAAAJyGO45I:APA91bEAm0BD51p3onfptJ_oz7s90U4f-nLF0JnKdVOC1FwUPyYiX64-jRuDWc8iF6F3WTQH92-BZoteiBcXPyoDfxNXSQ1qws5-jZd0DkK0IDpejkzA6G4mDAAhJEVteGUxqaD_3jKY'; // Replace with your FCM server key
+    const String firebaseUrl = 'https://fcm.googleapis.com/fcm/send';
+
+    final Map<String, dynamic> message = {
+      'notification': {
+        'title': notificationTitle,
+        'body': notificationBody,
+      },
+      'data': {
+        // You can include additional data in the notification payload if needed
+        // For example, you might include a link to open a specific screen in your app
+        'click_action': 'FLUTTER_NOTIFICATION_CLICK',
+      },
+      'to': recipientDeviceToken,
+    };
+
+    try {
+      final response = await http.post(
+        Uri.parse(firebaseUrl),
+        headers: <String, String>{
+          'Content-Type': 'application/json',
+          'Authorization': 'key=$serverKey',
+        },
+        body: jsonEncode(message),
+      );
+      print(response.body);
+      
+      if (response.statusCode == 200) {
+        print('Notification sent successfully!');
+      } else {
+        print('Failed to send notification. Error: ${response.body}');
+      }
+    } catch (e) {
+      print('Exception while sending notification: $e');
+    }
+  }
+}
+
+
+
+// Example usage:
+// Send a notification to a user with username "recipient123"
+// sendNotificationToUser("recipient123", "New Message", "You have a new message!");
