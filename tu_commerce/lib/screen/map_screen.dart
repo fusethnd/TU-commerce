@@ -14,6 +14,13 @@ class MapScreen extends StatefulWidget {
 
 class _MapScreenState extends State<MapScreen> {
   late GoogleMapController mapController;
+  late LatLng _markerPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _markerPosition = LatLng(widget.latitude, widget.longitude);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -32,13 +39,20 @@ class _MapScreenState extends State<MapScreen> {
         markers: {
           Marker(
             markerId: MarkerId('Marker'),
-            position: LatLng(widget.latitude, widget.longitude),
+            position: _markerPosition,
             infoWindow: InfoWindow(
               title: 'Your Location',
             ),
           ),
         },
+        onTap: _onMapTapped,
       ),
     );
+  }
+
+  void _onMapTapped(LatLng tappedPoint) {
+    setState(() {
+      _markerPosition = tappedPoint;
+    });
   }
 }

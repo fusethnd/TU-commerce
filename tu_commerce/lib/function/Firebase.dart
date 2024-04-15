@@ -130,30 +130,30 @@ Future<void> updateStatus(order,status,index) async { // update field status
 
 }
 
-// Future<List<Map<String, dynamic>>> getMessages(chatId) async { 
-//   List<Map<String, dynamic>> messages = [];
-
-//   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('ChatRoom').doc(chatId).collection('Message').orderBy('time',descending: true).get();
-//   querySnapshot.docs.forEach((doc) {
-//     Map<String, dynamic> messageData = doc.data() as Map<String, dynamic>;
-//     messageData['time'] = (messageData['time'] as Timestamp).toDate();
-//     messages.add(messageData);
-//     // print(messageData);
-//   });
-
-//   return messages;
-// }
-
 Future<List<Map<String, dynamic>>> getMessages(chatId) async { 
-  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('ChatRoom').doc(chatId).collection('Message').orderBy('time', descending: true).get();
+  List<Map<String, dynamic>> messages = [];
 
-  return querySnapshot.docs.map((doc) {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('ChatRoom').doc(chatId).collection('Message').orderBy('time',descending: true).get();
+  querySnapshot.docs.forEach((doc) {
     Map<String, dynamic> messageData = doc.data() as Map<String, dynamic>;
-    // Convert Firestore Timestamp to Dart DateTime
-    messageData['time'] = (messageData['time'] as Timestamp).toDate();
-    return messageData;
-  }).toList();
+    // messageData['time'] = (messageData['time'] as Timestamp).toDate();
+    messages.add(messageData);
+    // print(messageData);
+  });
+
+  return messages;
 }
+
+// Future<List<Map<String, dynamic>>> getMessages(chatId) async { 
+//   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('ChatRoom').doc(chatId).collection('Message').orderBy('time', descending: true).get();
+
+//   return querySnapshot.docs.map((doc) {
+//     Map<String, dynamic> messageData = doc.data() as Map<String, dynamic>;
+//     // Convert Firestore Timestamp to Dart DateTime
+//     messageData['time'] = (messageData['time'] as Timestamp).toDate();
+//     return messageData;
+//   }).toList();
+// }
 
 Future<Position> determinePosition() async {
   LocationPermission permission;
