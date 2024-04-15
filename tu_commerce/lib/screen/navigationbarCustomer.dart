@@ -8,6 +8,7 @@ import 'package:tu_commerce/screen/checkout.dart';
 import 'package:tu_commerce/screen/customerHome.dart';
 import 'package:tu_commerce/screen/editProfile.dart';
 import 'package:tu_commerce/screen/favorite.dart';
+import 'package:tu_commerce/screen/historyCustomer.dart';
 import 'package:tu_commerce/screen/inboxScreen.dart';
 import 'package:tu_commerce/screen/profileScreen.dart';
 import 'package:tu_commerce/screen/sellerHome.dart';
@@ -22,9 +23,10 @@ class NavigationCustomer extends StatefulWidget {
   final String category;
   final List<DocumentSnapshot>? allItem;
   final Map<String, dynamic>? product;
+  final Map<String, dynamic>? order;
 
   NavigationCustomer({Key? key, required this.email,this.temp=2,
-                this.category = '',this.allItem,this.product}) : super(key: key);
+                this.category = '',this.allItem,this.product,this.order}) : super(key: key);
   // const NavigationCustomer ({super.key});
 
   @override
@@ -36,6 +38,7 @@ class _NavigationState extends State<NavigationCustomer> {
  // ทุกครั้งที่อยากได้ new navbar ให้เข้ามาหน้านี้แล้วสร้าง  Container() เพิ่มอีกอัน ละอ่านต่อข้างล่าง
   List<Widget> _widgetOptions  = <Widget>[
     Container(), // Add default values here or any other appropriate Widget
+    Container(),
     Container(),
     Container(),
     Container(),
@@ -72,8 +75,9 @@ void _initializeUserData() async {
         EditProfile(user: user),
         ShowCategory(category: widget.category,allItem: widget.allItem,),
         CheckOut(username: user,product: widget.product,),
-        ChatScreen(username: user,product: widget.product,),
-        ToShipScreen(username: user)
+        ChatScreen(username: user,order: widget.order,),
+        ToShipScreen(username: user),
+        HistoryCustomer(username:user),
       ];
       print('---------------');
       print(userData);

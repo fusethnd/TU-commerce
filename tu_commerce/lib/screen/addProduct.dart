@@ -41,6 +41,7 @@ class _AddProductState extends State<AddProduct> {
     });
     print(_image);
   }
+  
   void didChangeDependencies() {
     super.didChangeDependencies();
     scaffoldContext = context; // Save scaffold's context
@@ -142,20 +143,25 @@ class _AddProductState extends State<AddProduct> {
                 if (_formKey.currentState!.validate()) {
                   
                   _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
-                  
-                  await uploadImageToFirebase(context);
-                  // _formKey.currentState!.save();
-                  // product.linkUrl = url;
-                  print('------------ url -------------');
-                  print(product.imageUrl);
-                  print('-------------link url --------');
-                  print(product.linkUrl);
-                  await saveProductDB(product);
-                  _formKey.currentState!.reset();
-                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
-                      return Navigation(username: widget.username, temp: 0);
+                  if (widget.username.containsKey('Credit') == false){
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
+                      );
+                  }else {
+                      await uploadImageToFirebase(context);
+                      // _formKey.currentState!.save();
+                      // product.linkUrl = url;
+                      print('------------ url -------------');
+                      print(product.imageUrl);
+                      print('-------------link url --------');
+                      print(product.linkUrl);
+                      await saveProductDB(product);
+                      _formKey.currentState!.reset();
+                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                          return Navigation(username: widget.username, temp: 0);
+                      }
+                    ),(Route<dynamic> route) => false);
                   }
-                ),(Route<dynamic> route) => false);
                 }
               }, 
               child: const Text('Save'),

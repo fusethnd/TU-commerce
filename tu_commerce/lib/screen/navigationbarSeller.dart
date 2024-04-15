@@ -40,15 +40,15 @@ class _NavigationState extends State<Navigation> {
     _selectedIndex = widget.temp;
     widget.username['shoppingMode'] = false;
     _widgetOptions = <Widget>[
-    StockScreen(email: widget.username,), // Define your screens here
-    const WalletScreen(),
-    SellerHome(username: widget.username),
-    InboxScreen(username: widget.username,),
-    const NoticeSeller(),
-    AddProduct(username:widget.username),
-    HistorySeller(),
-    ToShipScreen(username:widget.username),
-  ];
+      StockScreen(email: widget.username,), // Define your screens here
+      const WalletScreen(),
+      SellerHome(username: widget.username),
+      InboxScreen(username: widget.username,),
+      const NoticeSeller(),
+      AddProduct(username:widget.username),
+      HistorySeller(username:widget.username),
+      ToShipScreen(username:widget.username),
+    ];
   }
   
 

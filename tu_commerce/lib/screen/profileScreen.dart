@@ -96,7 +96,7 @@ class _ProfileState extends State<Profile> {
                                 Navigator.pushAndRemoveUntil(
                                   context,
                                   MaterialPageRoute(
-                                    builder: (context) => HistoryCustomer(),
+                                    builder: (context) => NavigationCustomer(email: widget.email['email'],temp: 10,),
                                   ),(Route<dynamic> route) => false
                                 );
                               },

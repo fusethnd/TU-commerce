@@ -7,4 +7,13 @@ class Orders{
   void updateStatus(){
     status++;
   }
+
+  Map<String, dynamic> toMap() {
+    return {
+      'product': product,
+      'username': buyer,
+      'status': status,
+      'date': time,
+    };
+  }
 }

@@ -35,7 +35,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('MESSAGES'),
+        title: Text('TO SHIP'),
       ),
       body: orders == null
           ? Center(child: CircularProgressIndicator()) //  ฝากแก้ด้วยละกันให้ถ้าไม่มี orders ให้แก้เเป็น text
@@ -50,6 +50,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                         " " +
                         order['product']['seller']['lname'])
                     : order['username']['fname'] + " " + order['username']['lname'];
+                print(widget.username['shoppingMode']);
                 return Card(
                   child: Column(
                     children: [
@@ -76,7 +77,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                           children: [
                             // status ที่ 0 คือเริ่มต้น
                               IgnorePointer(
-                                ignoring: status > 0, 
+                                ignoring: (status > 0) , 
                                 child:IconButton(onPressed: () async{
                                     await updateStatus(order,0,index); // เปลี่ยน status หลังกด
                                     setState(() {
@@ -88,7 +89,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                             // จบ status ที่ 0
                             // status ที่ 1
                               IgnorePointer(
-                                ignoring: status > 1,
+                                ignoring: (status > 1 ) || (widget.username['shoppingMode'] == true),
                                 child: IconButton(onPressed: () async {
                                     await updateStatus(order,1,index);
                                     setState(() {
@@ -97,7 +98,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                 }, icon: Icon(Icons.directions_car),color: status == 1 ? Colors.red : Colors.grey,)
                               ),
                               IgnorePointer(
-                                ignoring: status > 2 || status < 1,
+                                ignoring: ((status > 2 || status < 1) || (widget.username['shoppingMode'] == true)),
                                 child: IconButton(onPressed: ()async {
                                     await updateStatus(order,2,index);
                                     setState(() {
@@ -106,12 +107,41 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                 }, icon: Icon(Icons.location_on),color: status == 2 ? Colors.red : Colors.grey,),
                               ),
                               IgnorePointer(
-                                ignoring: status > 3 || status < 2,
+                                ignoring: ((status > 3 || status < 2) ),
                                 child: IconButton(onPressed: ()async {
                                   if (widget.username['username'] == order['username']['username']){
                                     print('in site delete');
                                     // ถ้าเกิดคนกดเป็นคือคนซื้อก็จะลบ order นี้ออกแต่ยังไม่ได้ตัดตังนะ
+                                    DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Credit').doc(order['product']['seller']['Credit']).get();
+                                    Map<String, dynamic>? seller =  await getUserByEmail(order['product']['seller']['email']);
+                                    if (widget.username.containsKey('historyID')){
+                                      print('contain key');
+                                      // customer
+                                      await saveHistory(order,order['username']['historyID'],widget.username,'customer');
+                                      // seller
+                                    } else{
+                                      print('dont contain key');
+                                      await saveHistory(order,'No',widget.username,'customer');
+                                    }
+
+                                    if (seller!.containsKey('historyID')){
+                                      print('contain key');
+                                      // customer
+                                      await saveHistory(order,seller['historyID'],seller,'seller');
+                                      // seller
+                                    } else{
+                                      print('dont contain key');
+                                      await saveHistory(order,'No',seller,'seller');
+                                    }
+
+                                    Map<String, dynamic> credit = snapshot.data() as  Map<String, dynamic>;
+                                    await FirebaseFirestore.instance.collection('Credit').doc(order['product']['seller']['Credit']).update({
+                                    'balance': double.parse(credit['balance'].toString()) + double.parse(order['product']['price'].toString())});
                                     await FirebaseFirestore.instance.collection('Orders').doc(orders![index].id).delete();
+                                    String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
+                                    if (orders!.length == 1){
+                                      await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).delete();
+                                    }
                                   }
                                   else {
                                     // ถ้าเกิดคนกดเป็นคือคนขายก็จะถือว่า updata status ปกติ
