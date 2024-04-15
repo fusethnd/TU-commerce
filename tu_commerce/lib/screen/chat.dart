@@ -45,6 +45,7 @@ class _ChatScreenState extends State<ChatScreen> {
     if (mounted){
       setState(() {
         allMessage = temp;
+        // allMessage = temp..sort((a, b) => b['time'].compareTo(a['time']));
       });
 
     }
@@ -87,7 +88,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
       {
         'sender':message.sender,
         'reciever':message.reciever,
-        'time':DateTime.now(),
+        'time':FieldValue.serverTimestamp() as DateTime?,
         'message':null,
         'link':null,
         'latitude': position.latitude,
@@ -165,7 +166,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                       controller: _textEditingController,
                       onChanged: (context){
                         message.message = context;
-                        message.time = DateTime.now();
+                        message.time = FieldValue.serverTimestamp() as DateTime?;
                       },
                       decoration: const InputDecoration(
                           hintText: 'Message here'
