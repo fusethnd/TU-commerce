@@ -69,7 +69,7 @@ class _CheckOutState extends State<CheckOut> {
                     // สร้างส่ง รูปเข้าไปในแชท
                       'sender':widget.username['username'],
                       'reciever':widget.product!['seller']['username'],
-                      'time':DateTime.now(),
+                      'time':FieldValue.serverTimestamp(),
                       'message':null,
                       'link':widget.product!['link'],
                       'latitude': null,
