@@ -166,7 +166,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                       controller: _textEditingController,
                       onChanged: (context){
                         message.message = context;
-                        message.time = FieldValue.serverTimestamp() as DateTime?;
+                        // message.time = FieldValue.serverTimestamp() as DateTime?;
                       },
                       decoration: const InputDecoration(
                           hintText: 'Message here'
