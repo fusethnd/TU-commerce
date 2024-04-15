@@ -136,6 +136,7 @@ Future<List<Map<String, dynamic>>> getMessages(chatId) async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance.collection('ChatRoom').doc(chatId).collection('Message').orderBy('time',descending: true).get();
   querySnapshot.docs.forEach((doc) {
     Map<String, dynamic> messageData = doc.data() as Map<String, dynamic>;
+    messageData['time'] = (messageData['time'] as Timestamp).toDate();
     messages.add(messageData);
     // print(messageData);
   });
