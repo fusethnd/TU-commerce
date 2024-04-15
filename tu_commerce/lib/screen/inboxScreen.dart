@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
@@ -16,22 +18,38 @@ class _InboxScreenState extends State<InboxScreen> {
 
   List<dynamic>? orders;
   List<dynamic>? chatRooms;
+  late StreamSubscription<List<DocumentSnapshot>>? _chatRoomSubscription;
   @override
   void initState() {
     super.initState();
     _initializeData();
     print(widget.username['shoppingMode']);
   }
-  Future<void> _initializeData() async {
-    List<DocumentSnapshot> temp = await getOrders(widget.username['username'],widget.username['shoppingMode']);
-    List<DocumentSnapshot> temp2 = await getChatRoom(widget.username['username'],widget.username['shoppingMode']);
-    print('temp2 ----------');
-    print(temp2);
-    setState(() {
-      orders = temp;
-      chatRooms = temp2;
-    });
+  void dispose() {
+    // Cancel the stream subscription
+    _chatRoomSubscription?.cancel();
+    super.dispose();
   }
+  Future<void> _initializeData() async {
+    try {
+      List<DocumentSnapshot> temp = await getOrders(
+          widget.username['username'], widget.username['shoppingMode']);
+      List<DocumentSnapshot> temp2 = await getChatRoom(
+          widget.username['username'], widget.username['shoppingMode']);
+      print('temp2 ----------');
+      print(temp2);
+
+      if (mounted) {
+        setState(() {
+          orders = temp;
+          chatRooms = temp2;
+        });
+      }
+    } catch (e) {
+      print('Error initializing data: $e');
+    }
+  }
+
 
   Future<List<QueryDocumentSnapshot<Object?>>> getChatRoom(username,shoppingMode) async{
     QuerySnapshot querySnapshot;

@@ -30,20 +30,24 @@ class _ChatScreenState extends State<ChatScreen> {
   void initState() {
     // TODO: implement initState
     super.initState();
-    setState(() {
-      message.sender = widget.username['username'];
-      message.reciever = widget.order!['product']['seller']['username'];
-      chatId = widget.order!['username']['username'] + '-' + widget.order!['product']['seller']['username'];
-    });
+    if (mounted){
+      setState(() {
+        message.sender = widget.username['username'];
+        message.reciever = widget.order!['product']['seller']['username'];
+        chatId = widget.order!['username']['username'] + '-' + widget.order!['product']['seller']['username'];
+      });
+    }
     _initializeData();
   }
 
   Future<void> _initializeData() async {
     List<Map<String, dynamic>> temp = await getMessages(chatId); //get message
+    if (mounted){
+      setState(() {
+        allMessage = temp;
+      });
 
-    setState(() {
-      allMessage = temp;
-    });
+    }
     // _initializeData();
   }
 
@@ -63,9 +67,12 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
         'longitude': null,
       }
     );
-    setState(() {
-      message.message = '';
-    });
+    if (mounted){
+
+      setState(() {
+        message.message = '';
+      });
+    }
     _textEditingController.clear(); // clear text ในช้องแชท
     _initializeData(); // ให้ไป query ข้อความทั้งหมด ทำให้มัน realtime
   }
@@ -87,7 +94,6 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
         'longitude': position.longitude,
       }
     );
-
     _initializeData(); // requery
   }
 
@@ -96,16 +102,17 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
 
   @override
   Widget build(BuildContext context) {
+    _initializeData();
     return Scaffold(
       appBar: AppBar(title: Text(message.reciever.toString()),),
       body: Column(
         children: [
             Expanded(
-              child:ListView.builder(
+              child: allMessage != null ? ListView.builder(
                 reverse: true,
                 itemCount: allMessage?.length,
                 itemBuilder: (context,index) {  
-                  
+                  print(allMessage);
                   Map<String, dynamic>? messageData = allMessage?[index];
 
                   // if (messageData == null) return SizedBox();
@@ -134,11 +141,11 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                               ),
                             )
                           : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
-    )
-  )
+                    )
+                  )
                   );
                 },
-              )//
+              ) : CircularProgressIndicator()
             ),
             Form(
               key: _formKey,

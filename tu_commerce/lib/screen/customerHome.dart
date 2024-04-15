@@ -45,13 +45,13 @@ class CustomerHomeState extends State<CustomerHome> {
     // String? token = await FirebaseApi().initNotifications();
     // print(token);
 
-    if (widget.username.containsKey('tokenNotice')){
-      await _notificationService.requestNotificationPermissions();
-      // print("Token: " + widget.username['tokenNotice']);
-      await sendNotificationToUser(widget.username['tokenNotice'], "New Message", "You have a new message!");
-      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+    // if (widget.username.containsKey('tokenNotice')){
+    //   await _notificationService.requestNotificationPermissions();
+    //   // print("Token: " + widget.username['tokenNotice']);
+    //   await sendNotificationToUser(widget.username['tokenNotice'], "New Message", "You have a new message!");
+    //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
 
-    }
+    // }
     setState(() {
       allItem = items; // ตัว hold ไว้เฉยๆ
       searchItem = items; // ใช้ตัวนี้ในการโชว์
