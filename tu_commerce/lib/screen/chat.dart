@@ -7,6 +7,8 @@ import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/message.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'map_screen.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 
 class ChatScreen extends StatefulWidget {
   final Map<String, dynamic>  username;
@@ -26,6 +28,7 @@ class _ChatScreenState extends State<ChatScreen> {
   final TextEditingController _textEditingController = TextEditingController(); // hold text
   String? chatId; // hold ID room // patern "username_customer-username_buyer"
   List<Map<String, dynamic>>? allMessage; // Hold all message sort by Time
+  late GoogleMapController mapController;
   @override
   void initState() {
     // TODO: implement initState
@@ -35,6 +38,7 @@ class _ChatScreenState extends State<ChatScreen> {
         message.sender = widget.username['username'];
         message.reciever = widget.order!['product']['seller']['username'];
         chatId = widget.order!['username']['username'] + '-' + widget.order!['product']['seller']['username'];
+        
       });
     }
     _initializeData();
@@ -42,10 +46,10 @@ class _ChatScreenState extends State<ChatScreen> {
 
   Future<void> _initializeData() async {
     List<Map<String, dynamic>> temp = await getMessages(chatId); //get message
+    
     if (mounted){
       setState(() {
         allMessage = temp;
-        // allMessage = temp..sort((a, b) => b['time'].compareTo(a['time']));
       });
 
     }
@@ -82,7 +86,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
   void _getCurrentLocation() async {
     // get location 
     Position position = await determinePosition(); // determinePosition เอาไว้หา latitude กับ longitude
-
+    // Position? temp2 = await determinePosition(); 
     await FirebaseFirestore.instance.collection('ChatRoom').doc(chatId).collection('Message').add(
       
       {
@@ -95,10 +99,28 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
         'longitude': position.longitude,
       }
     );
+    if (mounted){
+
+      setState(() {
+        message.message = '';
+      });
+    }
+    // _markerPosition = LatLng(widget.latitude, widget.longitude);
     _initializeData(); // requery
   }
 
+  void _onMapTapped(LatLng tappedPoint) async {
+    FirebaseFirestore firestore = FirebaseFirestore.instance;
 
+    QuerySnapshot snapshot = await firestore.collection('ChatRoom').doc(chatId).collection('Message').where('latitude', isNull: false).get();
+    snapshot.docs.forEach((doc) async {
+      // Get the document ID
+      String docId = doc.id;
+      // Update the latitude field with the new value
+      await firestore.collection('ChatRoom').doc(chatId).collection('Message').doc(docId).update({'latitude': tappedPoint.latitude,'longitude':tappedPoint.longitude});
+    });
+    
+  }
 
 
   @override
@@ -113,10 +135,8 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                 reverse: true,
                 itemCount: allMessage?.length,
                 itemBuilder: (context,index) {  
-                  print(allMessage);
                   Map<String, dynamic>? messageData = allMessage?[index];
 
-                  // if (messageData == null) return SizedBox();
                   bool isSender = messageData?['sender'] == widget.username['username']; 
 
                   return Container(          
@@ -136,10 +156,24 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                           ? SizedBox(
                               width: 500,
                               height: 500,
-                              child: MapScreen(
-                                latitude: messageData!['latitude'],
-                                longitude: messageData['longitude'],
-                                chatID: chatId,
+                              child: GoogleMap(
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(messageData?['latitude'], messageData?['longitude']),
+                                  zoom: 15,
+                                ),
+                                onMapCreated: (controller) {
+                                  mapController = controller;
+                                },
+                                markers: {
+                                  Marker(
+                                    markerId: MarkerId('Marker'),
+                                    position: LatLng(messageData?['latitude'], messageData?['longitude']),
+                                    infoWindow: InfoWindow(
+                                      title: 'Your Location',
+                                    ),
+                                  ),
+                                },
+                                onTap: _onMapTapped,
                               ),
                             )
                           : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
