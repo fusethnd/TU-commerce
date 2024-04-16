@@ -139,6 +139,7 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                               child: MapScreen(
                                 latitude: messageData!['latitude'],
                                 longitude: messageData['longitude'],
+                                chatID: chatId,
                               ),
                             )
                           : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
