@@ -24,13 +24,12 @@ class MyApp extends StatefulWidget {
 }
 
 class _MyAppState extends State<MyApp> {
-
   var auth = FirebaseAuth.instance;
   var isLogin = false;
 
-  checkLogin() async{
+  checkLogin() async {
     auth.authStateChanges().listen((User? user) {
-      if(user != null && mounted){
+      if (user != null && mounted) {
         setState(() {
           isLogin = true;
         });
@@ -46,17 +45,11 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
-
     return MaterialApp(
-      title: 'Flutter Demo',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: const HomeScreen()
-
-    );
+        title: 'Flutter Demo',
+        theme: ThemeData(
+          primarySwatch: Colors.blue,
+        ),
+        home: const HomeScreen());
   }
 }
-
-
-

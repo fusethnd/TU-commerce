@@ -24,9 +24,18 @@ class NavigationCustomer extends StatefulWidget {
   final List<DocumentSnapshot>? allItem;
   final Map<String, dynamic>? product;
   final Map<String, dynamic>? order;
+  String? chatName;
 
-  NavigationCustomer({Key? key, required this.email,this.temp=2,
-                this.category = '',this.allItem,this.product,this.order}) : super(key: key);
+  NavigationCustomer(
+      {Key? key,
+      required this.email,
+      this.temp = 2,
+      this.category = '',
+      this.allItem,
+      this.product,
+      this.order,
+      this.chatName})
+      : super(key: key);
   // const NavigationCustomer ({super.key});
 
   @override
@@ -35,8 +44,8 @@ class NavigationCustomer extends StatefulWidget {
 
 class _NavigationState extends State<NavigationCustomer> {
   int _selectedIndex = 2;
- // ทุกครั้งที่อยากได้ new navbar ให้เข้ามาหน้านี้แล้วสร้าง  Container() เพิ่มอีกอัน ละอ่านต่อข้างล่าง
-  List<Widget> _widgetOptions  = <Widget>[
+  // ทุกครั้งที่อยากได้ new navbar ให้เข้ามาหน้านี้แล้วสร้าง  Container() เพิ่มอีกอัน ละอ่านต่อข้างล่าง
+  List<Widget> _widgetOptions = <Widget>[
     Container(), // Add default values here or any other appropriate Widget
     Container(),
     Container(),
@@ -51,47 +60,55 @@ class _NavigationState extends State<NavigationCustomer> {
   ];
   late Map<String, dynamic> userData;
 
-
-@override
-void initState() {
-  super.initState();
-  _selectedIndex = widget.temp;
-  _initializeUserData();
-}
-
-void _initializeUserData() async {
-
-  Map<String, dynamic>? user = await getUserByEmail(widget.email);
-  // อ่านต่อตรงนี้ ก็เพิ่มclass ใหม่เวลาเรียกใช้ก็ให้ยิงมาที่นี่่พร้อมกับ temp ย้อนไปดูตัวแปรเริ่มต้นข้างบน
-  if (user != null) {
-    setState(() {
-      userData = user;
-      _widgetOptions = <Widget>[
-        const WalletScreen(),
-        Favorite(username: user),
-        CustomerHome(username: user,),
-        InboxScreen(username: user),
-        Profile(email: user),
-        EditProfile(user: user),
-        ShowCategory(category: widget.category,allItem: widget.allItem,),
-        CheckOut(username: user,product: widget.product,),
-        ChatScreen(username: user,order: widget.order,),
-        ToShipScreen(username: user),
-        HistoryCustomer(username:user),
-      ];
-      print('---------------');
-      print(userData);
-    });
-  }else{
-    print('its null');
+  @override
+  void initState() {
+    super.initState();
+    _selectedIndex = widget.temp;
+    _initializeUserData();
   }
-}
+
+  void _initializeUserData() async {
+    Map<String, dynamic>? user = await getUserByEmail(widget.email);
+    // อ่านต่อตรงนี้ ก็เพิ่มclass ใหม่เวลาเรียกใช้ก็ให้ยิงมาที่นี่่พร้อมกับ temp ย้อนไปดูตัวแปรเริ่มต้นข้างบน
+    if (user != null) {
+      setState(() {
+        userData = user;
+        _widgetOptions = <Widget>[
+          const WalletScreen(),
+          Favorite(username: user),
+          CustomerHome(
+            username: user,
+          ),
+          InboxScreen(username: user),
+          Profile(email: user),
+          EditProfile(user: user),
+          ShowCategory(
+            category: widget.category,
+            allItem: widget.allItem,
+          ),
+          CheckOut(
+            username: user,
+            product: widget.product,
+          ),
+          ChatScreen(
+            username: user,
+            order: widget.order,
+            seller: widget.chatName,
+          ),
+          ToShipScreen(username: user),
+          HistoryCustomer(username: user),
+        ];
+        print('---------------');
+        print(userData);
+      });
+    } else {
+      print('its null');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    
     return Scaffold(
-
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
         selectedIndex: _selectedIndex,
@@ -121,7 +138,6 @@ void _initializeUserData() async {
             icon: Icons.account_box,
             // text: 'account',
           ),
-
         ],
       ),
     );
