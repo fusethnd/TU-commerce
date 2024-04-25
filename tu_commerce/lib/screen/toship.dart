@@ -163,7 +163,12 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
                                     if (orders!.length == 1){
                                       await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).delete();
-                                    }
+                                      await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).collection('Message').get().then((snapshot) {
+                                        for (DocumentSnapshot doc in snapshot.docs) {
+                                          doc.reference.delete();
+                                        }
+                                      });                                    }
+                                    
                                   }
                                   else {
                                     // ส่งข้อความเข้าแชท
