@@ -152,70 +152,71 @@ class _ChatScreenState extends State<ChatScreen> {
       body: Column(
         children: [
           Expanded(
-              child: allMessage != null
-                  ? ListView.builder(
-                      reverse: true,
-                      itemCount: allMessage?.length,
-                      itemBuilder: (context, index) {
-                        Map<String, dynamic>? messageData = allMessage?[index];
+            child: allMessage != null? ListView.builder(
+              reverse: true,
+              itemCount: allMessage?.length,
+              itemBuilder: (context, index) {
+                Map<String, dynamic>? messageData = allMessage?[index];
 
-                        bool isSender = messageData?['sender'] ==
-                            widget.username['username'];
+                bool isSender = messageData?['sender'] ==
+                    widget.username['username'];
 
-                        return Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 16, vertical: 8),
-                            margin: EdgeInsets.symmetric(
-                                vertical: 4, horizontal: 8),
-                            decoration: BoxDecoration(
-                              // ใส่กรอบ
-                              color: isSender ? Colors.blue : Colors.grey[300],
-                              borderRadius: BorderRadius.circular(8),
-                            ),
-                            alignment: isSender
-                                ? Alignment.centerRight
-                                : Alignment
-                                    .centerLeft, // เอาไว้เช็คว่าเป็นคนส่งมั้ยถ้าเป็นจะโยนแชทไว้ฝั่งขวา
+                return Container(
+                    padding: EdgeInsets.symmetric(
+                        horizontal: 16, vertical: 8),
+                    margin: EdgeInsets.symmetric(
+                        vertical: 4, horizontal: 8),
+                    decoration: BoxDecoration(
+                      // ใส่กรอบ
+                      color: isSender ? Colors.blue : Colors.grey[300],
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    alignment: isSender
+                        ? Alignment.centerRight
+                        : Alignment
+                            .centerLeft, // เอาไว้เช็คว่าเป็นคนส่งมั้ยถ้าเป็นจะโยนแชทไว้ฝั่งขวา
 
-                            child: messageData?['link'] !=
-                                    null // เช็ค 3 อย่างถ้าเป็นแบบไหนจะโชว์อันนั้น เช็คว่าเป็นภาพมั้ยจาก field link
-                                ? Image.network(messageData!['link']) //
-                                : (messageData?['message'] !=
-                                        null // เช็คว่า เป็น field message มั้ยจะโชว์เป็น text
-                                    ? Text(messageData!['message']) //
-                                    : (messageData?['latitude'] !=
-                                            null // เช็คว่า เป็น latitude มั้ยจะโชว์เป็น map
-                                        ? SizedBox(
-                                            width: 500,
-                                            height: 500,
-                                            child: GoogleMap(
-                                              initialCameraPosition:
-                                                  CameraPosition(
-                                                target: LatLng(
-                                                    messageData?['latitude'],
-                                                    messageData?['longitude']),
-                                                zoom: 15,
-                                              ),
-                                              onMapCreated: (controller) {
-                                                mapController = controller;
-                                              },
-                                              markers: {
-                                                Marker(
-                                                  markerId: MarkerId('Marker'),
-                                                  position: LatLng(
-                                                      messageData?['latitude'],
-                                                      messageData?[
-                                                          'longitude']),
-                                                  infoWindow: InfoWindow(
-                                                    title: 'Your Location',
-                                                  ),
-                                                ),
-                                              },
-                                              onTap: _onMapTapped,
-                                            ),
-                                          )
-                                        : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
-                                    )));
+                    child: messageData?['link'] !=
+                            null // เช็ค 3 อย่างถ้าเป็นแบบไหนจะโชว์อันนั้น เช็คว่าเป็นภาพมั้ยจาก field link
+                        ? Image.network(messageData!['link']) //
+                        : (messageData?['message'] !=
+                                null // เช็คว่า เป็น field message มั้ยจะโชว์เป็น text
+                            ? Text(messageData!['message']) //
+                            : (messageData?['latitude'] !=
+                                    null // เช็คว่า เป็น latitude มั้ยจะโชว์เป็น map
+                                ? SizedBox(
+                                    width: 500,
+                                    height: 500,
+                                    child: GoogleMap(
+                                      initialCameraPosition:
+                                          CameraPosition(
+                                        target: LatLng(
+                                            messageData?['latitude'],
+                                            messageData?['longitude']),
+                                        zoom: 15,
+                                      ),
+                                      onMapCreated: (controller) {
+                                        mapController = controller;
+                                      },
+                                      markers: {
+                                        Marker(
+                                          markerId: MarkerId('Marker'),
+                                          position: LatLng(
+                                              messageData?['latitude'],
+                                              messageData?[
+                                                  'longitude']),
+                                          infoWindow: InfoWindow(
+                                            title: 'Your Location',
+                                          ),
+                                        ),
+                                      },
+                                      onTap: _onMapTapped,
+                                    ),
+                                  )
+                                : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
+                            )
+                          )
+                        );
                       },
                     )
                   : CircularProgressIndicator()),
