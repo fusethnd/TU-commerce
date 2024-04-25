@@ -111,6 +111,10 @@ class _NavigationState extends State<NavigationCustomer> {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
+        color: Colors.white,
+        backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
+        activeColor: const Color.fromRGBO(54, 91, 109, 1.0),
+        iconSize: 30,
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
           setState(() {
@@ -119,7 +123,7 @@ class _NavigationState extends State<NavigationCustomer> {
         },
         tabs: const [
           GButton(
-            icon: Icons.inventory,
+            icon: Icons.wallet,
             // text: 'Stock',
           ),
           GButton(
@@ -127,15 +131,16 @@ class _NavigationState extends State<NavigationCustomer> {
             // text: 'Wallet',
           ),
           GButton(
-            icon: Icons.home,
+            icon: Icons.home_rounded,
+            iconSize: 50,
             // text: 'Home',
           ),
           GButton(
-            icon: Icons.inbox,
+            icon: Icons.email,
             // text: 'Inbox',
           ),
           GButton(
-            icon: Icons.account_box,
+            icon: Icons.account_circle_rounded,
             // text: 'account',
           ),
         ],

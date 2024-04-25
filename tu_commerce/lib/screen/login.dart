@@ -103,7 +103,7 @@ class _LoginState extends State<Login> {
                             borderRadius: BorderRadius.circular(50),
                           ),
                           prefixIcon: const Icon(
-                            Icons.person_outline,
+                            Icons.account_circle_rounded,
                             color: Color.fromRGBO(65, 193, 186, 1.0),
                           ),
                           hintText: 'Username',
@@ -154,7 +154,7 @@ class _LoginState extends State<Login> {
                         ),
                         child: const Text('Login'),
                       ),
-                      const SizedBox(height: 40),
+                      const Spacer(),
                       Row(
                         children: [
                           const Text("Don't have an account?"),

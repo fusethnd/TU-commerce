@@ -123,7 +123,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
                 ),
                 hintStyle: const TextStyle(color: Colors.grey),
                 filled: true,
-                fillColor: const Color.fromRGBO(54, 91, 109, 1.0),
+                fillColor: const Color.fromRGBO(219, 241, 240, 1.0),
                 contentPadding: const EdgeInsets.only(left: 25),
               ),
               elevatedButtonTheme: ElevatedButtonThemeData(

@@ -18,7 +18,7 @@ class InboxScreen extends StatefulWidget {
 class _InboxScreenState extends State<InboxScreen> {
   List<dynamic>? orders;
   List<dynamic>? chatRooms;
-  late StreamSubscription<List<DocumentSnapshot>>? _chatRoomSubscription;
+  // late StreamSubscription<List<DocumentSnapshot>>? _chatRoomSubscription;
   @override
   void initState() {
     super.initState();
@@ -28,7 +28,7 @@ class _InboxScreenState extends State<InboxScreen> {
 
   void dispose() {
     // Cancel the stream subscription
-    _chatRoomSubscription?.cancel();
+    // _chatRoomSubscription?.cancel();
     super.dispose();
   }
 
