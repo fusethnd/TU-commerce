@@ -95,26 +95,273 @@ class _WalletScreenState extends State<WalletScreen> {
       );
     }
     return Scaffold(
+
+      
         appBar: AppBar(
-          title: Text('Wallet'),
+          centerTitle: true,
+          title: Text('Wallet',style: TextStyle(color: Color.fromRGBO(54, 91, 109, 1.0), fontWeight: FontWeight.bold,),),
+              backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
+              toolbarHeight: 100,
+              automaticallyImplyLeading: false,
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                 
+                )
+              ),
+
         ),
+
+
+
         body: Column(children: [
-          Text("Balance: ${balance.toString()}"),
-          Text("Bank number: ${bankNumber}"),
-          Text("Bank name: ${bankName}"),
-          Text("Name: ${name}"),
-          Row(children: [
-            ElevatedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> TopUpScreen(creditID: creditID,userCredit: userCredit!,)));
-            }, child: Text("Top up")),
-            ElevatedButton(onPressed: (){
-              Navigator.push(context, MaterialPageRoute(builder: (context)=> WithdrawScreen(creditID: creditID,userCredit: userCredit!,)));
-            }, child: Text("Withdraw"))
-          ],
+          SizedBox(height: 20,),
+          Container(
+            padding: EdgeInsets.all(20.0),
+            width: 350.0, 
+            height: 120.0,
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: const Color.fromRGBO(65, 193, 186, 1.0)
+              ),
+              child: RichText(
+                
+              text: TextSpan(
+                children: [
+                  
+                  const TextSpan(
+                    text: "Total Balance \n ", 
+                    
+                    style: TextStyle(
+                      color: Color.fromRGBO(54, 91, 109, 1.0), 
+                      fontSize: 16, 
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const WidgetSpan(
+                       child: SizedBox(height: 40), 
+                  ),
+                  TextSpan(
+                    text: "฿ ${balance.toString()}", 
+                    style: const TextStyle(
+                      color: Color.fromRGBO(54, 91, 109, 1.0), 
+                      fontSize: 30, 
+                      fontWeight: FontWeight.bold, 
+                    ),
+                  ),
+                  
+      ],
+    ),
+  ),
+              
+              
           ),
-          ElevatedButton(onPressed: (){
-            Navigator.push(context, MaterialPageRoute(builder: (context)=> EditBankAccount(bankAccountID: bankAccountID,)));
-          }, child: Text("Edit BankAccount"))
+
+
+Padding(
+  padding: EdgeInsets.all(20.0), // Add padding around the Row
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.center,
+    children: [
+      ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => TopUpScreen(creditID: creditID, userCredit: userCredit!)),
+          );
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color.fromRGBO(54, 91, 109, 1.0)),
+          foregroundColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+          textStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 40), // Horizontal padding inside the button
+          ),
+        ),
+        child: Text("Top up"),
+      ),
+      SizedBox(width: 40), // Space between buttons
+      ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => WithdrawScreen(creditID: creditID, userCredit: userCredit!)),
+          );
+        },
+        style: ButtonStyle(
+          backgroundColor: MaterialStateProperty.all(Color.fromRGBO(54, 91, 109, 1.0)),
+          foregroundColor: MaterialStateProperty.all(Color.fromRGBO(255, 255, 255, 1)),
+          textStyle: MaterialStateProperty.all(
+            const TextStyle(
+              fontSize: 16,
+            ),
+          ),
+          padding: MaterialStateProperty.all(
+            EdgeInsets.symmetric(horizontal: 40), // Horizontal padding inside the button
+          ),
+        ),
+        child: Text("Withdraw"),
+      ),
+    ],
+  ),
+),
+
+
+
+
+Container(
+  padding: EdgeInsets.symmetric(horizontal: 16.0), // Add horizontal padding to the container
+  child: Row(
+    mainAxisAlignment: MainAxisAlignment.spaceAround, // Aligns the children with space between them
+    children: [
+      const Text(
+        "Your Bank Account",
+        style: TextStyle(
+          fontSize: 16, // Adjust the font size as needed
+          // Add other text styling as needed
+        ),
+      ),
+      ElevatedButton(
+        onPressed: () {
+          Navigator.push(
+            context, 
+            MaterialPageRoute(builder: (context) => EditBankAccount(bankAccountID: bankAccountID)),
+          );
+        },
+        style: ElevatedButton.styleFrom(
+          foregroundColor: Color.fromARGB(255, 119, 119, 119),  
+          backgroundColor: Colors.transparent, 
+          splashFactory: NoSplash.splashFactory,
+          elevation: 0,
+          
+          
+        ),
+        child: Text("Edit"),
+      ),
+    ],
+  ),
+),
+
+
+
+// Container(
+//   padding: EdgeInsets.all(20.0),
+//   width: 350.0,
+//   height: 150.0,
+//   decoration: BoxDecoration(
+//     borderRadius: BorderRadius.circular(20),
+//     color: Color.fromRGBO(65, 193, 186, 1.0),
+//   ),
+//   child: Column(
+    
+//     children: [
+//       Icon(Icons.attach_money),
+//       Text("Bank number: ${bankNumber}"),
+//       Text("Bank name: ${bankName}"),
+//       Text("Name: ${name}"),
+//     ],
+//   ),
+// )
+
+
+Container(
+  padding: EdgeInsets.all(20.0),
+  width: 350.0,
+  
+  decoration: BoxDecoration(
+    borderRadius: BorderRadius.circular(20),
+    color: Color.fromRGBO(65, 193, 186, 1.0),
+  ),
+  child: Row( 
+    children: [
+      // First Column: Icon
+      Icon(Icons.attach_money, size: 48.0, color: Color.fromRGBO(54, 91, 109, 1.0)),
+      SizedBox(width: 16.0), 
+      
+      // Second Column: Texts
+      Expanded( 
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start, 
+          mainAxisAlignment: MainAxisAlignment.center, 
+          children: [
+
+            // Text("Account ${name}", style: TextStyle(color: Color.fromRGBO(54, 91, 109, 1.0))),
+            // SizedBox(height: 8.0),
+
+            Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // This will align "Account" left and `${name}` right
+                  children: [
+                    const Text(
+                      "Account",
+                      style: TextStyle(
+                        color: Color.fromRGBO(54, 91, 109, 1.0), // Your color
+                      ),
+                    ),
+                    Text(
+                      "${name}",
+                      style: const TextStyle(
+                        color: Color.fromRGBO(54, 91, 109, 1.0), // Your color
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0), 
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // This will align "Account" left and `${name}` right
+                  children: [
+                    const Text(
+                      "Account No.",
+                      style: TextStyle(
+                        color: Color.fromRGBO(54, 91, 109, 1.0), // Your color
+                      ),
+                    ),
+                    Text(
+                      "${bankNumber}",
+                      style: const TextStyle(
+                        color: Color.fromRGBO(54, 91, 109, 1.0), // Your color
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0), 
+
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween, // This will align "Account" left and `${name}` right
+                  children: [
+                    const Text(
+                      "Bank",
+                      style: TextStyle(
+                        color: Color.fromRGBO(54, 91, 109, 1.0), // Your color
+                      ),
+                    ),
+                    Text(
+                      "${bankName}",
+                      style: const TextStyle(
+                        color: Color.fromRGBO(54, 91, 109, 1.0), // Your color
+                      ),
+                    ),
+                  ],
+                ),
+                SizedBox(height: 8.0), 
+
+
+            
+          ],
+        ),
+      ),
+    ],
+  ),
+)
+
+          
+          
+
+          
+          
         ]));
   }
 }
