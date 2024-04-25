@@ -85,6 +85,7 @@ class _NavigationState extends State<NavigationCustomer> {
           ShowCategory(
             category: widget.category,
             allItem: widget.allItem,
+            username: user,
           ),
           CheckOut(
             username: user,
