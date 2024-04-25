@@ -35,6 +35,8 @@ class _FavoriteState extends State<Favorite> {
               prodName: widget.username['favorite'][index]['prodName'].toString(),
               prodDetail: widget.username['favorite'][index]['details'].toString(),
               price: widget.username['favorite'][index]['price'].toString(),
+              username: widget.username,
+              item: widget.username['favorite'][index],
               onPressed: (){
                           updateFavoriteStatus(index); //ถ้ากดหัวใจจะเข้าคำสั่งนี้
                         },
