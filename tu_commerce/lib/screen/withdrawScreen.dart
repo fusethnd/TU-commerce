@@ -11,10 +11,10 @@ class WithdrawScreen extends StatefulWidget {
       : super(key: key);
 
   @override
-  State<WithdrawScreen> createState() => _TopUpScreenState();
+  State<WithdrawScreen> createState() => _WithdrawScreeState();
 }
 
-class _TopUpScreenState extends State<WithdrawScreen> {
+class _WithdrawScreeState extends State<WithdrawScreen> {
   @override
   final _formKey = GlobalKey<FormState>();
   final _amountController = TextEditingController();
@@ -38,22 +38,23 @@ class _TopUpScreenState extends State<WithdrawScreen> {
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text("Your balance is not enough")),
           );
+        } else {
+          double newBalance = creditDoc.data()?['balance'].toDouble() -
+              double.parse(_amountController.text.trim());
+          await FirebaseFirestore.instance
+              .collection("Credit")
+              .doc(widget.creditID)
+              .update({'balance': newBalance});
+
+          Navigator.pushAndRemoveUntil(
+              context,
+              MaterialPageRoute(
+                builder: (context) => NavigationCustomer(
+                    email: FirebaseAuth.instance.currentUser!.email.toString(),
+                    temp: 0),
+              ),
+              (Route<dynamic> route) => false);
         }
-
-        double newBalance = creditDoc.data()?['balance'].toDouble() - double.parse(_amountController.text.trim());
-        await FirebaseFirestore.instance
-            .collection("Credit")
-            .doc(widget.creditID)
-            .update({'balance': newBalance});
-
-        Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-              builder: (context) => NavigationCustomer(
-                  email: FirebaseAuth.instance.currentUser!.email.toString(),
-                  temp: 0),
-            ),
-            (Route<dynamic> route) => false);
       } on FirebaseAuthException catch (e) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text(e.message ?? 'Error, Please try again later')),
