@@ -82,7 +82,14 @@ class _CheckOutState extends State<CheckOut> {
                   // await updateUser(widget.username,widget.product,'No');
                   print('map order ---------------');
                   // print(order as Map<String, dynamic>);
-                  Map<String, dynamic> orderMap = order!.toMap();
+                  // Map<String, dynamic> orderMap = order!.toMap();
+                  Map<String, dynamic> orderMap =
+                    {
+                      'roomName':nameRoom,
+                      'customer':widget.username,
+                      'seller':widget.product!['seller']
+                    };
+
                   Navigator.pushReplacement(
                     context, 
                     MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,))
