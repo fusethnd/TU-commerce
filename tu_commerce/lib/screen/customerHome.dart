@@ -197,49 +197,57 @@ class CustomerHomeState extends State<CustomerHome> {
                 bool favorite = isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav); // check ว่าตอนนี้กดปุ่มหรือยังเอาไว้โชว์ สี
                 String? imageUrl = searchItem[index]['link']; // link image
 
-                return GridView(
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                  children: [ 
-                    GestureDetector(
+                // return GridView(
+                //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                //   children: [ 
+                //     GestureDetector(
+                //       onTap: () {
+                //         Navigator.push(
+                //           context, 
+                //           MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 7,product: searchItem[index].data() as  Map<String, dynamic>?,))
+                //         );
+                //       },
+                //       child: ProductBox(
+                //         imageUrl: imageUrl,
+                //         prodName: searchItem[index]['prodName'].toString(),
+                //         prodDetail: searchItem[index]['details'].toString(),
+                //         price: searchItem[index]['price'].toString(),
+                //         onPressed: () async {
+                //                     updateFavoriteStatus(index);
+                //                   },
+                //         favorite: favorite
+                //       ),
+                //     ),
+                //   ]
+                  
+                return GestureDetector(
                       onTap: () {
                         Navigator.push(
                           context, 
                           MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 7,product: searchItem[index].data() as  Map<String, dynamic>?,))
                         );
                       },
-                      child: ProductBox(
-                        imageUrl: imageUrl,
-                        prodName: searchItem[index]['prodName'].toString(),
-                        prodDetail: searchItem[index]['details'].toString(),
-                        price: searchItem[index]['price'].toString(),
-                        onPressed: () async {
-                                    updateFavoriteStatus(index);
-                                  },
-                        favorite: favorite
+                  child: Card(
+                    child: ListTile(
+                      leading: CircleAvatar(
+                        child: Image.network(imageUrl!),
+                      ),
+                      title: Text(searchItem[index]['prodName'].toString()),
+                      subtitle: Row(
+                        children: [
+                          Expanded(child: Text(searchItem[index]['price'].toString()),),
+                          Expanded(
+                            child: ElevatedButton(
+                              onPressed: () async {
+                                updateFavoriteStatus(index);
+                              }, 
+                              child: Icon(Icons.favorite,color: favorite ? Colors.pink : Colors.black,),
+                            )
+                          )
+                        ],
                       ),
                     ),
-                  ]
-                  // child: Card(
-                  //   child: ListTile(
-                  //     leading: CircleAvatar(
-                  //       child: Image.network(imageUrl!),
-                  //     ),
-                  //     title: Text(searchItem[index]['prodName'].toString()),
-                  //     subtitle: Row(
-                  //       children: [
-                  //         Expanded(child: Text(searchItem[index]['price'].toString()),),
-                  //         Expanded(
-                  //           child: ElevatedButton(
-                  //             onPressed: () async {
-                  //               updateFavoriteStatus(index);
-                  //             }, 
-                  //             child: Icon(Icons.favorite,color: favorite ? Colors.pink : Colors.black,),
-                  //           )
-                  //         )
-                  //       ],
-                  //     ),
-                  //   ),
-                  // )
+                  )
                 );
               }
             ),
