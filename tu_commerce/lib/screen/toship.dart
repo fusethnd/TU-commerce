@@ -82,6 +82,13 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                 ignoring: (status > 0) , 
                                 child:IconButton(onPressed: () async{
                                     await updateStatus(order,0,index); // เปลี่ยน status หลังกด
+                                    // if (widget.username.containsKey('tokenNotice')){
+                                    //   await _notificationService.requestNotificationPermissions();
+                                    //   // print("Token: " + widget.username['tokenNotice']);
+                                    //   await sendNotificationToUser(widget.username['tokenNotice'], "New Message", "You have a new message!");
+                                    //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                    //
+                                    // }
                                     setState(() {
                                       _initializeData(); //ให้มันไปรี query พวกไอเท็มๆ ต่างๆใหม่บรรทัดสำคัญเพราะว่ามันจะทำให้สี status เปลี่ยนทันที
                                     });
