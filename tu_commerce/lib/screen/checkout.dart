@@ -92,7 +92,7 @@ class _CheckOutState extends State<CheckOut> {
 
                   Navigator.pushReplacement(
                     context, 
-                    MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,))
+                    MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.username['username'],))
                   );
                 }else {
                     ScaffoldMessenger.of(context).showSnackBar(
