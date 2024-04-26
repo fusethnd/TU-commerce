@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'navigationbarCustomer.dart';
 
 class TopUpScreen extends StatefulWidget {
@@ -32,7 +33,8 @@ class _TopUpScreenState extends State<TopUpScreen> {
             .collection("Credit")
             .doc(widget.creditID)
             .get();
-        double newBalance = creditDoc.data()?['balance'].toDouble() + double.parse(_amountController.text.trim());
+        double newBalance = creditDoc.data()?['balance'].toDouble() +
+            double.parse(_amountController.text.trim());
 
         await FirebaseFirestore.instance
             .collection("Credit")
@@ -59,10 +61,54 @@ class _TopUpScreenState extends State<TopUpScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Top up"),
+          centerTitle: true,
+          title: const Text(
+            'Top Up',
+            style: TextStyle(
+              color: Color.fromRGBO(54, 91, 109, 1.0),
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
+          toolbarHeight: 100,
         ),
         body: Column(children: [
-          Text("Your Balance ${widget.userCredit["balance"]}"),
+          const SizedBox(
+            height: 20,
+          ),
+          Container(
+            padding: const EdgeInsets.all(20.0),
+            width: 350.0,
+            height: 120.0,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(20),
+                color: const Color.fromRGBO(98, 221, 214, 1.0)),
+            child: RichText(
+              text: TextSpan(
+                children: [
+                  const TextSpan(
+                    text: "Total Balance \n ",
+                    style: TextStyle(
+                      color: Color.fromRGBO(54, 91, 109, 1.0),
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                  const WidgetSpan(
+                    child: SizedBox(height: 40),
+                  ),
+                  TextSpan(
+                    text: "฿ ${widget.userCredit["balance"]}",
+                    style: const TextStyle(
+                      color: Color.fromRGBO(54, 91, 109, 1.0),
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
           Form(
             key: _formKey,
             child: Column(children: [
@@ -72,13 +118,40 @@ class _TopUpScreenState extends State<TopUpScreen> {
                   keyboardType: TextInputType.number,
                   validator: (value) =>
                       value!.isEmpty ? 'Enter your amount' : null),
-              ElevatedButton(
-                onPressed: () {
-                  _formKey.currentState!.save();
-                  _topUp();
-                },
-                child: const Text('TopUp'),
+              Padding(
+                padding: const EdgeInsets.all(
+                    30.0), // Adjust the outer padding value as needed
+                child: ElevatedButton(
+                  onPressed: () {
+                    _formKey.currentState!.save();
+                    _topUp();
+                  },
+                  style: ButtonStyle(
+                    backgroundColor: MaterialStateProperty.all(
+                        const Color.fromRGBO(54, 91, 109, 1.0)),
+                    foregroundColor: MaterialStateProperty.all(
+                        const Color.fromRGBO(255, 255, 255, 1)),
+                    textStyle: MaterialStateProperty.all(
+                      const TextStyle(
+                        fontSize: 16,
+                      ),
+                    ),
+                    padding: MaterialStateProperty.all(
+                      const EdgeInsets.symmetric(horizontal: 40),
+                    ),
+                  ),
+                  child: const Text("TopUp"),
+                ),
               ),
+              
+              
+              // ElevatedButton(
+              //   onPressed: () {
+              //     _formKey.currentState!.save();
+              //     _topUp();
+              //   },
+              //   child: const Text('TopUp'),
+              // ),
             ]),
           ),
         ]));

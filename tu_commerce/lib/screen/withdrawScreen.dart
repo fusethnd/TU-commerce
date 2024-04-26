@@ -79,12 +79,12 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
           backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
           toolbarHeight: 100,
         ),
-        
         body: Align(
-          alignment: Alignment.center,
-          child: Column(
-            children: [  
-              const SizedBox(height: 20,),
+            alignment: Alignment.center,
+            child: Column(children: [
+              const SizedBox(
+                height: 20,
+              ),
               Container(
                 padding: const EdgeInsets.all(20.0),
                 width: 350.0,
@@ -118,12 +118,13 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                   ),
                 ),
               ),
-              const SizedBox(height: 20,),
+              const SizedBox(
+                height: 20,
+              ),
               Form(
                 key: _formKey,
-                child: Column(
-                  children: [
-                    Container(
+                child: Column(children: [
+                  Container(
                       padding: const EdgeInsets.all(20.0),
                       width: 350.0,
                       height: 200.0,
@@ -133,7 +134,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const Text( 
+                          const Text(
                             "Withdraw \n ",
                             style: TextStyle(
                               color: Color.fromRGBO(54, 91, 109, 1.0),
@@ -144,23 +145,23 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                             children: [
                               Flexible(
                                 child: TextFormField(
-                                  textAlign: TextAlign.end,
-                                  style: const TextStyle(
-                                    color: Color.fromRGBO(54, 91, 109, 1.0),
-                                    fontSize: 30,
-                                    fontWeight: FontWeight.bold
-                                  ),
-                                  controller: _amountController,
-                                  decoration: const InputDecoration(
-                                    hintText: "Amount",
-                                    hintStyle: TextStyle(color: Color.fromRGBO(54, 91, 109, 0.5))
-                                    ),
-                                  keyboardType: TextInputType.number,
-                                  validator: (value) =>
-                                      value!.isEmpty ? 'Enter your amount' : null
-                                ),
+                                    textAlign: TextAlign.end,
+                                    style: const TextStyle(
+                                        color: Color.fromRGBO(54, 91, 109, 1.0),
+                                        fontSize: 30,
+                                        fontWeight: FontWeight.bold),
+                                    controller: _amountController,
+                                    decoration: const InputDecoration(
+                                        hintText: "Amount",
+                                        hintStyle: TextStyle(
+                                            color: Color.fromRGBO(
+                                                54, 91, 109, 0.5))),
+                                    keyboardType: TextInputType.number,
+                                    validator: (value) => value!.isEmpty
+                                        ? 'Enter your amount'
+                                        : null),
                               ),
-                              const Text( 
+                              const Text(
                                 " ฿",
                                 style: TextStyle(
                                   color: Color.fromRGBO(54, 91, 109, 1.0),
@@ -169,23 +170,63 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          const Row(
+                            children: [
+                              Padding(
+                                padding: EdgeInsets.all(
+                                    8.0), // Adjust the padding value as needed
+                                child: Text(
+                                  "*You will get your money in 3 days",
+                                  style: TextStyle(
+                                    color: Color.fromRGBO(54, 91, 109, 1.0),
+                                    fontSize: 10,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
                         ],
-                      ) 
-                    ),
-                    ElevatedButton(
+                      )),
+
+
+                  Padding(
+                    padding: const EdgeInsets.all(
+                        30.0), // Adjust the outer padding value as needed
+                    child: ElevatedButton(
                       onPressed: () {
                         _formKey.currentState!.save();
                         _topUp();
                       },
-                      child: const Text('Withdraw'),
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(
+                            const Color.fromRGBO(54, 91, 109, 1.0)),
+                        foregroundColor: MaterialStateProperty.all(
+                            const Color.fromRGBO(255, 255, 255, 1)),
+                        textStyle: MaterialStateProperty.all(
+                          const TextStyle(
+                            fontSize: 16,
+                          ),
+                        ),
+                        padding: MaterialStateProperty.all(
+                          const EdgeInsets.symmetric(
+                              horizontal:
+                                  40), 
+                        ),
+                      ),
+                      child: const Text("Withdraw"),
                     ),
-                  ]
-                ),
+                  ),
+
+                  // ElevatedButton(
+                  //   onPressed: () {
+                  //     _formKey.currentState!.save();
+                  //     _topUp();
+                  //   },
+                  //   child: const Text('Withdraw'),
+                  // ),
+                ]),
               ),
-            ]
-          )
-        )
-    );
+            ])));
   }
 }

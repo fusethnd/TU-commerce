@@ -5,8 +5,10 @@ import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 
 class EditBankAccount extends StatefulWidget {
   final String bankAccountID;
-  final Map<String,dynamic> username;
-  EditBankAccount({Key? key, required this.bankAccountID,required this.username}) : super(key: key);
+  final Map<String, dynamic> username;
+  EditBankAccount(
+      {Key? key, required this.bankAccountID, required this.username})
+      : super(key: key);
 
   @override
   State<EditBankAccount> createState() => _EditBankAccountState();
@@ -22,8 +24,10 @@ class _EditBankAccountState extends State<EditBankAccount> {
   _editBankAccount() async {
     if (_formKey.currentState!.validate()) {
       try {
-
-        await FirebaseFirestore.instance.collection("BankAccount").doc(widget.bankAccountID).update({
+        await FirebaseFirestore.instance
+            .collection("BankAccount")
+            .doc(widget.bankAccountID)
+            .update({
           "bankName": _bankNameController.text.trim(),
           "bankNumber": _bankNumberController.text.trim(),
           "name": _nameController.text.trim(),
@@ -48,10 +52,16 @@ class _EditBankAccountState extends State<EditBankAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
       appBar: AppBar(
         centerTitle: true,
-        title: Text("Edit bank account"),),
+        title: Text(
+          "Edit bank account",
+            style: TextStyle(
+              color: Color.fromRGBO(60, 91, 109, 1.0),
+              fontWeight: FontWeight.bold,
+            ),
+        ),
+      ),
       body: Form(
         key: _formKey,
         child: Column(
