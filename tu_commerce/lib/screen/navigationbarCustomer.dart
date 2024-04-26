@@ -110,7 +110,7 @@ class _NavigationState extends State<NavigationCustomer> {
   @override
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
-    final bool isSmallScreen = screenWidth < 400;
+    final bool isSmallScreen = screenWidth < 430;
     
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),

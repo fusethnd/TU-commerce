@@ -25,8 +25,8 @@ class _InboxScreenState extends State<InboxScreen> {
   void initState() {
     super.initState();
     _initializeData();
-    print(widget.username['shoppingMode']);
-    print(orders);
+    // print(widget.username['shoppingMode']);
+    // print(orders);
   }
 
   void dispose() {
@@ -37,11 +37,12 @@ class _InboxScreenState extends State<InboxScreen> {
 
   Future<void> _initializeData() async {
     try {
-      List<Map<String,dynamic>?> storeLast = [];
+      List<Map<String, dynamic>?> storeLast = [];
       List<DocumentSnapshot> temp = await getOrders(
           widget.username['username'], widget.username['shoppingMode']);
       List<DocumentSnapshot> temp2 = await getChatRoom(
           widget.username['username'], widget.username['shoppingMode']);
+        
       print('temp2 ----------');
       print(temp2);
       // for (DocumentSnapshot roomSnapshot in temp2) {
@@ -53,6 +54,7 @@ class _InboxScreenState extends State<InboxScreen> {
       //   storeLast.add(lastMessageData);
       //
       // }
+      
       if (mounted) {
         setState(() {
           orders = temp;
@@ -62,6 +64,44 @@ class _InboxScreenState extends State<InboxScreen> {
     } catch (e) {
       print('Error initializing data: $e');
     }
+  }
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getChatRoom(String username, bool shoppingMode) async {
+    CollectionReference chatRoomCollection = FirebaseFirestore.instance.collection('ChatRoom');
+    QuerySnapshot snapshot = await chatRoomCollection.get();
+    List<String> documentIds = snapshot.docs.map((doc) => doc.id).toList();
+    List<String> temp = [];
+    for (String data in documentIds){
+      if (data.contains(username)){
+        temp.add(data);
+      }
+    }
+    List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
+    for (String docID in temp) {
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+          .collection('ChatRoom')
+          .doc(docID)
+          .get();
+
+      documents.add(snapshot);
+    }
+    print(documents);
+    return documents;
+
+    // if (shoppingMode) {
+    //   querySnapshot = await FirebaseFirestore.instance
+    //       .collection('ChatRoom')
+    //       .where(FieldPath.documentId,
+    //           isGreaterThanOrEqualTo: '$username-', isLessThan: '$username~')
+    //       .get();
+    // } else {
+    //   querySnapshot = await FirebaseFirestore.instance
+    //       .collection('ChatRoom')
+    //       .where(FieldPath.documentId,
+    //           isGreaterThanOrEqualTo: '-$username', isLessThan: '~$username')
+    //       .get();
+    // }
+
+    
   }
   // Future<Map<String, dynamic>?> lastMessage(chatId,senderName) async {
   //   Map<String, dynamic>? lastMessageData;
@@ -85,29 +125,12 @@ class _InboxScreenState extends State<InboxScreen> {
   //   print('end-------');
   //   return lastMessageData;
   // }
-  Future<List<QueryDocumentSnapshot<Object?>>> getChatRoom(
-      username, shoppingMode) async {
-    QuerySnapshot querySnapshot;
-    if (shoppingMode) {
-      querySnapshot = await FirebaseFirestore.instance
-          .collection('ChatRoom')
-          .where(FieldPath.documentId,
-              isGreaterThanOrEqualTo: '$username-', isLessThan: '$username~')
-          .get();
-    } else {
-      querySnapshot = await FirebaseFirestore.instance
-          .collection('ChatRoom')
-          .where(FieldPath.documentId,
-              isGreaterThanOrEqualTo: '-$username', isLessThan: '~$username')
-          .get();
-    }
 
-    return querySnapshot.docs;
-  }
+
   Future<Map<String, dynamic>?> message(id) async {
     List<Map<String, dynamic>> messages = await getMessages(id);
     if (messages.isNotEmpty) {
-      print(messages[0]);
+      // print(messages[0]);
       return messages[0];
     } else {
       // Handle the case where there are no messages
@@ -124,16 +147,24 @@ class _InboxScreenState extends State<InboxScreen> {
           title: const Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('MESSAGES', style: TextStyle(fontWeight: FontWeight.bold),),
-              SizedBox(height: 10,),
-              Divider(color: Color.fromRGBO(219, 241, 240, 1.0),)
+              Text(
+                'MESSAGES',
+                style: TextStyle(fontWeight: FontWeight.bold),
+              ),
+              SizedBox(
+                height: 10,
+              ),
+              Divider(
+                color: Color.fromRGBO(219, 241, 240, 1.0),
+              )
             ],
-          ) ,
+          ),
           automaticallyImplyLeading: false,
         ),
-        body: orders == null? const Center(child: CircularProgressIndicator())
+        body: orders == null
+            ? const Center(child: CircularProgressIndicator())
             : ListView.builder(
-              // padding: EdgeInsets.all(10),
+                // padding: EdgeInsets.all(10),
                 itemCount: chatRooms!.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map<String, dynamic> order =
@@ -142,6 +173,7 @@ class _InboxScreenState extends State<InboxScreen> {
                       chatRooms![index].data() as Map<String, dynamic>;
                   // print('---------- length ');
                   // print(chatRooms!.length);
+                  // print(chatRoom);
                   String sellerName = widget.username['shoppingMode']
                       ? (chatRoom['seller']['fname'] +
                           " " +
@@ -150,43 +182,43 @@ class _InboxScreenState extends State<InboxScreen> {
                           " " +
                           chatRoom['customer']['lname'];
                   // print(sellerName);
-                  print('-------');
-                  print(order);
-                  return Column(
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                        username: widget.username,
-                                        order: chatRoom,
-                                        seller: sellerName,
-                                      )));
-                        },
-                        child: Card(
-                          surfaceTintColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(20),
-                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                            titleTextStyle: const TextStyle(
+                  // print('-------');
+                  // print(order);
+                  return Column(children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatScreen(
+                                      username: widget.username,
+                                      order: chatRoom,
+                                      seller: sellerName,
+                                    )));
+                      },
+                      child: Card(
+                        surfaceTintColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(20),
+                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          titleTextStyle: const TextStyle(
                               fontWeight: FontWeight.bold,
                               fontSize: 20,
-                              color: Color.fromRGBO(54, 91, 109, 1.0)
-                            ),
-                            // subtitleTextStyle: ,
+                              color: Color.fromRGBO(54, 91, 109, 1.0)),
+                          // subtitleTextStyle: ,
 
-                            leading: CircleAvatar(),
-                            title: Text(sellerName),
-                          ),
+                          leading: CircleAvatar(),
+                          title: Text(sellerName),
                         ),
                       ),
-                      Divider(color: Color.fromRGBO(219, 241, 240, 1.0),)
-                    ]
-                  );
+                    ),
+                    Divider(
+                      color: Color.fromRGBO(219, 241, 240, 1.0),
+                    )
+                  ]);
                 },
               ),
       ),

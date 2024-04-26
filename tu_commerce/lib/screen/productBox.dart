@@ -49,7 +49,7 @@ class ProductBox extends StatelessWidget {
                   
                   Container(
                     width: double.infinity,
-                    height: 200,
+                    height: 180,
                     decoration: const BoxDecoration(color: Colors.grey),
                     child: Image.network(
                       imageUrl!,

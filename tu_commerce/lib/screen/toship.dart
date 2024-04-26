@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/tabContent.dart';
 
+import '../model/noticeApi.dart';
+
 class ToShipScreen extends StatefulWidget {
   final Map<String, dynamic> username;
   
@@ -17,7 +19,7 @@ class ToShipScreen extends StatefulWidget {
 class _ToShipScreenState extends State<ToShipScreen> {
   List<dynamic>? orders;
   Map<int, bool> _isBottomSheetOpen = {};
-
+  final NotificationService _notificationService = NotificationService();
   @override
   void initState() {
     super.initState();
@@ -89,7 +91,13 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                     //
                                     // }
-                                    setState(() {
+                                    setState(() async {
+                                      if (widget.username.containsKey('tokenNotice')){
+                                        await _notificationService.requestNotificationPermissions();
+                                        // print("Token: " + widget.username['tokenNotice']);
+                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                      }
                                       _initializeData(); //ให้มันไปรี query พวกไอเท็มๆ ต่างๆใหม่บรรทัดสำคัญเพราะว่ามันจะทำให้สี status เปลี่ยนทันที
                                     });
                                   }, icon: Icon(Icons.star),color: status == 0 ? Colors.red : Colors.grey, // 
@@ -111,7 +119,13 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                         'longitude': null,
                                     });
                                     await updateStatus(order,1,index);
-                                    setState(() {
+                                    setState(() async {
+                                      if (widget.username.containsKey('tokenNotice')){
+                                        await _notificationService.requestNotificationPermissions();
+                                        // print("Token: " + widget.username['tokenNotice']);
+                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                      }
                                       _initializeData();
                                     });
                                 }, icon: Icon(Icons.directions_car),color: status == 1 ? Colors.red : Colors.grey,)
@@ -130,7 +144,13 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                         'longitude': null,
                                     });
                                     await updateStatus(order,2,index);
-                                    setState(() {
+                                    setState(() async {
+                                      if (widget.username.containsKey('tokenNotice')){
+                                        await _notificationService.requestNotificationPermissions();
+                                        // print("Token: " + widget.username['tokenNotice']);
+                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                      }
                                       _initializeData();
                                     });
                                 }, icon: Icon(Icons.location_on),color: status == 2 ? Colors.red : Colors.grey,),
@@ -190,9 +210,16 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     });
                                     // ถ้าเกิดคนกดเป็นคือคนขายก็จะถือว่า updata status ปกติ
                                     await updateStatus(order,3,index);
+                                      if (widget.username.containsKey('tokenNotice')){
+                                        await _notificationService.requestNotificationPermissions();
+                                        // print("Token: " + widget.username['tokenNotice']);
+                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                      }
                                   }
 
                                   setState(() {
+
                                     _initializeData();
                                   });
                               }, icon: Icon(Icons.flag),color: status == 3 ? Colors.red : Colors.grey,),
