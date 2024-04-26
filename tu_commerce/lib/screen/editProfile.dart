@@ -6,7 +6,7 @@ import 'package:tu_commerce/model/user.dart';
 
 class EditProfile extends StatefulWidget {
   final Map<String, dynamic> user;
-  
+
   EditProfile({Key? key, required this.user}) : super(key: key);
 
   @override
@@ -14,111 +14,101 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
-
   final _formKey = GlobalKey<FormState>();
-  FirebaseFirestore  firestore = FirebaseFirestore.instance; 
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
-  // late String username;
+  editProfile() async {
+    QuerySnapshot querySnapshot = await firestore
+        .collection('users')
+        .where('email', isEqualTo: widget.user['email'])
+        .get();
 
-  // void updateEmail(String email) async{
-  //   FirebaseAuth auth = FirebaseAuth.instance;
-  //   User? user = auth.currentUser;
-  //   if (user != null && user.emailVerified) {
-  //     user.verifyBeforeUpdateEmail(email);
-  //     print('User delete');
-  //   } else {
-  //     print('Email not Verifed');
-  //   }
+    var usernameIsExist = await FirebaseFirestore.instance
+        .collection('users')
+        .where("username", isEqualTo: widget.user['username'])
+        .get();
 
-  // }
+    var emailIsExist = await FirebaseFirestore.instance
+        .collection('users')
+        .where("email", isEqualTo: widget.user['email'])
+        .get();
+
+    if (usernameIsExist.size > 0 &&
+        widget.user['username'] != usernameIsExist.docs.first['username']) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('This username is already exist')));
+    }
+    // else if (emailIsExist.size > 0 && widget.user['email'] != usernameIsExist.docs.first['email']) {
+    //   ScaffoldMessenger.of(context).showSnackBar(
+    //       SnackBar(content: Text('This username is already exist')));
+    // }
+    else {
+      querySnapshot.docs.forEach((doc) async {
+        await doc.reference.update({
+          'address': widget.user['address'],
+          'email': widget.user['email'],
+          'favorite': widget.user['favorite'],
+          'fname': widget.user['fname'],
+          'lname': widget.user['lname'],
+          'phone': widget.user['phone'],
+          'shoppingMode': true,
+          'username': widget.user['username'],
+        });
+      });
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Save success')));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
       appBar: AppBar(title: Text('Edit Profile')),
       body: Form(
         key: _formKey,
-        child: Column(
-            children: [
-              TextFormField(
-                initialValue: widget.user['username'],
-                decoration: const InputDecoration(
-                  labelText: 'Username'
-                ),
-                onSaved: (newValue) => widget.user['username'] = newValue,
-              ),
-              TextFormField(
-                initialValue: widget.user['fname'],
-                decoration: const InputDecoration(
-                  labelText: 'name'
-                ),
-                onSaved: (newValue) => widget.user['fname'] = newValue,
-              ),
-              TextFormField(
-                initialValue: widget.user['lname'],
-                decoration: const InputDecoration(
-                  labelText: 'Surname'
-                ),
-                onSaved: (newValue) => widget.user['lname'] = newValue,
-              ),
-              // TextFormField(
-              //   initialValue: widget.user['email'],
-              //   decoration: const InputDecoration(
-              //     labelText: 'email'
-              //   ),
-              //   onSaved: (newValue)  {
-              //     email = widget.user['email'];
-              //     widget.user['email'] = newValue;
-              //   },
-              // ),
-              TextFormField(
-                initialValue: widget.user['phone'],
-                decoration: const InputDecoration(
-                  labelText: 'phone'
-                ),
-                onSaved: (newValue) => widget.user['phone'] = newValue,
-              ),
-              TextFormField(
-                initialValue: widget.user['address'],
-                decoration: const InputDecoration(
-                  labelText: 'address'
-                ),
-                onSaved: (newValue) => widget.user['address'] = newValue,
-              ),
-              ElevatedButton(
-                onPressed: () async {
-                  
-                  _formKey.currentState!.save();
-                  // if (email != widget.user['email']) {
-                  //   updateEmail(widget.user['email']);
-                  // }
-                  QuerySnapshot querySnapshot = await firestore.collection('users').where('email',isEqualTo: widget.user['email']).get();
-                  querySnapshot.docs.forEach((doc) async {
-                      await doc.reference.update(
-                        {
-                          'address':widget.user['address'],
-                          'email':widget.user['email'],
-                          'favorite':widget.user['favorite'],
-                          'fname':widget.user['fname'],
-                          'lname':widget.user['lname'],
-                          'phone':widget.user['phone'],
-                          'shoppingMode':true,
-                          'username':widget.user['username'],
-                          
-                        }
-                      );
-                      
-                    }
-                  );
-                  ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Save success')));
-                  // print(email);
-                  
-                  print(widget.user);
-                }, 
-                child: const Text('Save'))
-            ]
+        child: Column(children: [
+          TextFormField(
+            initialValue: widget.user['username'],
+            decoration: const InputDecoration(labelText: 'Username'),
+            onSaved: (newValue) => widget.user['username'] = newValue,
           ),
+          TextFormField(
+            initialValue: widget.user['fname'],
+            decoration: const InputDecoration(labelText: 'name'),
+            onSaved: (newValue) => widget.user['fname'] = newValue,
+          ),
+          TextFormField(
+            initialValue: widget.user['lname'],
+            decoration: const InputDecoration(labelText: 'Surname'),
+            onSaved: (newValue) => widget.user['lname'] = newValue,
+          ),
+          // TextFormField(
+          //   initialValue: widget.user['email'],
+          //   decoration: const InputDecoration(
+          //     labelText: 'email'
+          //   ),
+          //   onSaved: (newValue)  {
+          //     email = widget.user['email'];
+          //     widget.user['email'] = newValue;
+          //   },
+          // ),
+          TextFormField(
+            initialValue: widget.user['phone'],
+            decoration: const InputDecoration(labelText: 'phone'),
+            onSaved: (newValue) => widget.user['phone'] = newValue,
+          ),
+          TextFormField(
+            initialValue: widget.user['address'],
+            decoration: const InputDecoration(labelText: 'address'),
+            onSaved: (newValue) => widget.user['address'] = newValue,
+          ),
+          ElevatedButton(
+              onPressed: () async {
+                _formKey.currentState!.save();
+                editProfile();
+              },
+              child: const Text('Save'))
+        ]),
       ),
     );
   }

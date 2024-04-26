@@ -82,6 +82,13 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                 ignoring: (status > 0) , 
                                 child:IconButton(onPressed: () async{
                                     await updateStatus(order,0,index); // เปลี่ยน status หลังกด
+                                    // if (widget.username.containsKey('tokenNotice')){
+                                    //   await _notificationService.requestNotificationPermissions();
+                                    //   // print("Token: " + widget.username['tokenNotice']);
+                                    //   await sendNotificationToUser(widget.username['tokenNotice'], "New Message", "You have a new message!");
+                                    //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                    //
+                                    // }
                                     setState(() {
                                       _initializeData(); //ให้มันไปรี query พวกไอเท็มๆ ต่างๆใหม่บรรทัดสำคัญเพราะว่ามันจะทำให้สี status เปลี่ยนทันที
                                     });
@@ -163,7 +170,12 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
                                     if (orders!.length == 1){
                                       await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).delete();
-                                    }
+                                      await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).collection('Message').get().then((snapshot) {
+                                        for (DocumentSnapshot doc in snapshot.docs) {
+                                          doc.reference.delete();
+                                        }
+                                      });                                    }
+                                    
                                   }
                                   else {
                                     // ส่งข้อความเข้าแชท

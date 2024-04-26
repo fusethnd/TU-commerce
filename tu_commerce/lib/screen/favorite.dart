@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/screen/productBox.dart';
 
 class Favorite extends StatefulWidget {
   final Map<String, dynamic>  username;
@@ -24,28 +25,27 @@ class _FavoriteState extends State<Favorite> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Favorites'),),
-      body: ListView.builder(
+      body: GridView.builder(
+          padding: const EdgeInsets.all(ProductGridViewStyle.padding),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ProductGridViewStyle.gridCrossAxisCount,
+            childAspectRatio: ProductGridViewStyle.aspectRatio
+          ),
           itemCount: widget.username['favorite'].length,
           itemBuilder: (context,index){
             String? imageUrl = widget.username['favorite'][index]['link']; // เอาลิ้ง image มาจากตอน init
-            return Card(
-              child: ListTile(
-                leading: CircleAvatar(
-                  child: Image.network(imageUrl!), // โชว์ภาพไว้ใน circle
-                ),
-                title: Text(widget.username['favorite'][index]['prodName'].toString()), 
-                subtitle: Row(
-                  children: [
-                    Text(widget.username['favorite'][index]['price'].toString()),
-                    SizedBox(width: 8,),
-                    ElevatedButton(
-                      onPressed: (){
-                        updateFavoriteStatus(index); //ถ้ากดหัวใจจะเข้าคำสั่งนี้
-                      }, 
-                      child: Icon(Icons.favorite),)
-                  ],
-                ),
-              ),
+
+            return ProductBox(
+              imageUrl: imageUrl,
+              prodName: widget.username['favorite'][index]['prodName'].toString(),
+              prodDetail: widget.username['favorite'][index]['details'].toString(),
+              price: widget.username['favorite'][index]['price'].toString(),
+              username: widget.username,
+              item: widget.username['favorite'][index],
+              onPressed: (){
+                          updateFavoriteStatus(index); //ถ้ากดหัวใจจะเข้าคำสั่งนี้
+                        },
+              favorite: true
             );
           }
         )

@@ -1,4 +1,3 @@
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -16,11 +15,11 @@ import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
 class Navigation extends StatefulWidget {
-
   final Map<String, dynamic> username;
   final int temp;
-  
-  Navigation({Key? key, required this.username,this.temp = 2}) : super(key: key);
+
+  Navigation({Key? key, required this.username, this.temp = 2})
+      : super(key: key);
   // const Navigation({super.key});
 
   @override
@@ -28,35 +27,35 @@ class Navigation extends StatefulWidget {
 }
 
 class _NavigationState extends State<Navigation> {
-  late int _selectedIndex ;
+  late int _selectedIndex;
 
   late List<Widget> _widgetOptions;
 
-
   @override
-  void initState()  {
+  void initState() {
     // TODO: implement initState
     super.initState();
     _selectedIndex = widget.temp;
     widget.username['shoppingMode'] = false;
     _widgetOptions = <Widget>[
-      StockScreen(email: widget.username,), // Define your screens here
-      const WalletScreen(),
+      StockScreen(
+        email: widget.username,
+      ), // Define your screens here
+      WalletScreen(username: widget.username,),
       SellerHome(username: widget.username),
-      InboxScreen(username: widget.username,),
+      InboxScreen(
+        username: widget.username,
+      ),
       const NoticeSeller(),
-      AddProduct(username:widget.username),
-      HistorySeller(username:widget.username),
-      ToShipScreen(username:widget.username),
+      AddProduct(username: widget.username),
+      HistorySeller(username: widget.username),
+      ToShipScreen(username: widget.username),
     ];
   }
-  
-
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
         selectedIndex: _selectedIndex,
