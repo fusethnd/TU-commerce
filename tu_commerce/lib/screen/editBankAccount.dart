@@ -5,8 +5,8 @@ import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 
 class EditBankAccount extends StatefulWidget {
   final String bankAccountID;
-
-  EditBankAccount({Key? key, required this.bankAccountID}) : super(key: key);
+  final Map<String,dynamic> username;
+  EditBankAccount({Key? key, required this.bankAccountID,required this.username}) : super(key: key);
 
   @override
   State<EditBankAccount> createState() => _EditBankAccountState();
@@ -48,7 +48,10 @@ class _EditBankAccountState extends State<EditBankAccount> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Edit bank account")),
+
+      appBar: AppBar(
+        centerTitle: true,
+        title: Text("Edit bank account"),),
       body: Form(
         key: _formKey,
         child: Column(

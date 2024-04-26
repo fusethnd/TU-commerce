@@ -74,7 +74,7 @@ class _NavigationState extends State<NavigationCustomer> {
       setState(() {
         userData = user;
         _widgetOptions = <Widget>[
-          const WalletScreen(),
+          WalletScreen(username: user),
           Favorite(username: user),
           CustomerHome(
             username: user,
