@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:ffi';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -77,6 +78,8 @@ class _WalletScreenState extends State<WalletScreen> {
         child: CircularProgressIndicator(),
       );
     }
+    // print("---- mode -----");
+    // print(widget.username['shoppingMode']);
     if (!isHaveCredit) {
       return Scaffold(
         appBar: AppBar(
@@ -98,10 +101,9 @@ class _WalletScreenState extends State<WalletScreen> {
       );
     }
     return Scaffold(
-
         appBar: AppBar(
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Wallet',
             style: TextStyle(
               color: Color.fromRGBO(60, 91, 109, 1.0),
@@ -117,10 +119,8 @@ class _WalletScreenState extends State<WalletScreen> {
             borderRadius: BorderRadius.vertical(),
           ),
         ),
-
-        
         body: Column(children: [
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Container(
@@ -130,8 +130,8 @@ class _WalletScreenState extends State<WalletScreen> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: widget.username['shoppingMode']
-              ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
-              : Color.fromRGBO(38, 174, 236, 1)),
+                    ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
+                    : Color.fromRGBO(38, 174, 236, 1)),
             child: RichText(
               text: TextSpan(
                 children: [
@@ -183,14 +183,17 @@ class _WalletScreenState extends State<WalletScreen> {
                       ),
                     ),
                     padding: MaterialStateProperty.all(
-                      EdgeInsets.symmetric(
+                      const EdgeInsets.symmetric(
                           horizontal:
                               40), // Horizontal padding inside the button
                     ),
                   ),
-                  child: Text("Top up"),
+                  child: const Text("Top Up"),
                 ),
-                SizedBox(width: 40), // Space between buttons
+                const SizedBox(width: 40),
+                
+                
+                 // Space between buttons
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
@@ -262,8 +265,8 @@ class _WalletScreenState extends State<WalletScreen> {
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: widget.username['shoppingMode']
-              ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
-              : Color.fromRGBO(38, 174, 236, 1),
+                  ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
+                  : Color.fromRGBO(38, 174, 236, 1),
             ),
             child: Row(
               children: [
