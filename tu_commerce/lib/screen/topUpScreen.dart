@@ -140,7 +140,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
                       const EdgeInsets.symmetric(horizontal: 40),
                     ),
                   ),
-                  child: const Text("TopUp"),
+                  child: const Text("Top Up"),
                 ),
               ),
               

@@ -188,9 +188,12 @@ class _WalletScreenState extends State<WalletScreen> {
                               40), // Horizontal padding inside the button
                     ),
                   ),
-                  child: const Text("Top up"),
+                  child: const Text("Top Up"),
                 ),
-                const SizedBox(width: 40), // Space between buttons
+                const SizedBox(width: 40),
+                
+                
+                 // Space between buttons
                 ElevatedButton(
                   onPressed: () {
                     Navigator.push(
