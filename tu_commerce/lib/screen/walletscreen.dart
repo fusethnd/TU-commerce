@@ -100,7 +100,7 @@ class _WalletScreenState extends State<WalletScreen> {
         appBar: AppBar(
           centerTitle: true,
           title: Text('Wallet',style: TextStyle(color: Color.fromRGBO(54, 91, 109, 1.0), fontWeight: FontWeight.bold,),),
-              backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
+              backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
               toolbarHeight: 100,
               automaticallyImplyLeading: false,
               shape: const RoundedRectangleBorder(
@@ -121,7 +121,7 @@ class _WalletScreenState extends State<WalletScreen> {
             height: 120.0,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
-                color: const Color.fromRGBO(65, 193, 186, 1.0)
+                color: const Color.fromRGBO(98, 221, 214, 1.0)
               ),
               child: RichText(
                 
@@ -273,7 +273,7 @@ Container(
   
   decoration: BoxDecoration(
     borderRadius: BorderRadius.circular(20),
-    color: Color.fromRGBO(65, 193, 186, 1.0),
+    color: Color.fromRGBO(98, 221, 214, 1.0),
   ),
   child: Row( 
     children: [

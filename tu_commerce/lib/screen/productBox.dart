@@ -3,6 +3,12 @@ import 'package:tu_commerce/screen/favorite.dart';
 
 import 'navigationbarCustomer.dart';
 
+class ProductGridViewStyle {
+  static const double padding = 5;
+  static const int gridCrossAxisCount = 2;
+  static const double aspectRatio = 7/10;
+}
+
 class ProductBox extends StatelessWidget { 
   final String? imageUrl; 
   final String prodName; 
@@ -26,25 +32,6 @@ class ProductBox extends StatelessWidget {
 
   @override 
   Widget build(BuildContext context) { 
-    // return Card(
-    //     child: ListTile(
-    //       leading: CircleAvatar(
-    //         child: Image.network(imageUrl!),
-    //       ),
-    //       title: Text(prodName),
-    //       subtitle: Row(
-    //         children: [
-    //           Expanded(child: Text(price),),
-    //           Expanded(
-    //             child: ElevatedButton(
-    //               onPressed: onPressed,
-    //               child: Icon(Icons.favorite, color: favorite ? Colors.pink : Colors.black,),
-    //             )
-    //           )
-    //         ],
-    //       ),
-    //     ),
-    // );
     return GestureDetector(
       onTap: (){
         Navigator.push(
@@ -53,16 +40,16 @@ class ProductBox extends StatelessWidget {
         );
       },
       child: Card(
+        shadowColor: Colors.transparent,
+        surfaceTintColor: Colors.transparent,
         child: Column(
-          children: [
-            Stack(
+            children: [
+              Stack(
                 children: [
                   Container(
-                    width: 150,
-                    height: 150,
-                    decoration: BoxDecoration(
-                        color: Colors.white
-                    ),
+                    width: double.infinity,
+                    height: 200,
+                    decoration: const BoxDecoration(color: Colors.grey),
                     child: Image.network(
                       imageUrl!,
                       fit: BoxFit.contain,
@@ -71,33 +58,69 @@ class ProductBox extends StatelessWidget {
                   Positioned(
                       right: 5,
                       top: 5,
-                      child: Icon(Icons.favorite, color: favorite ? Colors.pink : Colors.black,)
+                      child: RawMaterialButton(
+                        shape: const CircleBorder(),
+                        onPressed: onPressed,
+                        child: favorite ?
+                          const Icon(
+                            Icons.favorite,
+                            color: Colors.pink,
+                            size: 30,
+                          ) :
+                          const Icon(
+                            Icons.favorite_border_outlined,
+                            color: Colors.pink,
+                            size: 30,
+                          )
+                      )
                   )
                 ]
-            ),
-            Container(
-              width: 150,
-              padding: EdgeInsets.all(5),
-              decoration: BoxDecoration(
-                color: Color.fromRGBO(219, 241, 240, 1.0),
               ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(prodName),
-                  Text(prodDetail),
-                  Align(
-                    alignment: Alignment.bottomRight,
-                    child: Text(price),
-                  )
-                ],
-              ),
-            )
-          ],
+              Expanded(
+                child: Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(10),
+                  decoration: const BoxDecoration(
+                    color: Color.fromRGBO(219, 241, 240, 1.0),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        prodName,
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          color: Color.fromRGBO(54, 91, 109, 1.0),
+                          fontSize: 20
+                        ),
+                      ),
+                      Text(
+                        prodDetail,
+                        maxLines: 2,
+                        style: const TextStyle(
+                          color: Color.fromRGBO(54, 91, 109, 0.7),
+                        ),
+
+                      ),
+                      const Spacer(),
+                      Align(
+                        alignment: Alignment.bottomRight,
+                        child: Text(
+                          price,
+                          style: const TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
+                            color: Color.fromRGBO(54, 91, 109, 1.0),
+                          ),
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              )
+            ]
+          )
         ),
-      )
-    ) ;
-
-
+    );
   } 
 }

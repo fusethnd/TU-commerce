@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-
+import 'package:tu_commerce/screen/productBox.dart';
 import '../function/Firebase.dart';
 import 'navigationbarCustomer.dart';
 
@@ -65,44 +65,31 @@ class _ShowCategoryState extends State<ShowCategory> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text(widget.category),),
-      body: ListView.builder(
+      body: GridView.builder(
+          padding: const EdgeInsets.all(ProductGridViewStyle.padding),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ProductGridViewStyle.gridCrossAxisCount,
+            childAspectRatio: ProductGridViewStyle.aspectRatio
+          ),
           itemCount: categoryItem.length,
           itemBuilder: (context,index){
             bool favorite = isFavorite(categoryItem[index].data() as  Map<String, dynamic>?,fav); // check ว่าตอนนี้กดปุ่มหรือยังเอาไว้โชว์ สี
             String? imageUrl = categoryItem[index]['link'];
-            return GestureDetector(
-              onTap: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 7,product: categoryItem[index].data() as  Map<String, dynamic>?,))
-                );
-              },
-              child: Card(
-                child: ListTile(
-                  leading: CircleAvatar(
-                    child: Image.network(imageUrl!),
-                  ),
-                  title: Text(categoryItem[index]['prodName'].toString()),
-                  subtitle: Row(
-                    children: [
-                      Text(categoryItem[index]['price'].toString()),
-                      SizedBox(width: 8,),
-                      ElevatedButton(
-                        onPressed: () async {
+
+            return ProductBox(
+              imageUrl: imageUrl,
+              prodName: categoryItem[index]['prodName'].toString(),
+              prodDetail: categoryItem[index]['details'].toString(),
+              price: categoryItem[index]['price'].toString(),
+              onPressed: () async {
                           updateFavoriteStatus(index);
                         },
-                        child: Icon(Icons.favorite,color: favorite ? Colors.pink : Colors.black,),
-                      )
-                    ],
-                  ),
-                ),
-              ),
+              favorite: favorite,
+              username: widget.username,
+              item: categoryItem[index].data() as  Map<String, dynamic>?,
             );
-
-
           }
         )
-      
     );
   }
 }

@@ -25,7 +25,12 @@ class _FavoriteState extends State<Favorite> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: Text('Favorites'),),
-      body: ListView.builder(
+      body: GridView.builder(
+          padding: const EdgeInsets.all(ProductGridViewStyle.padding),
+          gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+            crossAxisCount: ProductGridViewStyle.gridCrossAxisCount,
+            childAspectRatio: ProductGridViewStyle.aspectRatio
+          ),
           itemCount: widget.username['favorite'].length,
           itemBuilder: (context,index){
             String? imageUrl = widget.username['favorite'][index]['link']; // เอาลิ้ง image มาจากตอน init

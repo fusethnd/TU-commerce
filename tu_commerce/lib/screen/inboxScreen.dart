@@ -125,14 +125,15 @@ class _InboxScreenState extends State<InboxScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text('MESSAGES', style: TextStyle(fontWeight: FontWeight.bold),),
-              Divider(color: Colors.black,)
+              SizedBox(height: 10,),
+              Divider(color: Color.fromRGBO(219, 241, 240, 1.0),)
             ],
           ) ,
           automaticallyImplyLeading: false,
         ),
         body: orders == null? const Center(child: CircularProgressIndicator())
             : ListView.builder(
-              padding: EdgeInsets.all(10),
+              // padding: EdgeInsets.all(10),
                 itemCount: chatRooms!.length,
                 itemBuilder: (BuildContext context, int index) {
                   Map<String, dynamic> order =
@@ -151,33 +152,40 @@ class _InboxScreenState extends State<InboxScreen> {
                   // print(sellerName);
                   print('-------');
                   print(order);
-                  return GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => ChatScreen(
-                                    username: widget.username,
-                                    order: chatRoom,
-                                    seller: sellerName,
-                                  )));
-                    },
-                    child: Card(
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
-                      child: ListTile(
-                        contentPadding: const EdgeInsets.all(20),
-                        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                        titleTextStyle: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 20,
-                          color: Color.fromRGBO(54, 91, 109, 1.0)
-                        ),
-                        // subtitleTextStyle: ,
+                  return Column(
+                    children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                        username: widget.username,
+                                        order: chatRoom,
+                                        seller: sellerName,
+                                      )));
+                        },
+                        child: Card(
+                          surfaceTintColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(0)),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(20),
+                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            titleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Color.fromRGBO(54, 91, 109, 1.0)
+                            ),
+                            // subtitleTextStyle: ,
 
-                        leading: CircleAvatar(),
-                        title: Text(sellerName),
+                            leading: CircleAvatar(),
+                            title: Text(sellerName),
+                          ),
+                        ),
                       ),
-                    ),
+                      Divider(color: Color.fromRGBO(219, 241, 240, 1.0),)
+                    ]
                   );
                 },
               ),
