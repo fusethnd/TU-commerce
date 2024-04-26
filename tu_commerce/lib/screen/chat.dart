@@ -119,8 +119,23 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
       // Update the latitude field with the new value
       await firestore.collection('ChatRoom').doc(chatId).collection('Message').doc(docId).update({'latitude': tappedPoint.latitude,'longitude':tappedPoint.longitude});
     });
-    
+    _updateCameraPosition(tappedPoint);
+    // if (mounted){
+    //   setState(() {
+    //     mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: tappedPoint,zoom: 17)));
+    //   });
+    // }
   }
+
+void _updateCameraPosition(LatLng? latLng) {
+  if (latLng != null) {
+    if (mounted){
+      setState(() {
+        mapController.animateCamera(CameraUpdate.newCameraPosition(CameraPosition(target: latLng,zoom: 17)));
+      });
+    }
+  }
+}
 
 
   @override
@@ -174,7 +189,12 @@ Future<void> addMessage() async { // save message ไว้ใน firebase
                                   ),
                                 },
                                 onTap: _onMapTapped,
+                                onCameraMove: (position) {
+                                  _updateCameraPosition(LatLng(messageData?['latitude'], messageData?['longitude']));
+                                },
+                                
                               ),
+
                             )
                           : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
                     )

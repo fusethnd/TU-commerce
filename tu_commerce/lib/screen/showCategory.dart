@@ -27,6 +27,7 @@ class _ShowCategoryState extends State<ShowCategory> {
     setState(() {
       allItem = widget.allItem!;
       categoryItem = item;
+      
     });
   }
 
