@@ -61,7 +61,9 @@ class _EditBankAccountState extends State<EditBankAccount> {
             fontWeight: FontWeight.bold,
           ),
         ),
-        backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
+        backgroundColor: widget.username['shoppingMode']
+            ? Color.fromRGBO(98, 221, 214, 1.0)
+            : Color.fromRGBO(32, 157, 214, 1),
         toolbarHeight: 100,
       ),
       body: Form(
@@ -81,56 +83,65 @@ class _EditBankAccountState extends State<EditBankAccount> {
                   ),
                   hintStyle: const TextStyle(color: Colors.grey),
                   filled: true,
-                  fillColor: const Color.fromRGBO(219, 241, 240, 1.0),
+                  fillColor: widget.username['shoppingMode']
+        ? Color.fromRGBO(219, 241, 240, 1.0) // True condition: light teal
+        : Color.fromARGB(255, 182, 226, 250),
                   contentPadding: const EdgeInsets.only(left: 25),
                 ),
                 elevatedButtonTheme: ElevatedButtonThemeData(
                     style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(
-                            const Color.fromRGBO(65, 193, 186, 1.0)),
-                        foregroundColor: MaterialStateProperty.all(
-                            const Color.fromRGBO(54, 91, 109, 1.0)),
-                        minimumSize: MaterialStateProperty.all(
-                            const Size(double.infinity, 50))
-                            )
-                            )
+                            widget.username['shoppingMode']
+                                ? Color.fromRGBO(
+                                    98, 221, 214, 1.0) // True condition
+                                : Color.fromRGBO(
+                                    38, 174, 236, 1) // False condition
                             ),
-              home: SingleChildScrollView(
-                child: SizedBox(
-                  height: 300,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TextFormField(
-                  controller: _nameController,
-                  decoration: const InputDecoration(labelText: 'Your Account Name'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Enter your name' : null,
+                        foregroundColor: MaterialStateProperty.all(
+                            widget.username['shoppingMode']
+                                ? Color.fromRGBO(54, 91, 109,
+                                    1.0) // True condition: dark blue-gray
+                                : Colors.white // False condition: white
+                            ),
+                        minimumSize: MaterialStateProperty.all(
+                            const Size(double.infinity, 50))))),
+            home: SingleChildScrollView(
+              child: SizedBox(
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextFormField(
+                      controller: _nameController,
+                      decoration:
+                          const InputDecoration(labelText: 'Your Account Name'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter your name' : null,
+                    ),
+                    TextFormField(
+                      controller: _bankNumberController,
+                      decoration:
+                          const InputDecoration(labelText: 'Account No.'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter your bank number' : null,
+                    ),
+                    TextFormField(
+                      controller: _bankNameController,
+                      decoration: const InputDecoration(labelText: 'Bank'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter your bank name' : null,
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        _formKey.currentState!.save();
+                        _editBankAccount();
+                      },
+                      child: const Text('Edit'),
+                    ),
+                  ],
                 ),
-                TextFormField(
-                  controller: _bankNumberController,
-                  decoration: const InputDecoration(labelText: 'Account No.'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Enter your bank number' : null,
-                ),
-                TextFormField(
-                  controller: _bankNameController,
-                  decoration: const InputDecoration(labelText: 'Bank'),
-                  validator: (value) =>
-                      value!.isEmpty ? 'Enter your bank name' : null,
-                ),
-                
-                ElevatedButton(
-                  onPressed: () {
-                    _formKey.currentState!.save();
-                    _editBankAccount();
-                  },
-                  child: const Text('Edit'),
-                ),
-              ],
+              ),
             ),
-          ),
-        ),
           ),
         ),
       ),
