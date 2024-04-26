@@ -5,6 +5,7 @@ import 'package:tu_commerce/screen/historyCustomer.dart';
 import 'package:tu_commerce/screen/home.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/profilePicture.dart';
 import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
@@ -19,9 +20,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
-  
-  
-  
+
   logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
@@ -35,6 +34,13 @@ class _ProfileState extends State<Profile> {
     Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.email['email'],temp: 4) ),(Route<dynamic> route) => false);
   }
 
+  @override
+  void initState() {
+    setState(() {
+
+    });
+    super.initState();
+  }
          
   @override
   Widget build(BuildContext context) {
@@ -46,13 +52,14 @@ class _ProfileState extends State<Profile> {
         onRefresh: _refreshData,
         child: ListView(
               children: [
+                ProfilePicture(user: widget.email),
                 // ตอนนี้โชว์แค่ ชื่อ หาต่อได้ที่ userDataมีตามใน firebase กับโชว์ลิ้งไป wallet
-                Container( 
+                Container(
                   decoration: BoxDecoration(color: Colors.red),
                   height: 100,
                   child: Row(
                     children: [
-                      // Expanded(child: Text('${userData['fname']} ${userData['lname']}')), 
+                      // Expanded(child: Text('${userData['fname']} ${userData['lname']}')),
                       Expanded(child: ElevatedButton(
                         onPressed: () {
                           Navigator.pushAndRemoveUntil(
