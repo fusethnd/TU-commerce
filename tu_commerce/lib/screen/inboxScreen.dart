@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/chat.dart';
@@ -16,7 +17,7 @@ class InboxScreen extends StatefulWidget {
 }
 
 class _InboxScreenState extends State<InboxScreen> {
-  List<dynamic>? orders;
+  // List<dynamic>? orders;
   List<dynamic>? chatRooms;
   List<dynamic>? last_message;
 
@@ -38,8 +39,8 @@ class _InboxScreenState extends State<InboxScreen> {
   Future<void> _initializeData() async {
     try {
       List<Map<String, dynamic>?> storeLast = [];
-      List<DocumentSnapshot> temp = await getOrders(
-          widget.username['username'], widget.username['shoppingMode']);
+      // List<DocumentSnapshot> temp = await getOrders(
+      //     widget.username['username'], widget.username['shoppingMode']);
       List<DocumentSnapshot> temp2 = await getChatRoom(
           widget.username['username'], widget.username['shoppingMode']);
         
@@ -57,7 +58,7 @@ class _InboxScreenState extends State<InboxScreen> {
       
       if (mounted) {
         setState(() {
-          orders = temp;
+          // orders = temp;
           chatRooms = temp2;
         });
       }
@@ -72,9 +73,24 @@ class _InboxScreenState extends State<InboxScreen> {
     List<String> temp = [];
     for (String data in documentIds){
       if (data.contains(username)){
-        temp.add(data);
+        List<String> parts = data.split("-");
+        int index = parts.indexOf(username);
+        print(shoppingMode);
+        if ((shoppingMode == true) &&( index == 0)){
+          print('in 0');
+          temp.add(data);
+        }
+        if ((shoppingMode == false) && (index == 1)){
+          print('in 1');
+          temp.add(data);
+        }
+
+        // print(index);
+        // temp.add(data);
       }
     }
+    print(temp);
+    // await FirebaseFirestore.instance.collection('ChatRoom').where(username,arrayContains: temp).get();
     List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
     for (String docID in temp) {
       DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
@@ -161,14 +177,14 @@ class _InboxScreenState extends State<InboxScreen> {
           ),
           automaticallyImplyLeading: false,
         ),
-        body: orders == null
+        body: chatRooms == null
             ? const Center(child: CircularProgressIndicator())
             : ListView.builder(
                 // padding: EdgeInsets.all(10),
                 itemCount: chatRooms!.length,
                 itemBuilder: (BuildContext context, int index) {
-                  Map<String, dynamic> order =
-                      orders![index].data() as Map<String, dynamic>;
+                  // Map<String, dynamic> order =
+                  //     orders![index].data() as Map<String, dynamic>;
                   Map<String, dynamic> chatRoom =
                       chatRooms![index].data() as Map<String, dynamic>;
                   // print('---------- length ');
