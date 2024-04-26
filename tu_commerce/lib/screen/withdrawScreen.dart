@@ -198,22 +198,6 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                         _formKey.currentState!.save();
                         _topUp();
                       },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color.fromRGBO(54, 91, 109, 1.0)),
-                        foregroundColor: MaterialStateProperty.all(
-                            const Color.fromRGBO(255, 255, 255, 1)),
-                        textStyle: MaterialStateProperty.all(
-                          const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              horizontal:
-                                  40), 
-                        ),
-                      ),
                       child: const Text("Withdraw"),
                     ),
                   ),

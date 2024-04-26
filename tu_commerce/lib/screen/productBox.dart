@@ -46,20 +46,20 @@ class ProductBox extends StatelessWidget {
             children: [
               Stack(
                 children: [
-                  
                   Container(
                     width: double.infinity,
-                    height: 180,
-                    decoration: const BoxDecoration(color: Colors.grey),
+                    height: 200,
+                    decoration: const BoxDecoration(color: Colors.white),
                     child: Image.network(
                       imageUrl!,
                       fit: BoxFit.contain,
                     ),
                   ),
                   Positioned(
-                      right: 5,
-                      top: 5,
+                      right: 0,
+                      top: 0,
                       child: RawMaterialButton(
+                        constraints: const BoxConstraints(minWidth: 36),
                         shape: const CircleBorder(),
                         onPressed: onPressed,
                         child: favorite ?
@@ -120,8 +120,8 @@ class ProductBox extends StatelessWidget {
                 )
               )
             ]
-          )
-        ),
+        )
+      ),
     );
   } 
 }

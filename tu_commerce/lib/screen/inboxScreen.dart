@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/chat.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
+import 'package:tu_commerce/screen/navigationbarSeller.dart';
 
 class InboxScreen extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -34,6 +35,13 @@ class _InboxScreenState extends State<InboxScreen> {
     // Cancel the stream subscription
     // _chatRoomSubscription?.cancel();
     super.dispose();
+  }
+
+  Future<void> _refreshData() async {
+    await Future.delayed(const Duration(seconds: 0)); // Simulate a delay
+    widget.username['shoppingmode'] 
+    ? Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 3) ),(Route<dynamic> route) => false)
+    : Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => Navigation(username: widget.username,temp: 3) ),(Route<dynamic> route) => false); 
   }
 
   Future<void> _initializeData() async {
@@ -177,66 +185,70 @@ class _InboxScreenState extends State<InboxScreen> {
           ),
           automaticallyImplyLeading: false,
         ),
-        body: chatRooms == null
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                // padding: EdgeInsets.all(10),
-                itemCount: chatRooms!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Map<String, dynamic> order =
-                  //     orders![index].data() as Map<String, dynamic>;
-                  Map<String, dynamic> chatRoom =
-                      chatRooms![index].data() as Map<String, dynamic>;
-                  // print('---------- length ');
-                  // print(chatRooms!.length);
-                  // print(chatRoom);
-                  String sellerName = widget.username['shoppingMode']
-                      ? (chatRoom['seller']['fname'] +
-                          " " +
-                          chatRoom['seller']['lname'])
-                      : chatRoom['customer']['fname'] +
-                          " " +
-                          chatRoom['customer']['lname'];
-                  // print(sellerName);
-                  // print('-------');
-                  // print(order);
-                  return Column(children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                      username: widget.username,
-                                      order: chatRoom,
-                                      seller: sellerName,
-                                    )));
-                      },
-                      child: Card(
-                        surfaceTintColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(20),
-                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                          titleTextStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Color.fromRGBO(54, 91, 109, 1.0)),
-                          // subtitleTextStyle: ,
-
-                          leading: CircleAvatar(),
-                          title: Text(sellerName),
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: chatRooms == null
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  // padding: EdgeInsets.all(10),
+                  itemCount: chatRooms!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    // Map<String, dynamic> order =
+                    //     orders![index].data() as Map<String, dynamic>;
+                    Map<String, dynamic> chatRoom =
+                        chatRooms![index].data() as Map<String, dynamic>;
+                    // print('---------- length ');
+                    // print(chatRooms!.length);
+                    // print(chatRoom);
+                    String sellerName = widget.username['shoppingMode']
+                        ? (chatRoom['seller']['fname'] +
+                            " " +
+                            chatRoom['seller']['lname'])
+                        : chatRoom['customer']['fname'] +
+                            " " +
+                            chatRoom['customer']['lname'];
+                    // print(sellerName);
+                    // print('-------');
+                    // print(order);
+                    return Column(children: [
+                      GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                  builder: (context) => ChatScreen(
+                                        username: widget.username,
+                                        order: chatRoom,
+                                        seller: sellerName,
+                                      )));
+                        },
+                        child: Card(
+                          color: Color.fromRGBO(242, 241, 236, 1),
+                          surfaceTintColor: Colors.transparent,
+                          shadowColor: Colors.transparent,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(0)),
+                          child: ListTile(
+                            contentPadding: const EdgeInsets.all(20),
+                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                            titleTextStyle: const TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20,
+                                color: Color.fromRGBO(54, 91, 109, 1.0)),
+                            // subtitleTextStyle: ,
+          
+                            leading: CircleAvatar(),
+                            title: Text(sellerName),
+                          ),
                         ),
                       ),
-                    ),
-                    Divider(
-                      color: Color.fromRGBO(219, 241, 240, 1.0),
-                    )
-                  ]);
-                },
-              ),
+                      Divider(
+                        color: Color.fromRGBO(219, 241, 240, 1.0),
+                      )
+                    ]);
+                  },
+                ),
+        ),
       ),
     );
   }

@@ -172,22 +172,6 @@ class _WalletScreenState extends State<WalletScreen> {
                               creditID: creditID, userCredit: userCredit!)),
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(54, 91, 109, 1.0)),
-                    foregroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(255, 255, 255, 1)),
-                    textStyle: MaterialStateProperty.all(
-                      const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(
-                          horizontal:
-                              40), // Horizontal padding inside the button
-                    ),
-                  ),
                   child: const Text("Top Up"),
                 ),
                 const SizedBox(width: 40),
@@ -203,22 +187,6 @@ class _WalletScreenState extends State<WalletScreen> {
                               creditID: creditID, userCredit: userCredit!)),
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(54, 91, 109, 1.0)),
-                    foregroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(255, 255, 255, 1)),
-                    textStyle: MaterialStateProperty.all(
-                      const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    padding: MaterialStateProperty.all(
-                      EdgeInsets.symmetric(
-                          horizontal:
-                              40), // Horizontal padding inside the button
-                    ),
-                  ),
                   child: Text("Withdraw"),
                 ),
               ],

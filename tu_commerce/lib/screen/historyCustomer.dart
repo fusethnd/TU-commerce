@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:intl/intl.dart';
+import 'package:tu_commerce/screen/historyBox.dart';
 
 class HistoryCustomer extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -57,16 +58,24 @@ class _HistoryCustomerState extends State<HistoryCustomer> {
   }
   @override
   Widget build(BuildContext context) {
+    
+    // String sellerName = widget.username['username'];
 
     return Scaffold(
-      appBar: AppBar(title: const Text('History'),),
+      appBar: AppBar(
+        title: const Text('History'),
+      ),
       body: Column(
         children: [
           Container(
+            padding: const EdgeInsets.all(20),
             child: TextFormField(
               onChanged: filterItem,
               decoration: const InputDecoration(
-                hintText: 'Search here'
+                border: InputBorder.none,
+                hintText: 'Search',
+                fillColor: Colors.white,
+                filled: true
               ),
             )
           ),
@@ -78,16 +87,13 @@ class _HistoryCustomerState extends State<HistoryCustomer> {
                 DateTime timestamp = item!['date'].toDate(); 
                 String formattedDate = DateFormat.yMMMd().format(timestamp); 
 
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Image.network(item?['product']['link']),
-                    ),
-                    title: Text(item['product']['prodName'] ?? ''),
-                    subtitle: Text(formattedDate),
-                      
-                  )
-                );
+                return HistoryBox(
+                  partner: item['product']['seller'],
+                  product: item['product'],
+                  date: formattedDate,
+                  status: item['status'],
+                ); 
+                
               } 
             ),
           ),
@@ -97,8 +103,9 @@ class _HistoryCustomerState extends State<HistoryCustomer> {
             _initializeData();
                 
             }, 
-            child: Text('Remove History')
-          )
+            child: const Text('Clear History')
+          ),
+          const SizedBox(height: 10,)
         ],
       )
     );
