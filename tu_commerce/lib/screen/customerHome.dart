@@ -191,63 +191,28 @@ class CustomerHomeState extends State<CustomerHome> {
             ),
           ),
           Expanded(
-            child: ListView.builder( // โชว์ product ทั้งหมด เรียงตามวันที่สร้าง
+            child: GridView.builder(
+              padding: const EdgeInsets.all(ProductGridViewStyle.padding),
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: ProductGridViewStyle.gridCrossAxisCount,
+                childAspectRatio: ProductGridViewStyle.aspectRatio
+              ), // โชว์ product ทั้งหมด เรียงตามวันที่สร้าง
               itemCount: searchItem.length,
               itemBuilder: (context,index){
                 bool favorite = isFavorite(searchItem[index].data() as  Map<String, dynamic>?,fav); // check ว่าตอนนี้กดปุ่มหรือยังเอาไว้โชว์ สี
                 String? imageUrl = searchItem[index]['link']; // link image
 
-                // return GridView(
-                //   gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-                //   children: [ 
-                //     GestureDetector(
-                //       onTap: () {
-                //         Navigator.push(
-                //           context, 
-                //           MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 7,product: searchItem[index].data() as  Map<String, dynamic>?,))
-                //         );
-                //       },
-                //       child: ProductBox(
-                //         imageUrl: imageUrl,
-                //         prodName: searchItem[index]['prodName'].toString(),
-                //         prodDetail: searchItem[index]['details'].toString(),
-                //         price: searchItem[index]['price'].toString(),
-                //         onPressed: () async {
-                //                     updateFavoriteStatus(index);
-                //                   },
-                //         favorite: favorite
-                //       ),
-                //     ),
-                //   ]
-                  
-                return GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                          context, 
-                          MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 7,product: searchItem[index].data() as  Map<String, dynamic>?,))
-                        );
-                      },
-                  child: Card(
-                    child: ListTile(
-                      leading: CircleAvatar(
-                        child: Image.network(imageUrl!),
-                      ),
-                      title: Text(searchItem[index]['prodName'].toString()),
-                      subtitle: Row(
-                        children: [
-                          Expanded(child: Text(searchItem[index]['price'].toString()),),
-                          Expanded(
-                            child: ElevatedButton(
-                              onPressed: () async {
-                                updateFavoriteStatus(index);
-                              }, 
-                              child: Icon(Icons.favorite,color: favorite ? Colors.pink : Colors.black,),
-                            )
-                          )
-                        ],
-                      ),
-                    ),
-                  )
+                return ProductBox(
+                  imageUrl: imageUrl,
+                  prodName: searchItem[index]['prodName'].toString(),
+                  prodDetail: searchItem[index]['details'].toString(),
+                  price: searchItem[index]['price'].toString(),
+                  onPressed: () async {
+                              updateFavoriteStatus(index);
+                            },
+                  favorite: favorite,
+                  username: widget.username,
+                  item: searchItem[index].data() as  Map<String, dynamic>?,
                 );
               }
             ),

@@ -5,6 +5,7 @@ import 'package:tu_commerce/screen/historyCustomer.dart';
 import 'package:tu_commerce/screen/home.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/profilePicture.dart';
 import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 
@@ -39,6 +40,12 @@ class _ProfileState extends State<Profile> {
   }
 
   @override
+  void initState() {
+    setState(() {});
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
@@ -48,6 +55,7 @@ class _ProfileState extends State<Profile> {
             onRefresh: _refreshData,
             child: ListView(
               children: [
+                ProfilePicture(user: widget.email),
                 // ตอนนี้โชว์แค่ ชื่อ หาต่อได้ที่ userDataมีตามใน firebase กับโชว์ลิ้งไป wallet
                 Container(
                   height: 100,

@@ -41,7 +41,7 @@ class _NavigationState extends State<Navigation> {
       StockScreen(
         email: widget.username,
       ), // Define your screens here
-      const WalletScreen(),
+      WalletScreen(username: widget.username,),
       SellerHome(username: widget.username),
       InboxScreen(
         username: widget.username,

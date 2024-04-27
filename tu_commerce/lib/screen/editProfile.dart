@@ -1,13 +1,19 @@
+import 'dart:io';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:tu_commerce/function/Firebase.dart';
-import 'package:tu_commerce/model/user.dart';
+import 'package:tu_commerce/main.dart';
+import 'package:tu_commerce/screen/profilePicture.dart';
 
 class EditProfile extends StatefulWidget {
   final Map<String, dynamic> user;
 
-  EditProfile({Key? key, required this.user}) : super(key: key);
+  const EditProfile({super.key, required this.user});
 
   @override
   State<EditProfile> createState() => _EditProfileState();
@@ -15,100 +21,184 @@ class EditProfile extends StatefulWidget {
 
 class _EditProfileState extends State<EditProfile> {
   final _formKey = GlobalKey<FormState>();
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
+  final _usernameController = TextEditingController();
+  final _nameController = TextEditingController();
+  final _surnameController = TextEditingController();
+  final _phoneController = TextEditingController();
+  final _addressController = TextEditingController();
 
-  editProfile() async {
-    QuerySnapshot querySnapshot = await firestore
-        .collection('users')
-        .where('email', isEqualTo: widget.user['email'])
-        .get();
-
-    var usernameIsExist = await FirebaseFirestore.instance
-        .collection('users')
-        .where("username", isEqualTo: widget.user['username'])
-        .get();
-
-    var emailIsExist = await FirebaseFirestore.instance
-        .collection('users')
-        .where("email", isEqualTo: widget.user['email'])
-        .get();
-
-    if (usernameIsExist.size > 0 &&
-        widget.user['username'] != usernameIsExist.docs.first['username']) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('This username is already exist')));
+  void refresh() {
+    if (mounted) {
+      Navigator.of(context).build(context);
     }
-    // else if (emailIsExist.size > 0 && widget.user['email'] != usernameIsExist.docs.first['email']) {
-    //   ScaffoldMessenger.of(context).showSnackBar(
-    //       SnackBar(content: Text('This username is already exist')));
-    // }
-    else {
-      querySnapshot.docs.forEach((doc) async {
-        await doc.reference.update({
-          'address': widget.user['address'],
-          'email': widget.user['email'],
-          'favorite': widget.user['favorite'],
-          'fname': widget.user['fname'],
-          'lname': widget.user['lname'],
-          'phone': widget.user['phone'],
-          'shoppingMode': true,
-          'username': widget.user['username'],
+  }
+
+  editProfileForm() async {
+    try {
+      var userID = await getUserIDByEmail(widget.user['email']);
+      var existUser = await FirebaseFirestore.instance
+          .collection('users')
+          .where('username', isEqualTo: _usernameController.text.trim())
+          .get();
+
+      if (existUser.size > 0 &&
+          existUser.docs.first['username'] != widget.user['username']) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Username is already used')),
+        );
+      } else {
+        await FirebaseFirestore.instance
+            .collection('users')
+            .doc(userID)
+            .update({
+          'username': _usernameController.text.trim(),
+          'fname': _nameController.text.trim(),
+          'lname': _surnameController.text.trim(),
+          'phone': _phoneController.text.trim(),
+          'address': _addressController.text.trim(),
         });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Saved')),
+        );
+      }
+    } on FirebaseAuthException catch (e) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text(e.message ?? 'Error, Please try again later')),
+      );
+    }
+  }
+
+  updateProfilePicture() async{
+    try {
+      File _picture;
+      final pickedFile = await ImagePicker().pickImage(
+          source: ImageSource.gallery);
+      _picture = File(pickedFile!.path);
+      String filename = widget.user['username'] + '_pic.png';
+      Reference ref = await FirebaseStorage.instance.ref();
+      await ref.child('profile/$filename').putFile(_picture);
+      String pictureURL = (await FirebaseStorage.instance.ref().child(
+          'profile/$filename').getDownloadURL()).toString();
+
+      var userID = await getUserIDByEmail(widget.user['email']);
+      await FirebaseFirestore.instance
+          .collection('users')
+          .doc(userID)
+          .update({'profilePicture': pictureURL});
+
+      setState(() {
+        widget.user['profilePicture'] = pictureURL;
       });
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text('Save success')));
+    }
+    catch(e){
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error, Please try again later')),
+      );
     }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Edit Profile')),
-      body: Form(
-        key: _formKey,
-        child: Column(children: [
-          TextFormField(
-            initialValue: widget.user['username'],
-            decoration: const InputDecoration(labelText: 'Username'),
-            onSaved: (newValue) => widget.user['username'] = newValue,
+      appBar: AppBar(
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            color: Color.fromRGBO(60, 91, 109, 1.0),
+            fontWeight: FontWeight.bold,
           ),
-          TextFormField(
-            initialValue: widget.user['fname'],
-            decoration: const InputDecoration(labelText: 'name'),
-            onSaved: (newValue) => widget.user['fname'] = newValue,
+        ),
+        leading: const GoBackButton(),
+        toolbarHeight: 100,
+        backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
+        centerTitle: true,  
+      ),
+      body: MaterialApp(
+        theme: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            hintStyle: const TextStyle(color: Colors.grey),
+            filled: true,
+            fillColor: const Color.fromRGBO(219, 241, 240, 1.0),
+            contentPadding: const EdgeInsets.only(left: 25),
           ),
-          TextFormField(
-            initialValue: widget.user['lname'],
-            decoration: const InputDecoration(labelText: 'Surname'),
-            onSaved: (newValue) => widget.user['lname'] = newValue,
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(65, 193, 186, 1.0)),
+              foregroundColor: MaterialStateProperty.all(const Color.fromRGBO(54, 91, 109, 1.0)),
+              minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50))
+            )
           ),
-          // TextFormField(
-          //   initialValue: widget.user['email'],
-          //   decoration: const InputDecoration(
-          //     labelText: 'email'
-          //   ),
-          //   onSaved: (newValue)  {
-          //     email = widget.user['email'];
-          //     widget.user['email'] = newValue;
-          //   },
-          // ),
-          TextFormField(
-            initialValue: widget.user['phone'],
-            decoration: const InputDecoration(labelText: 'phone'),
-            onSaved: (newValue) => widget.user['phone'] = newValue,
+        ),
+        home: SingleChildScrollView(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 100,
+                height: 100,
+                child: CircleAvatar(
+                  child: ProfilePicture(user: widget.user),
+                ),
+              ),
+              const SizedBox(height: 20,),
+              ElevatedButton(
+                onPressed: (){
+                  updateProfilePicture();
+                },
+                child: const Text('Edit Image')
+              ),
+              const SizedBox(height: 60,),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _usernameController..text = widget.user['username'],
+                      decoration: const InputDecoration(labelText: 'Username'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _nameController..text = widget.user['fname'],
+                      decoration: const InputDecoration(labelText: 'name'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _surnameController..text = widget.user['lname'],
+                      decoration: const InputDecoration(labelText: 'Surname'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _phoneController..text = widget.user['phone'],
+                      decoration: const InputDecoration(labelText: 'phone'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _addressController..text = widget.user['address'],
+                      decoration: const InputDecoration(labelText: 'address'),
+                    ),
+                    const SizedBox(height: 50,),
+                    ElevatedButton(
+                        onPressed: () async {
+                          _formKey.currentState!.save();
+                          editProfileForm();
+                        },
+                        child: const Text('Save')
+                    )
+                ]
+              ),
+                              ),
+            ],
           ),
-          TextFormField(
-            initialValue: widget.user['address'],
-            decoration: const InputDecoration(labelText: 'address'),
-            onSaved: (newValue) => widget.user['address'] = newValue,
-          ),
-          ElevatedButton(
-              onPressed: () async {
-                _formKey.currentState!.save();
-                editProfile();
-              },
-              child: const Text('Save'))
-        ]),
+        ),
       ),
     );
   }

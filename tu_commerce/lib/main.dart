@@ -21,7 +21,9 @@ class MyApp extends StatefulWidget {
 
   @override
   State<MyApp> createState() => _MyAppState();
+
 }
+
 
 class _MyAppState extends State<MyApp> {
   var auth = FirebaseAuth.instance;
@@ -48,8 +50,31 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
         title: 'Flutter Demo',
         theme: ThemeData(
-          primarySwatch: Colors.blue,
+          // primarySwatch: Colors.blue,
+          scaffoldBackgroundColor: const Color.fromRGBO(242, 241, 236, 1),
+          appBarTheme: const AppBarTheme(backgroundColor: Color.fromRGBO(242, 241, 236, 1)),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(54, 91, 109, 1.0)),
+              foregroundColor: MaterialStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
+              textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 16,),),
+              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal:40),),
+            ),
+          )
+          
         ),
         home: const HomeScreen());
+  }
+}
+
+class GoBackButton extends StatelessWidget {
+  const GoBackButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      onPressed: () => Navigator.of(context).pop(),
+      child: const Icon(Icons.arrow_back_ios_new_rounded),
+    );
   }
 }

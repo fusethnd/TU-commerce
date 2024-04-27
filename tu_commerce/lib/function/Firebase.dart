@@ -138,12 +138,12 @@ Future<List<Map<String, dynamic>>> getMessages(chatId) async {
       .collection('Message')
       .orderBy('time', descending: true)
       .get();
-  querySnapshot.docs.forEach((doc) {
+  for (var doc in querySnapshot.docs) {
     Map<String, dynamic> messageData = doc.data() as Map<String, dynamic>;
     // messageData['time'] = (messageData['time'] as Timestamp).toDate();
     messages.add(messageData);
     // print(messageData);
-  });
+  }
 
   return messages;
 }
