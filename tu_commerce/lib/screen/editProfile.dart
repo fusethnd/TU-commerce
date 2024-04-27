@@ -4,8 +4,10 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/profilePicture.dart';
 
 class EditProfile extends StatefulWidget {
@@ -99,45 +101,95 @@ class _EditProfileState extends State<EditProfile> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: const Text('Edit Profile')),
-      body: Column(
-        children: [
-          ProfilePicture(user: widget.user),
-          ElevatedButton(onPressed: (){
-            updateProfilePicture();
-          }, child: Text('Edit Image')),
-          Form(
-            key: _formKey,
-            child: Column(children: [
-              TextFormField(
-                controller: _usernameController..text = widget.user['username'],
-                decoration: const InputDecoration(labelText: 'Username'),
-              ),
-              TextFormField(
-                controller: _nameController..text = widget.user['fname'],
-                decoration: const InputDecoration(labelText: 'name'),
-              ),
-              TextFormField(
-                controller: _surnameController..text = widget.user['lname'],
-                decoration: const InputDecoration(labelText: 'Surname'),
-              ),
-              TextFormField(
-                controller: _phoneController..text = widget.user['phone'],
-                decoration: const InputDecoration(labelText: 'phone'),
-              ),
-              TextFormField(
-                controller: _addressController..text = widget.user['address'],
-                decoration: const InputDecoration(labelText: 'address'),
-              ),
-              ElevatedButton(
-                  onPressed: () async {
-                    _formKey.currentState!.save();
-                    editProfileForm();
-                  },
-                  child: const Text('Save'))
-            ]),
+      appBar: AppBar(
+        title: const Text('Edit Profile'),
+        leading: const GoBackButton(),
+      ),
+      body: MaterialApp(
+        theme: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(50),
+            ),
+            hintStyle: const TextStyle(color: Colors.grey),
+            filled: true,
+            fillColor: const Color.fromRGBO(219, 241, 240, 1.0),
+            contentPadding: const EdgeInsets.only(left: 25),
           ),
-        ],
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(65, 193, 186, 1.0)),
+              foregroundColor: MaterialStateProperty.all(const Color.fromRGBO(54, 91, 109, 1.0)),
+              minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50))
+            )
+          ),
+        ),
+        home: SingleChildScrollView(
+          padding: const EdgeInsets.all(40),
+          child: Column(
+            children: [
+              SizedBox(
+                width: 100,
+                height: 100,
+                child: CircleAvatar(
+                  child: ProfilePicture(user: widget.user),
+                ),
+              ),
+              const SizedBox(height: 20,),
+              ElevatedButton(
+                onPressed: (){
+                  updateProfilePicture();
+                },
+                child: const Text('Edit Image')
+              ),
+              const SizedBox(height: 60,),
+              Form(
+                key: _formKey,
+                child: Column(
+                  children: [
+                    TextFormField(
+                      controller: _usernameController..text = widget.user['username'],
+                      decoration: const InputDecoration(labelText: 'Username'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _nameController..text = widget.user['fname'],
+                      decoration: const InputDecoration(labelText: 'name'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _surnameController..text = widget.user['lname'],
+                      decoration: const InputDecoration(labelText: 'Surname'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _phoneController..text = widget.user['phone'],
+                      decoration: const InputDecoration(labelText: 'phone'),
+                    ),
+                    const SizedBox(height: 20,),
+                    TextFormField(
+                      controller: _addressController..text = widget.user['address'],
+                      decoration: const InputDecoration(labelText: 'address'),
+                    ),
+                    const SizedBox(height: 50,),
+                    ElevatedButton(
+                        onPressed: () async {
+                          _formKey.currentState!.save();
+                          editProfileForm();
+                        },
+                        child: const Text('Save')
+                    )
+                ]
+              ),
+                              ),
+            ],
+          ),
+        ),
       ),
     );
   }
