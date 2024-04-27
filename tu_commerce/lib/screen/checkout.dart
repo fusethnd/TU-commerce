@@ -136,7 +136,7 @@ class _CheckOutState extends State<CheckOut> {
                 order!.time = DateTime.now(); // เพิ่มเวลา
                 if (widget.username.containsKey('Credit') == false){ // ยังไม่เพิ่ม บัตร Credit
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
+                      const SnackBar(content: Text('No credit.')),
                     );
                 } else {
                   DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Credit').doc(widget.username['Credit']).get(); 
@@ -159,7 +159,7 @@ class _CheckOutState extends State<CheckOut> {
                         'sender':widget.username['username'],
                         'reciever':widget.product!['seller']['username'],
                         'time':FieldValue.serverTimestamp(),
-                        'message':null,
+                        'message':widget.product!['prodName'],
                         'link':widget.product!['link'],
                         'latitude': null,
                         'longitude': null,
@@ -198,10 +198,10 @@ class _CheckOutState extends State<CheckOut> {
                     }else{
                       await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
                     }
-                    if (order!.product!['seller']['username'].containsKey('tokenNotice')){
+                    if (order!.product!['seller'].containsKey('tokenNotice')){
                       await _notificationService.requestNotificationPermissions();
                         // print("Token: " + widget.username['tokenNotice']);
-                      await sendNotificationToUser(order!.product!['seller']['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                      await sendNotificationToUser(order!.product!['seller']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
                       await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                     }
                     Navigator.pushReplacement(
@@ -210,7 +210,7 @@ class _CheckOutState extends State<CheckOut> {
                     );
                   }else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('เงินไม่พอ ไอเวร')),
+                        const SnackBar(content: Text('Your balance is not enough.')),
                       );
                   }
                 }
