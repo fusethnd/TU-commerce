@@ -32,6 +32,7 @@ class _AddProductState extends State<AddProduct> {
   late BuildContext scaffoldContext;
   UploadTask? uploadTask;
   String url = '';
+  bool _isButtonClicked = false;
 
   Future pickImageFromGallery() async { //ฟังชั่นเรียกใช้ file ในเครื่อง
     final returnedImage = await ImagePicker().pickImage(source: ImageSource.gallery); // เรียกจาก gallery
@@ -139,7 +140,7 @@ class _AddProductState extends State<AddProduct> {
             // ---------- จบ ช่องใส่ ราคา ------------
             // ---------- ปุ่ม เซฟ      -------------
             ElevatedButton(
-              onPressed: () async {
+              onPressed: _isButtonClicked ? null : () async {
                 if (_formKey.currentState!.validate()) {
                   
                   _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
@@ -148,6 +149,9 @@ class _AddProductState extends State<AddProduct> {
                         const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
                       );
                   }else {
+                      setState(() {
+                        _isButtonClicked = true;
+                      });
                       await uploadImageToFirebase(context);
                       // _formKey.currentState!.save();
                       // product.linkUrl = url;
@@ -156,7 +160,7 @@ class _AddProductState extends State<AddProduct> {
                       print('-------------link url --------');
                       print(product.linkUrl);
                       await saveProductDB(product);
-                      _formKey.currentState!.reset();
+                      // _formKey.currentState!.reset();
                       Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
                           return Navigation(username: widget.username, temp: 0);
                       }

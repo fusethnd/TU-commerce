@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/model/noticeApi.dart';
 import 'package:tu_commerce/model/order.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/chat.dart';
@@ -24,6 +25,7 @@ class CheckOut extends StatefulWidget {
 
 class _CheckOutState extends State<CheckOut> {
   Orders? order;
+  final NotificationService _notificationService = NotificationService();
   @override
   void initState() {
     super.initState();
@@ -195,6 +197,12 @@ class _CheckOutState extends State<CheckOut> {
                       );
                     }else{
                       await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
+                    }
+                    if (order!.product!['seller']['username'].containsKey('tokenNotice')){
+                      await _notificationService.requestNotificationPermissions();
+                        // print("Token: " + widget.username['tokenNotice']);
+                      await sendNotificationToUser(order!.product!['seller']['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                     }
                     Navigator.pushReplacement(
                       context, 

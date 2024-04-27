@@ -71,6 +71,7 @@ class _NoticeSreenState extends State<NoticeSreen> {
                     // setState(() {
                     //   allNotice = null;
                     // });
+                    _initialState();
                   },
                   child: const Text('Delete')
                 )

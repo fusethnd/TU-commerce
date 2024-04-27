@@ -76,6 +76,7 @@ class _NoticeSellerState extends State<NoticeSeller> {
               // setState(() {
               //   allNotice = null;
               // });
+              _initialState();
             },
             child: const Text('Delete')
           )
