@@ -55,34 +55,54 @@ class _ProfileState extends State<Profile> {
             onRefresh: _refreshData,
             child: ListView(
               children: [
-                ProfilePicture(user: widget.email),
-                // ตอนนี้โชว์แค่ ชื่อ หาต่อได้ที่ userDataมีตามใน firebase กับโชว์ลิ้งไป wallet
                 Container(
-                  height: 100,
-                  child: Row(
-                    children: [
-                      Column(
-                        children: <Widget>[
-                          Text(
-                              '${widget.email['fname']} ${widget.email['lname']}\n'),
-                          Text('${widget.email['username']}\n'),
+                  height: 500,
+                  child: Column(
+                    children: <Widget>[
+                      Row(
+                        children: [
+                          ProfilePicture(user: widget.email),
+                          Column(
+                            children: <Widget>[
+                              Text(
+                                '${widget.email['fname']} ${widget.email['lname']}',
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 18.0),
+                              ),
+                              Text(
+                                '@${widget.email['username']}',
+                                style: TextStyle(fontSize: 18.0),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
-
-                      // Expanded(child: Text('${userData['fname']} ${userData['lname']}')),
-                      Expanded(
-                          child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.pushAndRemoveUntil(context,
-                              MaterialPageRoute(builder: (context) {
-                            return NavigationCustomer(
-                              email: widget.email['email'],
-                              temp: 0,
-                            );
-                          }), (Route<dynamic> route) => false);
-                        },
-                        child: const Text('MY WALLET'),
-                      ))
+                      Row(
+                        children: [
+                          Column(
+                            children: <Widget>[
+                              Text("MY CREDIT"),
+                              Text('${widget.email['username']}'),
+                              // Text("${widget.credit}")
+                            ],
+                          ),
+                          Spacer(),
+                          // Add button before but it's lost
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushAndRemoveUntil(context,
+                                  MaterialPageRoute(builder: (context) {
+                                return NavigationCustomer(
+                                  email: widget.email['email'],
+                                  temp: 0,
+                                );
+                              }), (Route<dynamic> route) => false);
+                            },
+                            child: const Text('MY WALLET'),
+                          )
+                        ],
+                      ),
                     ],
                   ),
                 ),
@@ -92,6 +112,11 @@ class _ProfileState extends State<Profile> {
                   decoration: BoxDecoration(color: Color(0xFFF2F1EC)),
                   child: Row(
                     children: [
+                      Text(
+                        'MENU',
+                        style: TextStyle(
+                            fontWeight: FontWeight.bold, fontSize: 18.0),
+                      ),
                       Expanded(
                         child: Column(
                           children: [
