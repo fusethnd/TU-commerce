@@ -107,6 +107,7 @@ class _NavigationState extends State<Navigation> {
             // text: 'Inbox',
           ),
           GButton(
+            
             icon: Icons.notifications,
             iconColor:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) 
              ? Colors.red 
@@ -114,6 +115,7 @@ class _NavigationState extends State<Navigation> {
              onPressed: () async{
               await FirebaseFirestore.instance.collection('Notice').doc("seller"+widget.username['username']).update({'length':allNotice!['noticeList'].length});
              },
+             
             // text: 'account',
           ),
         ],

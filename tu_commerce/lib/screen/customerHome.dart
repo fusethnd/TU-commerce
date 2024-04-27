@@ -9,6 +9,7 @@ import 'package:flutter/widgets.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
+import 'package:tu_commerce/screen/noticeScreen.dart';
 import 'package:tu_commerce/screen/searchPage.dart';
 import 'package:tu_commerce/screen/productBox.dart';
 import 'package:http/http.dart' as http;
@@ -32,7 +33,7 @@ class CustomerHomeState extends State<CustomerHome> {
   TextEditingController searchController = TextEditingController();
   bool isSearchEmpty = true;
   List<dynamic>? fav;
-
+  Map<String, dynamic>? allNotice;
   final NotificationService _notificationService = NotificationService();
   @override
   void initState() {
@@ -47,7 +48,16 @@ class CustomerHomeState extends State<CustomerHome> {
     List<DocumentSnapshot> items = await getProducts();// query prodcut ทั้งหมด
     // String? token = await FirebaseApi().initNotifications();
     // print(token);
-
+    Map<String, dynamic>? tempMap = (await FirebaseFirestore.instance
+        .collection('Notice')
+        // ignore: prefer_interpolation_to_compose_strings
+        .doc(widget.username['username'])
+        .get())
+        .data();
+    tempMap ??= {
+        "length":0,
+        "noticeList":[]
+      };
     // if (widget.username.containsKey('tokenNotice')){
     //   await _notificationService.requestNotificationPermissions();
     //   // print("Token: " + widget.username['tokenNotice']);
@@ -55,11 +65,15 @@ class CustomerHomeState extends State<CustomerHome> {
     //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
 
     // }
-    setState(() {
-      allItem = items; // ตัว hold ไว้เฉยๆ
-      searchItem = items; // ใช้ตัวนี้ในการโชว์
-      fav = widget.username['favorite']; // เก็บแค่ favorite เอามาจาก init
-    });
+    if (mounted){
+      setState(() {
+        allItem = items; // ตัว hold ไว้เฉยๆ
+        searchItem = items; // ใช้ตัวนี้ในการโชว์
+        fav = widget.username['favorite']; // เก็บแค่ favorite เอามาจาก init
+        allNotice = tempMap;
+      });
+
+    }
   }
 
   void filterItem(String query){ // คำสั่ง search 
@@ -120,11 +134,20 @@ class CustomerHomeState extends State<CustomerHome> {
               Positioned(
                 top: 30,
                 right: 30,
-                child: Icon(Icons.notifications, color: Colors.black,)
-                // child: IconButton(
-                //   icon: Icons.notifications,
-                //   onPressed: ,
-                // )
+                // child: Icon(Icons.notifications, color: Colors.black,)
+                child: IconButton(
+                  icon: Icon(Icons.notifications),
+                  color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Colors.white,
+                  onPressed: () async{
+                    await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.username)));
+                    if (mounted){
+                      setState(() {
+                        _initializeData();
+                      });
+                    }
+                  },
+                )
               ),
               Positioned(
                 top: 200,
