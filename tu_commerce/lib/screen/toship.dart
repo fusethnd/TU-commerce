@@ -41,6 +41,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initState();
     return Scaffold(
       appBar: AppBar(
         title: Text('TO SHIP'),

@@ -17,10 +17,6 @@ class ProfilePicture extends StatelessWidget {
         fit: BoxFit.contain,
       );
     }
-    return Container(
-      height: 100,
-      width: 100,
-      child: img,
-    );
+    return img;
   }
 }

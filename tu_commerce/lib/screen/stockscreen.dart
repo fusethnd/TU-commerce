@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/addProduct.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/productBox.dart';
 
 class StockScreen extends StatefulWidget {
   final Map<String, dynamic> email;
@@ -17,7 +18,7 @@ class StockScreen extends StatefulWidget {
 
 class _StockScreenState extends State<StockScreen> {
 
-  Map<String, dynamic>? allProduct;
+  List<Map<String, dynamic>>? allProduct;
   @override
   void initState() {
     // TODO: implement initState
@@ -25,7 +26,7 @@ class _StockScreenState extends State<StockScreen> {
     _init();
   }
   Future<void> _init() async{
-    Map<String, dynamic> temp = await getProductsByUsername(widget.email['username']);
+    List<Map<String, dynamic>> temp = await getProductsByUsername(widget.email['username']);
     print('-------- fuck you');
     print(temp);
     if(mounted){
@@ -36,22 +37,24 @@ class _StockScreenState extends State<StockScreen> {
   }
   @override
   Widget build(BuildContext context) {
-    print(allProduct!['noticeList']);
+    // print('----------');
+    // print(allProduct);
     return Scaffold(
       appBar: AppBar(title: const Text('My Stock'),),
 
       body: Column(
         children: [
-          // Expanded(
-          // child: ListView.builder(
-          //     itemCount: allProduct!['noticeList'].length,
-          //     itemBuilder: (context,index) {
-          //       Map<String,dynamic> item = allProduct!['noticeList'][index];
-          //       print(item);
-          //       // print(allProduct);
-          //     }
-          //   )
-          // )
+          Expanded(
+          child: ListView.builder(
+              itemCount: allProduct!.length,
+              itemBuilder: (context,index) {
+                Map<String,dynamic> item = allProduct![index];
+                print(item);
+                print(allProduct);
+
+              }
+            )
+          )
         ],
       ),
 
