@@ -45,7 +45,7 @@ class _NoticeSellerState extends State<NoticeSeller> {
     // print(allNotice!['noticeList']);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kuy'),
+        title: Text('Notifications'),
       ),
 
       body: allNotice == null || allNotice!['noticeList'] == null
