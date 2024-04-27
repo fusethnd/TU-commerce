@@ -56,10 +56,21 @@ class _ProfileState extends State<Profile> {
         .doc(widget.email['username'])
         .get())
         .data();
-    setState(() {
-      allNotice = tempMap;
-      notReadNotice = tempMap!['noticeList'].length - tempMap['length'];
-    });
+    print(tempMap);
+    if (tempMap != null) {
+        setState(() {
+          allNotice = tempMap;
+          notReadNotice = tempMap!['noticeList'].length - tempMap['length'];
+        });
+
+    }else{
+      setState(() {
+        allNotice = null;
+        notReadNotice = 0;
+      });
+    }
+
+
   }
 
 
@@ -257,7 +268,12 @@ class _ProfileState extends State<Profile> {
                 Container(
                   child: ElevatedButton(
                     onPressed: () async {
-                      await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': allNotice!['noticeList'].length});
+                      if (allNotice != null){
+                        await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': allNotice!['noticeList'].length});
+
+                      }else{
+                        await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': 0});
+                      }
                       Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email,)));
                     },
                     child: Text("Notice $notReadNotice"),

@@ -71,7 +71,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                       Stack(
                         children: [
                           HistoryBox(
-                            partner: widget.username['shoppingMode'] ? order['username'] : order['product']['seller'],
+                            partner: widget.username['shoppingMode'] ? order['product']['seller']  : order['username'],
                             product: order['product'],
                             date: formattedDate,
                             status: status
@@ -200,11 +200,11 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     }else{
                                                       await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
                                                     }
-                                                    if (widget.username.containsKey('tokenNotice')){
+                                                    if (order['username'].containsKey('tokenNotice')){
                                                       await _notificationService.requestNotificationPermissions();
                                                       // print("Token: " + widget.username['tokenNotice']);
-                                                      await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                      // await _notificationService.sendNotification(order['username']['tokenNotice'],'Hello');
                                                     }
                                                     setState(()  {
 
@@ -255,11 +255,11 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     }else{
                                                       await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
                                                     }
-                                                    if (widget.username.containsKey('tokenNotice')){
+                                                    if (order['username'].containsKey('tokenNotice')){
                                                       await _notificationService.requestNotificationPermissions();
                                                       // print("Token: " + widget.username['tokenNotice']);
-                                                      await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                      // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                     }
                                                     setState(()  {
 
@@ -354,7 +354,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       if (widget.username.containsKey('tokenNotice')){
                                                         await _notificationService.requestNotificationPermissions();
                                                           // print("Token: " + widget.username['tokenNotice']);
-                                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                        await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
                                                         await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                       }
                                                     }
