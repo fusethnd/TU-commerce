@@ -298,7 +298,7 @@ Future<void> sendEmailVerification() async {
 Future<List<DocumentSnapshot>> getProducts() async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('Product')
-      .orderBy('time')
+      .orderBy('time',descending: true)
       .get();
   return querySnapshot.docs;
 }
