@@ -78,7 +78,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
+          backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
           toolbarHeight: 100,
         ),
         body: Align(

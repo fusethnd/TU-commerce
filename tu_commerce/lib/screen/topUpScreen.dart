@@ -6,10 +6,11 @@ import 'package:tu_commerce/main.dart';
 import 'navigationbarCustomer.dart';
 
 class TopUpScreen extends StatefulWidget {
+  Map<String, dynamic> username;
   final DocumentSnapshot<Map<String, dynamic>> userCredit;
   final String creditID;
 
-  TopUpScreen({Key? key, required this.creditID, required this.userCredit})
+  TopUpScreen({Key? key, required this.username, required this.creditID, required this.userCredit})
       : super(key: key);
 
   @override
@@ -68,10 +69,13 @@ class _TopUpScreenState extends State<TopUpScreen> {
             'Top Up',
             style: TextStyle(
               color: Color.fromRGBO(54, 91, 109, 1.0),
+              // color: widget.username['shoppingMode']
+              // ? Color.fromRGBO(54, 91, 109, 1.0)
+              // : Color.fromRGBO(38, 174, 236, 1),
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
+          backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
           toolbarHeight: 100,
         ),
         body: Column(children: [

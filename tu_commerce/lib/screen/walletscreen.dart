@@ -111,7 +111,7 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
           ),
           backgroundColor: widget.username['shoppingMode']
-              ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
+              ? Color.fromRGBO(65, 193, 186, 1.0) // True condition
               : Color.fromRGBO(32, 157, 214, 1), // False condition
           toolbarHeight: 100,
           automaticallyImplyLeading: false,
@@ -169,7 +169,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => TopUpScreen(
-                              creditID: creditID, userCredit: userCredit!)),
+                              username: widget.username , creditID: creditID, userCredit: userCredit!)),
                     );
                   },
                   child: const Text("Top Up"),

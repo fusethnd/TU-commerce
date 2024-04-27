@@ -102,8 +102,17 @@ class _EditProfileState extends State<EditProfile> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Edit Profile'),
+        title: const Text(
+          'Edit Profile',
+          style: TextStyle(
+            color: Color.fromRGBO(60, 91, 109, 1.0),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
         leading: const GoBackButton(),
+        toolbarHeight: 100,
+        backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
+        centerTitle: true,  
       ),
       body: MaterialApp(
         theme: ThemeData(

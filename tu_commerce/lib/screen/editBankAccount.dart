@@ -64,7 +64,7 @@ class _EditBankAccountState extends State<EditBankAccount> {
           ),
         ),
         backgroundColor: widget.username['shoppingMode']
-            ? Color.fromRGBO(98, 221, 214, 1.0)
+            ? Color.fromRGBO(65, 193, 186, 1.0)
             : Color.fromRGBO(32, 157, 214, 1),
         toolbarHeight: 100,
       ),
