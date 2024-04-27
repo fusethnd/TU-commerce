@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/productBox.dart';
 import '../function/Firebase.dart';
 import 'navigationbarCustomer.dart';
@@ -64,7 +65,10 @@ class _ShowCategoryState extends State<ShowCategory> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(widget.category),),
+      appBar: AppBar(
+        title: Text(widget.category),
+        leading: const GoBackButton(),
+      ),
       body: GridView.builder(
           padding: const EdgeInsets.all(ProductGridViewStyle.padding),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

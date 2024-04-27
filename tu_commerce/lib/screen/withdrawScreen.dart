@@ -2,13 +2,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tu_commerce/main.dart';
 import 'navigationbarCustomer.dart';
 
 class WithdrawScreen extends StatefulWidget {
+  Map<String, dynamic> username;
   final DocumentSnapshot<Map<String, dynamic>> userCredit;
   final String creditID;
 
-  WithdrawScreen({Key? key, required this.creditID, required this.userCredit})
+  WithdrawScreen({Key? key, required this.username,required this.creditID, required this.userCredit})
       : super(key: key);
 
   @override
@@ -69,14 +71,17 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
-          title: const Text(
+          leading: GoBackButton(),
+          title:  Text(
             'Withdraw',
             style: TextStyle(
               color: Color.fromRGBO(54, 91, 109, 1.0),
               fontWeight: FontWeight.bold,
             ),
           ),
-          backgroundColor: const Color.fromRGBO(98, 221, 214, 1.0),
+          backgroundColor: widget.username['shoppingMode']
+              ? Color.fromRGBO(65, 193, 186, 1.0) // True condition
+              : Color.fromRGBO(32, 157, 214, 1),
           toolbarHeight: 100,
         ),
         body: Align(
@@ -91,7 +96,9 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                 height: 120.0,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
-                    color: const Color.fromRGBO(98, 221, 214, 1.0)),
+                    color: widget.username['shoppingMode']
+                    ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
+                    : Color.fromRGBO(38, 174, 236, 1)),
                 child: RichText(
                   text: TextSpan(
                     children: [
@@ -130,7 +137,9 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                       height: 200.0,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
-                          color: const Color.fromRGBO(98, 221, 214, 1.0)),
+                          color: widget.username['shoppingMode']
+                    ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
+                    : Color.fromRGBO(38, 174, 236, 1)),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
@@ -189,7 +198,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                         ],
                       )),
 
-
+                  
                   Padding(
                     padding: const EdgeInsets.all(
                         30.0), // Adjust the outer padding value as needed
@@ -198,22 +207,6 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                         _formKey.currentState!.save();
                         _topUp();
                       },
-                      style: ButtonStyle(
-                        backgroundColor: MaterialStateProperty.all(
-                            const Color.fromRGBO(54, 91, 109, 1.0)),
-                        foregroundColor: MaterialStateProperty.all(
-                            const Color.fromRGBO(255, 255, 255, 1)),
-                        textStyle: MaterialStateProperty.all(
-                          const TextStyle(
-                            fontSize: 16,
-                          ),
-                        ),
-                        padding: MaterialStateProperty.all(
-                          const EdgeInsets.symmetric(
-                              horizontal:
-                                  40), 
-                        ),
-                      ),
                       child: const Text("Withdraw"),
                     ),
                   ),

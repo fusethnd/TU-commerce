@@ -150,6 +150,7 @@ class _LoginState extends State<Login> {
                               )
                             ),
                             foregroundColor: MaterialStateProperty.all(const Color.fromRGBO(54, 91, 109, 1.0)),
+                            backgroundColor: MaterialStateProperty.all(Colors.white),
                           minimumSize: MaterialStateProperty.all(const Size(double.infinity, 50))
                         ),
                         child: const Text('Login'),

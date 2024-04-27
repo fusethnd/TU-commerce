@@ -30,11 +30,13 @@ class _NavigationState extends State<Navigation> {
   late int _selectedIndex;
 
   late List<Widget> _widgetOptions;
+  Map<String, dynamic>? allNotice;
 
   @override
   void initState() {
     // TODO: implement initState
     super.initState();
+    _initialState();
     _selectedIndex = widget.temp;
     widget.username['shoppingMode'] = false;
     _widgetOptions = <Widget>[
@@ -46,25 +48,48 @@ class _NavigationState extends State<Navigation> {
       InboxScreen(
         username: widget.username,
       ),
-      const NoticeSeller(),
+      NoticeSeller(username: widget.username,),
       AddProduct(username: widget.username),
       HistorySeller(username: widget.username),
       ToShipScreen(username: widget.username),
     ];
   }
+  Future<void> _initialState() async {
+    Map<String, dynamic>? tempMap = (await FirebaseFirestore.instance
+        .collection('Notice')
+        // ignore: prefer_interpolation_to_compose_strings
+        .doc("seller"+widget.username['username'])
+        .get())
+        .data();
+    tempMap ??= {
+        "length":0,
+        "noticeList":[]
+      };
+    print('error');
+    print(tempMap);
+    if (mounted){
+      setState(() {
+        allNotice = tempMap;
+      });
+    }
 
+  }
   @override
   Widget build(BuildContext context) {
+    _initialState();
+
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
+        color: Colors.white,
+        backgroundColor: Color.fromRGBO(32, 157, 214, 1),
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
           setState(() {
             _selectedIndex = index;
           });
         },
-        tabs: const [
+        tabs: [
           GButton(
             icon: Icons.inventory,
             // text: 'Stock',
@@ -83,6 +108,12 @@ class _NavigationState extends State<Navigation> {
           ),
           GButton(
             icon: Icons.notifications,
+            iconColor:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) 
+             ? Colors.red 
+             : Colors.white,
+             onPressed: () async{
+              await FirebaseFirestore.instance.collection('Notice').doc("seller"+widget.username['username']).update({'length':allNotice!['noticeList'].length});
+             },
             // text: 'account',
           ),
         ],

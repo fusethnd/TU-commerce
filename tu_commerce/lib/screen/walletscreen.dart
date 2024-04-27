@@ -48,18 +48,20 @@ class _WalletScreenState extends State<WalletScreen> {
           .collection("BankAccount")
           .doc(creditDoc.data()?['bankAccount'])
           .get();
+      if (mounted){
+        setState(() {
+          balance = creditDoc.data()?['balance'].toDouble();
+          bankNumber = bankAccountDoc.data()?['bankNumber'];
+          bankName = bankAccountDoc.data()?['bankName'];
+          name = bankAccountDoc.data()?['name'];
+          creditID = user?['Credit'];
+          bankAccountID = creditDoc.data()?['bankAccount'];
+          userCredit = creditDoc;
+          isHaveCredit = true;
+          isLoading = false;
+        });
 
-      setState(() {
-        balance = creditDoc.data()?['balance'].toDouble();
-        bankNumber = bankAccountDoc.data()?['bankNumber'];
-        bankName = bankAccountDoc.data()?['bankName'];
-        name = bankAccountDoc.data()?['name'];
-        creditID = user?['Credit'];
-        bankAccountID = creditDoc.data()?['bankAccount'];
-        userCredit = creditDoc;
-        isHaveCredit = true;
-        isLoading = false;
-      });
+      }
     }
   }
 
@@ -111,7 +113,7 @@ class _WalletScreenState extends State<WalletScreen> {
             ),
           ),
           backgroundColor: widget.username['shoppingMode']
-              ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
+              ? Color.fromRGBO(65, 193, 186, 1.0) // True condition
               : Color.fromRGBO(32, 157, 214, 1), // False condition
           toolbarHeight: 100,
           automaticallyImplyLeading: false,
@@ -169,25 +171,9 @@ class _WalletScreenState extends State<WalletScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => TopUpScreen(
-                              creditID: creditID, userCredit: userCredit!)),
+                              username: widget.username , creditID: creditID, userCredit: userCredit!)),
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(54, 91, 109, 1.0)),
-                    foregroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(255, 255, 255, 1)),
-                    textStyle: MaterialStateProperty.all(
-                      const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    padding: MaterialStateProperty.all(
-                      const EdgeInsets.symmetric(
-                          horizontal:
-                              40), // Horizontal padding inside the button
-                    ),
-                  ),
                   child: const Text("Top Up"),
                 ),
                 const SizedBox(width: 40),
@@ -200,25 +186,9 @@ class _WalletScreenState extends State<WalletScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => WithdrawScreen(
-                              creditID: creditID, userCredit: userCredit!)),
+                              username:widget.username ,creditID: creditID, userCredit: userCredit!)),
                     );
                   },
-                  style: ButtonStyle(
-                    backgroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(54, 91, 109, 1.0)),
-                    foregroundColor: MaterialStateProperty.all(
-                        Color.fromRGBO(255, 255, 255, 1)),
-                    textStyle: MaterialStateProperty.all(
-                      const TextStyle(
-                        fontSize: 16,
-                      ),
-                    ),
-                    padding: MaterialStateProperty.all(
-                      EdgeInsets.symmetric(
-                          horizontal:
-                              40), // Horizontal padding inside the button
-                    ),
-                  ),
                   child: Text("Withdraw"),
                 ),
               ],
