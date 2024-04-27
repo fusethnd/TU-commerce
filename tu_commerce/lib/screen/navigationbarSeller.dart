@@ -35,6 +35,7 @@ class _NavigationState extends State<Navigation> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    _initialState();
     _selectedIndex = widget.temp;
     widget.username['shoppingMode'] = false;
     _widgetOptions = <Widget>[
@@ -52,7 +53,25 @@ class _NavigationState extends State<Navigation> {
       ToShipScreen(username: widget.username),
     ];
   }
+  Future<void> _initialState() async {
+    Map<String, dynamic>? tempMap = (await FirebaseFirestore.instance
+        .collection('Notice')
+        .doc("seller"+widget.username['username'])
+        .get())
+        .data();
+    if (tempMap == null) {
+      tempMap = {
+        "length":0,
+        "noticeList":[]
+      };
+    }
+    if (mounted){
+      setState(() {
+        allNotice = tempMap;
+      });
+    }
 
+  }
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -85,6 +104,7 @@ class _NavigationState extends State<Navigation> {
           ),
           GButton(
             icon: Icons.notifications,
+            iconColor: Colors.red,
             // text: 'account',
           ),
         ],
