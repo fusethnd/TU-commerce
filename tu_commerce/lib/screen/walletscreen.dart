@@ -48,18 +48,20 @@ class _WalletScreenState extends State<WalletScreen> {
           .collection("BankAccount")
           .doc(creditDoc.data()?['bankAccount'])
           .get();
+      if (mounted){
+        setState(() {
+          balance = creditDoc.data()?['balance'].toDouble();
+          bankNumber = bankAccountDoc.data()?['bankNumber'];
+          bankName = bankAccountDoc.data()?['bankName'];
+          name = bankAccountDoc.data()?['name'];
+          creditID = user?['Credit'];
+          bankAccountID = creditDoc.data()?['bankAccount'];
+          userCredit = creditDoc;
+          isHaveCredit = true;
+          isLoading = false;
+        });
 
-      setState(() {
-        balance = creditDoc.data()?['balance'].toDouble();
-        bankNumber = bankAccountDoc.data()?['bankNumber'];
-        bankName = bankAccountDoc.data()?['bankName'];
-        name = bankAccountDoc.data()?['name'];
-        creditID = user?['Credit'];
-        bankAccountID = creditDoc.data()?['bankAccount'];
-        userCredit = creditDoc;
-        isHaveCredit = true;
-        isLoading = false;
-      });
+      }
     }
   }
 
