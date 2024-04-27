@@ -302,6 +302,22 @@ Future<List<DocumentSnapshot>> getProducts() async {
       .get();
   return querySnapshot.docs;
 }
+Future<Map<String, dynamic>> getProductsByUsername(String username) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('Product')
+      .where('seller.username', isEqualTo: username)
+      .get();
+
+  Map<String, dynamic> allProducts = {};
+  for (var doc in querySnapshot.docs) {
+    allProducts[doc.id] = doc.data();  // Using document ID as key
+  }
+  print('-----sadas');
+  print(allProducts);
+  return allProducts;
+}
+
+
 
 Future<Map<String, dynamic>> getHistory(String id) async {
   DocumentSnapshot<Map<String, dynamic>> querySnapshot =
