@@ -58,6 +58,8 @@ class _NavigationState extends State<Navigation> {
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
+        color: Colors.white,
+        backgroundColor: Color.fromRGBO(32, 157, 214, 1),
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
           setState(() {
