@@ -42,26 +42,32 @@ class _StockScreenState extends State<StockScreen> {
     // print('----------');
     // print(allProduct);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('My Stock'),
+      appBar: PreferredSize(
+        preferredSize: Size.fromHeight(100), // Adjust height as needed
+        child: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 30),
+
+          // Add horizontal padding
+          child: AppBar(
+            title: const Text(
+              'My Stock',
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Color.fromRGBO(60, 91, 109, 1.0),
+              ),
+            ),
+            automaticallyImplyLeading: false,
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.vertical(),
+            ),
+          ),
+        ),
       ),
 
       body: allProduct == null
           ? const Center(child: CircularProgressIndicator())
           : Column(
               children: [
-                // Expanded(
-                // child: ListView.builder(
-                //     itemCount: allProduct!.length,
-                //     itemBuilder: (context,index) {
-                //       Map<String,dynamic> item = allProduct![index];
-                //       print(item);
-                //       print(allProduct);
-
-                //     }
-                //   )
-                // )
-
                 Expanded(
                   child: ListView.builder(
                     itemCount: allProduct!.length,
@@ -72,54 +78,104 @@ class _StockScreenState extends State<StockScreen> {
                           item); // Debugging statement to see the data structure
                       print(allProduct); // Debugging statement to see all data
 
-                      return ListTile(
-                        leading: item['link'] != null
-                            ? Image.network(
-                                item['link'],
-                                width:
-                                    50, // Specify the width of the image for consistent sizing
-                                height: 50, // Specify the height of the image
-                                fit: BoxFit
-                                    .cover, // Ensures the image covers the box without changing the aspect ratio
-                              )
-                            : SizedBox(
-                                width: 50,
-                                height: 50), // Placeholder if the link is null
-                        title: Text(item['prodName'] ??
-                            'No Product Name'), // Display the product name
-                        subtitle: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                                'Category: ${item['category'] ?? 'No Category'}'), // Display the category
-                            Text(item['details'] ??
-                                'No Details'), // Display details
-                          ],
-                        ),
-                        trailing: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                                '฿ ${item['price'] ?? 'N/A'}'), // Display the price
-                          ],
-                        ),
-                        onTap: () {
-                          // Action when the entire ListTile is tapped, e.g., navigate to a detail page
-                        },
+                      return Column(
+                        children: [
+                          // Container(
+                          //   width: 100,
+                          //   height: 100,
+                          //   decoration: BoxDecoration(color: Colors.white),
+                          //   child: Image.network(
+                          //     item['link'], // Use item['link'] as the image URL
+                          //     fit: BoxFit.contain,
+                          //   ),
+                          // ),
+                          ListTile(
+                            leading: item['link'] != null
+                                ? Container(
+                                    width: 100,
+                                    height: 100,
+                                    decoration: BoxDecoration(
+                                      color: Colors.white,
+                                      // Optional: Add border radius for rounded corners
+                                    ),
+                                    child: Image.network(
+                                      item['link'],
+                                      // fit: BoxFit.contain,
+                                    ),
+                                  )
+                                : SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                  ),
+                            title: Text(
+                              item['prodName'] ?? 'No Product Name',
+                              style: TextStyle(
+                                color: Color.fromRGBO(60, 91, 109, 1.0),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                            subtitle: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                    'Category: ${item['category'] ?? 'No Category'}'),
+                                SizedBox(
+                                  height: 30,
+                                ),
+                                // Display the category
+                                Text(item['details'] ??
+                                    'No Details'), // Display details
+                              ],
+                            ),
+                            trailing: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                    '฿ ${item['price'] ?? 'N/A'}'), // Display the price
+                              ],
+                            ),
+                            onTap: () {
+                              // Action when the entire ListTile is tapped, e.g., navigate to a detail page
+                            },
+                          ),
+                          Container(
+                            width: MediaQuery.of(context).size.width *
+                                0.9, // Set width to 80% of the screen width
+                            child: Divider(
+                              color: Color.fromRGBO(174, 190, 199,
+                                  1), // Set the color of the divider
+                              thickness: 1, // Set the thickness of the divider
+                              height: 0, // Set the height of the divider
+                            ),
+                          ),
+                        ],
                       );
                     },
                   ),
                 ),
-                ElevatedButton(
-        onPressed: (){
-          Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
-              return Navigation(username: widget.email, temp: 5);
-          }
-        ),(Route<dynamic> route) => false);
-        },
-        child: Icon(Icons.add),
-      )
-
+                Padding(
+                  padding:
+                      EdgeInsets.all(20), // Adjust the padding values as needed
+                  child: Align(
+                    alignment: Alignment.centerRight,
+                    child: ElevatedButton(
+                      onPressed: () {
+                        Navigator.pushAndRemoveUntil(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) =>
+                                  Navigation(username: widget.email, temp: 5)),
+                          (Route<dynamic> route) => false,
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        shape: CircleBorder(),
+                        padding: EdgeInsets.all(20),
+                      ),
+                      child: Icon(Icons.add),
+                    ),
+                  ),
+                )
               ],
             ),
 
