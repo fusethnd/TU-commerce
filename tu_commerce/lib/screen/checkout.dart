@@ -1,10 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/order.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/chat.dart';
+import 'dart:ui';  // Import dart:ui for ImageFiltered
 
 import 'navigationbarCustomer.dart';
 
@@ -32,76 +36,180 @@ class _CheckOutState extends State<CheckOut> {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(title: Text(widget.product!['prodName']),), 
-      body: Column(
+      body: Stack(
         children: [
-          Image.network(widget.product!['link']),
-          Text(widget.product!['price'].toString()),
-          Text(widget.product!['prodName']),
-          Text(widget.product!['details']),
-          ElevatedButton(
-            onPressed: () async{
-              print('-----------');
-              
-              order!.time = DateTime.now(); // เพิ่มเวลา
-              if (widget.username.containsKey('Credit') == false){ // ยังไม่เพิ่ม บัตร Credit
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
-                  );
-              } else {
-                DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Credit').doc(widget.username['Credit']).get(); 
-                Map<String, dynamic> credit = snapshot.data() as  Map<String, dynamic>;
-                if (widget.username.containsKey('Credit') && credit['balance'] >= widget.product!['price']){ // กรณีเงินพอ จะเข้าเคสนี้
-                  String? id = await getUserIDByEmail(widget.username['email']);
-                  String nameRoom = widget.username['username'] + '-' + widget.product!['seller']['username']; // เซฟแชทรูม // ชื่อแชท buyer-seller ใช้ username
-                  await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).set({ // สร้าง Chat Room
-                    'roomName':nameRoom,
-                    'customer':widget.username,
-                    'seller':widget.product!['seller']
-                  }); 
-
-                  await FirebaseFirestore.instance.collection('users').doc(id).collection('ChatRoomId').doc(nameRoom).set({ // สร้าง chat username
-                    nameRoom:nameRoom
-                  });
-
-                  await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
-                    // สร้างส่ง รูปเข้าไปในแชท
-                      'sender':widget.username['username'],
-                      'reciever':widget.product!['seller']['username'],
-                      'time':FieldValue.serverTimestamp(),
-                      'message':null,
-                      'link':widget.product!['link'],
-                      'latitude': null,
-                      'longitude': null,
-                  });
-
-                  await saveOrderDB(order!); // save Order
-                  await FirebaseFirestore.instance.collection('Credit').doc(widget.username['Credit']).update({
-                  'balance': double.parse(credit['balance'].toString()) - double.parse(widget.product!['price'].toString()) }  ); // หัก credit user
-                  // await updateUser(widget.username,widget.product,'No');
-                  print('map order ---------------');
-                  // print(order as Map<String, dynamic>);
-                  // Map<String, dynamic> orderMap = order!.toMap();
-                  Map<String, dynamic> orderMap =
-                    {
+          Container(),
+          SizedBox(
+            height: screenHeight * 0.6,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                SizedBox(
+                  height: double.infinity,
+                  width: double.infinity,
+                  child: FittedBox(
+                    fit: BoxFit.fill,
+                    child: ImageFiltered(
+                      imageFilter: ImageFilter.blur(sigmaX: 10, sigmaY: 10),
+                      child: Image.network(
+                        widget.product!['link'],
+                        colorBlendMode: BlendMode.lighten,
+                      ),
+                    ),
+                  ),
+                ),
+                SizedBox(
+                  width: double.infinity,
+                  child: Image.network(
+                    widget.product!['link'],
+                    fit: BoxFit.contain,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          Positioned(
+            bottom: 0,
+            left: 0,
+            right: 0,
+            child: SingleChildScrollView(
+              child: Container(
+                padding: const EdgeInsets.all(30),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(20),
+                  color: Colors.white,
+                ),
+                height: screenHeight * 0.35,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      widget.product!['price'].toStringAsFixed(2) + " ฿",
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 25,
+                        color: Color.fromRGBO(54, 91, 109, 1.0)
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      child: Text(
+                        widget.product!['prodName'],
+                        style: const TextStyle(
+                          fontWeight: FontWeight.bold,
+                          fontSize: 35,
+                          color: Color.fromRGBO(54, 91, 109, 1.0)
+                        ),
+                      ),
+                    ),
+                    Text(
+                      widget.product!['details'],
+                      style: const TextStyle(
+                        fontWeight: FontWeight.bold,
+                        fontSize: 20,
+                        color: Color.fromRGBO(54, 91, 109, 1.0)
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ),
+          Positioned(
+            bottom: 20,
+            left: 30,
+            right: 30,
+            child: ElevatedButton(
+              style: ButtonStyle(
+                textStyle: MaterialStateProperty.all(const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
+                padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
+                shape: MaterialStateProperty.all(RoundedRectangleBorder(borderRadius: BorderRadius.circular(10)))
+              ),
+              onPressed: () async{
+                print('-----------');
+                
+                order!.time = DateTime.now(); // เพิ่มเวลา
+                if (widget.username.containsKey('Credit') == false){ // ยังไม่เพิ่ม บัตร Credit
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
+                    );
+                } else {
+                  DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Credit').doc(widget.username['Credit']).get(); 
+                  Map<String, dynamic> credit = snapshot.data() as  Map<String, dynamic>;
+                  if (widget.username.containsKey('Credit') && credit['balance'] >= widget.product!['price']){ // กรณีเงินพอ จะเข้าเคสนี้
+                    String? id = await getUserIDByEmail(widget.username['email']);
+                    String nameRoom = widget.username['username'] + '-' + widget.product!['seller']['username']; // เซฟแชทรูม // ชื่อแชท buyer-seller ใช้ username
+                    await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).set({ // สร้าง Chat Room
                       'roomName':nameRoom,
                       'customer':widget.username,
                       'seller':widget.product!['seller']
-                    };
-
-                  Navigator.pushReplacement(
-                    context, 
-                    MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
-                  );
-                }else {
-                    ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('เงินไม่พอ ไอเวร')),
+                    }); 
+                  
+                    await FirebaseFirestore.instance.collection('users').doc(id).collection('ChatRoomId').doc(nameRoom).set({ // สร้าง chat username
+                      nameRoom:nameRoom
+                    });
+                  
+                    await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
+                      // สร้างส่ง รูปเข้าไปในแชท
+                        'sender':widget.username['username'],
+                        'reciever':widget.product!['seller']['username'],
+                        'time':FieldValue.serverTimestamp(),
+                        'message':null,
+                        'link':widget.product!['link'],
+                        'latitude': null,
+                        'longitude': null,
+                    });
+                  
+                    await saveOrderDB(order!); // save Order
+                    await FirebaseFirestore.instance.collection('Credit').doc(widget.username['Credit']).update({
+                    'balance': double.parse(credit['balance'].toString()) - double.parse(widget.product!['price'].toString()) }  ); // หัก credit user
+                    // await updateUser(widget.username,widget.product,'No');
+                    print('map order ---------------');
+                    // print(order as Map<String, dynamic>);
+                    // Map<String, dynamic> orderMap = order!.toMap();
+                    Map<String, dynamic> orderMap =
+                      {
+                        'roomName':nameRoom,
+                        'customer':widget.username,
+                        'seller':widget.product!['seller']
+                      };
+                  
+                    Navigator.pushReplacement(
+                      context, 
+                      MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
                     );
+                  }else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('เงินไม่พอ ไอเวร')),
+                      );
+                  }
                 }
-              }
-            }, 
-            child: const Text('check out'))
+              }, 
+              child: const Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(Icons.shopping_cart),
+                  SizedBox(width: 15,),
+                  Text('Check Out'),
+                ],
+              )
+            ),
+          ),
+          Positioned(
+            top: 40,
+            left: 20,
+            child: RawMaterialButton(
+              padding: EdgeInsets.all(10),
+              constraints: const BoxConstraints(minWidth: 36),
+              shape: const CircleBorder(),
+              fillColor: const Color.fromRGBO(54, 91, 109, 1.0),
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white,),
+            )
+          )
         ],
       ),
     );

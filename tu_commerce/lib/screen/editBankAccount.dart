@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 
 class EditBankAccount extends StatefulWidget {
@@ -54,6 +55,7 @@ class _EditBankAccountState extends State<EditBankAccount> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
+        leading: const GoBackButton(),
         title: const Text(
           'Edit Bank Account',
           style: TextStyle(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/model/message.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'map_screen.dart';
@@ -148,6 +149,7 @@ class _ChatScreenState extends State<ChatScreen> {
     return Scaffold(
       appBar: AppBar(
         title: Text(widget.seller.toString()),
+        leading: const GoBackButton(),
       ),
       body: Column(
         children: [

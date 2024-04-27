@@ -24,7 +24,7 @@ class _FavoriteState extends State<Favorite> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Favorites'),),
+      appBar: AppBar(title: Text('Favorites'), automaticallyImplyLeading: false,),
       body: GridView.builder(
           padding: const EdgeInsets.all(ProductGridViewStyle.padding),
           gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(

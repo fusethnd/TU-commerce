@@ -5,6 +5,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/historyBox.dart';
 import 'package:tu_commerce/screen/tabContent.dart';
 import 'package:intl/intl.dart';
@@ -131,12 +132,12 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                     //
                                                     // }
-                                                    setState(() async {
+                                                    setState(()  {
                                                       if (widget.username.containsKey('tokenNotice')){
-                                                        await _notificationService.requestNotificationPermissions();
+                                                         _notificationService.requestNotificationPermissions();
                                                         // print("Token: " + widget.username['tokenNotice']);
-                                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                                         sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                         _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                       }
                                                       _initializeData(); //ให้มันไปรี query พวกไอเท็มๆ ต่างๆใหม่บรรทัดสำคัญเพราะว่ามันจะทำให้สี status เปลี่ยนทันที
                                                     });

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:form_field_validator/form_field_validator.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/model/user.dart';
 
 class RegisterScreen extends StatefulWidget {
@@ -95,6 +96,7 @@ class _RegisterScreenState extends State<RegisterScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Create Account'),
+        leading: const GoBackButton(),
         titleTextStyle: const TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 40,

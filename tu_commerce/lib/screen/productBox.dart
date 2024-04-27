@@ -32,6 +32,9 @@ class ProductBox extends StatelessWidget {
 
   @override 
   Widget build(BuildContext context) { 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenWidth < 430;
+    
     return GestureDetector(
       onTap: (){
         Navigator.push(
@@ -48,7 +51,7 @@ class ProductBox extends StatelessWidget {
                 children: [
                   Container(
                     width: double.infinity,
-                    height: 200,
+                    height: isSmallScreen ? 170 : 200,
                     decoration: const BoxDecoration(color: Colors.white),
                     child: Image.network(
                       imageUrl!,

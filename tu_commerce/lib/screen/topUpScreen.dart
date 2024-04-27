@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tu_commerce/main.dart';
 import 'navigationbarCustomer.dart';
 
 class TopUpScreen extends StatefulWidget {
@@ -62,6 +63,7 @@ class _TopUpScreenState extends State<TopUpScreen> {
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
+          leading: const GoBackButton(),
           title: const Text(
             'Top Up',
             style: TextStyle(

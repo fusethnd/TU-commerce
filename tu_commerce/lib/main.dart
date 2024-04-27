@@ -66,3 +66,15 @@ class _MyAppState extends State<MyApp> {
         home: const HomeScreen());
   }
 }
+
+class GoBackButton extends StatelessWidget {
+  const GoBackButton({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return RawMaterialButton(
+      onPressed: () => Navigator.of(context).pop(),
+      child: const Icon(Icons.arrow_back_ios_new_rounded),
+    );
+  }
+}
