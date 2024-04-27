@@ -48,32 +48,36 @@ class _NoticeSellerState extends State<NoticeSeller> {
         title: Text('Kuy'),
       ),
 
-      body: allNotice == null
-          ? const Center(child: CircularProgressIndicator()) :
+      body: allNotice == null || allNotice!['noticeList'] == null
+      ? Center(child: CircularProgressIndicator()):
       Column(
         children: [
-          Expanded(
-            child: ListView.builder(
-              itemCount: allNotice!['noticeList'] != null ? allNotice!['noticeList'].length : 0,
-              itemBuilder: (context, index) {
-                Map<String, dynamic> notice = allNotice!['noticeList'][index];
-                String status = notice['status'];
-                return Card(
-                  child: ListTile(
-                    title: Text('Status: $status'),
-                  ),
-                );
-              },
+            Expanded( // Wrap ListView.builder with Expanded
+              child: ListView.builder(
+                itemCount: allNotice!['noticeList'].length,
+                itemBuilder: (context, index) {
+                  Map<String, dynamic> notice = allNotice!['noticeList'][index];
+                  String status = notice['status'];
+                  return Card(
+                    child: ListTile(
+                      title: Text('Status: $status'),
+                    ),
+                  );
+                }
+              ),
             ),
-          ),
+
           ElevatedButton(
-                  onPressed: () async {
-                    await FirebaseFirestore.instance.collection('Notice').doc("seller${widget.username['username']}").delete();
-                    setState(() {
-                      allNotice = null;
-                    });
-                  },
-                  child: const Text('Delete')
+            onPressed: () async {
+              if (allNotice!['noticeList'].isEmpty == false){
+
+                await FirebaseFirestore.instance.collection('Notice').doc("seller${widget.username['username']}").delete();
+              }
+              // setState(() {
+              //   allNotice = null;
+              // });
+            },
+            child: const Text('Delete')
           )
 
 

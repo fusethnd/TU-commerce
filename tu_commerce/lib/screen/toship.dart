@@ -137,9 +137,10 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     // }
                                                     Map<String,dynamic> data = {
                                                       'status':'Get Order',
-                                                      'time' : DateTime.now(),
+                                                      'time' : FieldValue.serverTimestamp(),
                                                       'sellerName' : order['product']['seller']['username'],
-                                                      'customer' : order['username']['username']
+                                                      'customer' : order['username']['username'],
+                                                      'product':order['product']
                                                     };
                                                     DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
                                                     final docSnapshot = await noticeRef.get();
@@ -177,7 +178,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
                                                         'sender': widget.username['username'],
                                                         'reciever': order['username']['username'],
-                                                        'time':DateTime.now(),
+                                                        'time':FieldValue.serverTimestamp(),
                                                         'message': 'On The Way', // แก้ข้อความตรงนี้นะ
                                                         'link': null,
                                                         'latitude': null,
@@ -188,7 +189,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       'status':'On the way',
                                                       'time' : DateTime.now(),
                                                       'sellerName' : order['product']['seller']['username'],
-                                                      'customer' : order['username']['username']
+                                                      'customer' : order['username']['username'],
+                                                      'product':order['product']
                                                     };
                                                     print('Notice-----------------------');
                                                     DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
@@ -232,7 +234,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
                                                         'sender': widget.username['username'],
                                                         'reciever': order['username']['username'],
-                                                        'time':DateTime.now(), 
+                                                        'time':FieldValue.serverTimestamp(), 
                                                         'message': 'At Place', // แก้ข้อความตรงนี้นะ
                                                         'link': null, 
                                                         'latitude': null,
@@ -243,7 +245,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       'status':'At Place',
                                                       'time' : DateTime.now(),
                                                       'sellerName' : order['product']['seller']['username'],
-                                                      'customer' : order['username']['username']
+                                                      'customer' : order['username']['username'],
+                                                      'product':order['product']
                                                     };
                                                     print('Notice-----------------------');
                                                     DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
@@ -327,7 +330,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
                                                           'sender': widget.username['username'],
                                                           'reciever': order['username']['username'],
-                                                          'time':DateTime.now(), 
+                                                          'time':FieldValue.serverTimestamp(), 
                                                           'message': 'Finish', // แก้ข้อความตรงนี้นะ
                                                           'link': null, 
                                                           'latitude': null,
@@ -339,7 +342,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                         'status':'On the way',
                                                         'time' : DateTime.now(),
                                                         'sellerName' : order['product']['seller']['username'],
-                                                        'customer' : order['username']['username']
+                                                        'customer' : order['username']['username'],
+                                                        'product':order['product']
                                                       };
                                                       print('Notice-----------------------');
                                                       DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);

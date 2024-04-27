@@ -26,6 +26,12 @@ class _NoticeSreenState extends State<NoticeSreen> {
             .doc(widget.username['username'])
             .get())
         .data();
+    if (tempMap == null) {
+      tempMap = {
+        "length":0,
+        "noticeList":[]
+      };
+    }
     setState(() {
       allNotice = tempMap;
     });
@@ -39,28 +45,37 @@ class _NoticeSreenState extends State<NoticeSreen> {
         title: Text('Kuy'),
       ),
 
-      body: allNotice == null
+      body: allNotice == null || allNotice!['noticeList'] == null
           ? const Center(child: CircularProgressIndicator()) :
-      Container(
-        child: ListView.builder(
-            itemCount: allNotice!['noticeList'].length,
-            itemBuilder: (context, index) {
-              print('---------');
-              // print(allNotice!['noticeList'][index]);
-              // return null;
-              Map<String, dynamic> notice = allNotice!['noticeList'][index];
-              String status = notice['status'];
-              // String message = notice['Message'];
-              print(status);
-              // return null;
-              return Card(
-                child: ListTile(
-                  title: Text('Status: $status'),
-                  // Add more ListTile properties as needed
+          Column(
+            children: [
+                Expanded( // Wrap ListView.builder with Expanded
+                  child: ListView.builder(
+                    itemCount: allNotice!['noticeList'].length,
+                    itemBuilder: (context, index) {
+                      Map<String, dynamic> notice = allNotice!['noticeList'][index];
+                      String status = notice['status'];
+                      return Card(
+                        child: ListTile(
+                          title: Text('Status: $status'),
+                        ),
+                      );
+                    }
+                  ),
                 ),
-              );
-            }),
-      ),
+                ElevatedButton(
+                  onPressed: () async {
+                    if (allNotice!['noticeList'].isEmpty == false){
+                      await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).delete();
+                    }
+                    // setState(() {
+                    //   allNotice = null;
+                    // });
+                  },
+                  child: const Text('Delete')
+                )
+            ],
+          )
     );
   }
 }

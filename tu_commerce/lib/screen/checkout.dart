@@ -180,7 +180,8 @@ class _CheckOutState extends State<CheckOut> {
                       'status':'Get Order',
                       'time' : DateTime.now(),
                       'sellerName' : order!.product!['seller']['username'],
-                      'customer' : order!.buyer!['username']
+                      'customer' : order!.buyer!['username'],
+                      'product':widget.product
                     };
                     print('Notice-----------------------');
                     DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc("seller"+order!.product!['seller']['username'].toString());

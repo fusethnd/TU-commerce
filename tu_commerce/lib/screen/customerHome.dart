@@ -54,10 +54,14 @@ class CustomerHomeState extends State<CustomerHome> {
         .doc(widget.username['username'])
         .get())
         .data();
-    tempMap ??= {
+
+    if (tempMap == null) {
+      tempMap = {
         "length":0,
         "noticeList":[]
       };
+    }
+    print(tempMap);
     // if (widget.username.containsKey('tokenNotice')){
     //   await _notificationService.requestNotificationPermissions();
     //   // print("Token: " + widget.username['tokenNotice']);
@@ -139,7 +143,12 @@ class CustomerHomeState extends State<CustomerHome> {
                   icon: Icon(Icons.notifications),
                   color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Colors.white,
                   onPressed: () async{
-                    await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
+                    print(allNotice!['noticeList'].isEmpty);
+                    print(allNotice!['noticeList'] != []);
+                    if (allNotice!['noticeList'].isEmpty == false) {
+                      print('in notice if ---------');
+                      await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
+                    }
                     Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.username)));
                     if (mounted){
                       setState(() {

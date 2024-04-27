@@ -61,12 +61,13 @@ class _NavigationState extends State<Navigation> {
         .doc("seller"+widget.username['username'])
         .get())
         .data();
-    tempMap ??= {
+    if (tempMap == null) {
+      tempMap = {
         "length":0,
         "noticeList":[]
       };
-    print('error');
-    print(tempMap);
+    }
+
     if (mounted){
       setState(() {
         allNotice = tempMap;
@@ -113,7 +114,10 @@ class _NavigationState extends State<Navigation> {
              ? Colors.red 
              : Colors.white,
              onPressed: () async{
-              await FirebaseFirestore.instance.collection('Notice').doc("seller"+widget.username['username']).update({'length':allNotice!['noticeList'].length});
+              if (allNotice!['noticeList'].isEmpty == false){
+
+                await FirebaseFirestore.instance.collection('Notice').doc("seller"+widget.username['username']).update({'length':allNotice!['noticeList'].length});
+              }
              },
              
             // text: 'account',

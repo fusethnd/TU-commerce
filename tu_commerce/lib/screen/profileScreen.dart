@@ -293,42 +293,42 @@ class _ProfileState extends State<Profile> {
                     ],
                   ),
                 ),
-                Container(
-                  child: Stack(
-                    children: [
-                      IconButton(
-                        onPressed: () async {
-                          int noticeLength = allNotice != null ? allNotice!['noticeList'].length : 0;
+                // Container(
+                //   child: Stack(
+                //     children: [
+                //       IconButton(
+                //         onPressed: () async {
+                //           int noticeLength = allNotice != null ? allNotice!['noticeList'].length : 0;
 
-                          await FirebaseFirestore.instance
-                              .collection('Notice')
-                              .doc(widget.email['username'])
-                              .update({'length': noticeLength});
+                //           await FirebaseFirestore.instance
+                //               .collection('Notice')
+                //               .doc(widget.email['username'])
+                //               .update({'length': noticeLength});
 
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email)),
-                          );
-                        },
-                        icon: Icon(Icons.notifications),
-                      ),
-                      Positioned(
-                        right: 0,
-                        child: Container(
-                          padding: EdgeInsets.all(4),
-                          decoration: BoxDecoration(
-                            color: Colors.red, // You can customize the color as you like
-                            shape: BoxShape.circle,
-                          ),
-                          child: Text(
-                            allNotice != null ? allNotice!['noticeList'].length.toString() : '0',
-                            style: TextStyle(color: Colors.white, fontSize: 12),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                )
+                //           Navigator.push(
+                //             context,
+                //             MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email)),
+                //           );
+                //         },
+                //         icon: Icon(Icons.notifications),
+                //       ),
+                //       Positioned(
+                //         right: 0,
+                //         child: Container(
+                //           padding: EdgeInsets.all(4),
+                //           decoration: BoxDecoration(
+                //             color: Colors.red, // You can customize the color as you like
+                //             shape: BoxShape.circle,
+                //           ),
+                //           child: Text(
+                //             allNotice != null ? allNotice!['noticeList'].length.toString() : '0',
+                //             style: TextStyle(color: Colors.white, fontSize: 12),
+                //           ),
+                //         ),
+                //       ),
+                //     ],
+                //   ),
+                // )
               ],
             )));
   }
