@@ -118,6 +118,15 @@ class CustomerHomeState extends State<CustomerHome> {
                 automaticallyImplyLeading: false,
               ),
               Positioned(
+                top: 30,
+                right: 30,
+                child: Icon(Icons.notifications, color: Colors.black,)
+                // child: IconButton(
+                //   icon: Icons.notifications,
+                //   onPressed: ,
+                // )
+              ),
+              Positioned(
                 top: 200,
                 left: 70,
                 right: 70,
