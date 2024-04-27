@@ -71,7 +71,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                       Stack(
                         children: [
                           HistoryBox(
-                            partner: widget.username['shoppingMode'] ? order['username'] : order['product']['seller'],
+                            partner: widget.username['shoppingMode'] ? order['product']['seller'] : order['username'],
                             product: order['product'],
                             date: formattedDate,
                             status: status
