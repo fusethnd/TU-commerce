@@ -184,7 +184,7 @@ class _WalletScreenState extends State<WalletScreen> {
                       context,
                       MaterialPageRoute(
                           builder: (context) => WithdrawScreen(
-                              creditID: creditID, userCredit: userCredit!)),
+                              username:widget.username ,creditID: creditID, userCredit: userCredit!)),
                     );
                   },
                   child: Text("Withdraw"),

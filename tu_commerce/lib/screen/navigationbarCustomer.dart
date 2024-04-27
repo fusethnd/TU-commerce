@@ -58,13 +58,13 @@ class _NavigationState extends State<NavigationCustomer> {
     Container(),
     Container(),
   ];
-  late Map<String, dynamic> userData;
+  Map<String, dynamic>? userData;
 
   @override
   void initState() {
     super.initState();
-    _selectedIndex = widget.temp;
     _initializeUserData();
+    _selectedIndex = widget.temp;
   }
 
   void _initializeUserData() async {
@@ -111,12 +111,14 @@ class _NavigationState extends State<NavigationCustomer> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final bool isSmallScreen = screenWidth < 430;
-    
+    print("---- fuck you");
+    print(userData);
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
         color: Colors.white,
-        backgroundColor: const Color.fromRGBO(65, 193, 186, 1.0),
+        backgroundColor: Color.fromRGBO(65, 193, 186, 1.0) ,
+        
         activeColor: const Color.fromRGBO(54, 91, 109, 1.0),
         iconSize: isSmallScreen ? 20 : 30,
         selectedIndex: _selectedIndex,
