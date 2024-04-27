@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
@@ -5,6 +6,7 @@ import 'package:tu_commerce/screen/historyCustomer.dart';
 import 'package:tu_commerce/screen/home.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/noticeScreen.dart';
 import 'package:tu_commerce/screen/profilePicture.dart';
 import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
@@ -20,6 +22,9 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  Map<String, dynamic>? allNotice;
+  int? notReadNotice;
+
   logout() async {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
@@ -41,12 +46,26 @@ class _ProfileState extends State<Profile> {
 
   @override
   void initState() {
-    setState(() {});
+    _init();
     super.initState();
   }
 
+  Future<void> _init() async {
+    Map<String, dynamic>? tempMap = (await FirebaseFirestore.instance
+        .collection('Notice')
+        .doc(widget.email['username'])
+        .get())
+        .data();
+    setState(() {
+      allNotice = tempMap;
+      notReadNotice = tempMap!['noticeList'].length - tempMap['length'];
+    });
+  }
+
+
   @override
   Widget build(BuildContext context) {
+    _init();
     return Scaffold(
         appBar: AppBar(
           title: Text('Profile'),
@@ -137,6 +156,7 @@ class _ProfileState extends State<Profile> {
                           children: [
                             ElevatedButton(
                               onPressed: () {
+
                                 Navigator.pushAndRemoveUntil(
                                     context,
                                     MaterialPageRoute(
@@ -207,38 +227,40 @@ class _ProfileState extends State<Profile> {
                 Container(
                   child: Column(
                     children: [
-                      ElevatedButton(
-                        onPressed: logout,
-                        child: Text('Log Out'),
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor:
-                              Colors.red, // Sets the background color to red
-                        ),
-                      ),
-                      FutureBuilder(
-                          future: isEmailVerified(),
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            } else {
-                              bool emailVerified = snapshot.data ?? false;
-                              return Visibility(
-                                  visible: !emailVerified,
-                                  child: ElevatedButton(
-                                    onPressed: () async {
-                                      if (!emailVerified) {
-                                        await sendEmailVerification();
-                                        logout;
-                                      } else {
-                                        print('Email already verified');
-                                      }
-                                    },
-                                    child: Text('Verify'),
-                                  ));
-                            }
-                          })
+                      ElevatedButton(onPressed: logout, child: Text('log out')),
+                      // FutureBuilder(
+                      //   future: isEmailVerified(),
+                      //   builder: (context,snapshot){
+                      //     if (snapshot.connectionState == ConnectionState.waiting) {
+                      //       return CircularProgressIndicator();
+                      //     }else{
+                      //       bool emailVerified = snapshot.data ?? false;
+                      //       return Visibility(
+                      //         visible: !emailVerified,
+                      //         child: ElevatedButton(
+                      //           onPressed: () async{
+                      //             if (!emailVerified) {
+                      //               await sendEmailVerification();
+                      //               logout;
+                      //             } else {
+                      //               print('Email already verified');
+                      //             }
+                      //           }, child: Text('Verify'),
+                      //         )
+                      //       );
+                      //     }
+                      //   }
+                      //   )
                     ],
+                  ),
+                ),
+                Container(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': allNotice!['noticeList'].length});
+                      Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email,)));
+                    },
+                    child: Text("Notice $notReadNotice"),
                   ),
                 )
               ],
