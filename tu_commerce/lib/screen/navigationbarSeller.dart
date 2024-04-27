@@ -46,7 +46,7 @@ class _NavigationState extends State<Navigation> {
       InboxScreen(
         username: widget.username,
       ),
-      const NoticeSeller(),
+      NoticeSeller(username: widget.username,),
       AddProduct(username: widget.username),
       HistorySeller(username: widget.username),
       ToShipScreen(username: widget.username),
