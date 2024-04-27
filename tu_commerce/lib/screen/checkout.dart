@@ -176,7 +176,25 @@ class _CheckOutState extends State<CheckOut> {
                         'customer':widget.username,
                         'seller':widget.product!['seller']
                       };
-                  
+                    Map<String,dynamic> data = {
+                      'status':'Get Order',
+                      'time' : DateTime.now(),
+                      'sellerName' : order!.product!['seller']['username'],
+                      'customer' : order!.buyer!['username']
+                    };
+                    print('Notice-----------------------');
+                    DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc("seller"+order!.product!['seller']['username'].toString());
+                    final docSnapshot = await noticeRef.get();
+                    if (!docSnapshot.exists) {
+                      await noticeRef.set(
+                          {
+                            "noticeList" : [data],
+                            "length":0
+                          }
+                      );
+                    }else{
+                      await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
+                    }
                     Navigator.pushReplacement(
                       context, 
                       MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))

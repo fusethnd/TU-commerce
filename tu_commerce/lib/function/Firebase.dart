@@ -298,10 +298,27 @@ Future<void> sendEmailVerification() async {
 Future<List<DocumentSnapshot>> getProducts() async {
   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
       .collection('Product')
-      .orderBy('time')
+      .orderBy('time',descending: true)
       .get();
   return querySnapshot.docs;
 }
+Future<List<Map<String, dynamic>>> getProductsByUsername(String username) async {
+  QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+      .collection('Product')
+      .where('seller.username', isEqualTo: username)
+      .get();
+
+  List<Map<String, dynamic>> productList = [];
+
+  querySnapshot.docs.forEach((doc) {
+    Map<String, dynamic> data = doc.data() as Map<String, dynamic>;
+    productList.add(data);
+  });
+
+  return productList;
+}
+
+
 
 Future<Map<String, dynamic>> getHistory(String id) async {
   DocumentSnapshot<Map<String, dynamic>> querySnapshot =

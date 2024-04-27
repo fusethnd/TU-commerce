@@ -41,6 +41,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
 
   @override
   Widget build(BuildContext context) {
+    initState();
     return Scaffold(
       appBar: AppBar(
         title: Text('TO SHIP'),
@@ -71,7 +72,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                       Stack(
                         children: [
                           HistoryBox(
-                            partner: widget.username['shoppingMode'] ? order['username'] : order['product']['seller'],
+                            partner: widget.username['shoppingMode'] ? order['product']['seller']  : order['username'],
                             product: order['product'],
                             date: formattedDate,
                             status: status
@@ -132,13 +133,25 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                     //
                                                     // }
+                                                    Map<String,dynamic> data = {
+                                                      'status':'Get Order',
+                                                      'time' : DateTime.now(),
+                                                      'sellerName' : order['product']['seller']['username'],
+                                                      'customer' : order['username']['username']
+                                                    };
+                                                    DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
+                                                    final docSnapshot = await noticeRef.get();
+                                                    if (!docSnapshot.exists) {
+                                                      await noticeRef.set(
+                                                        {
+                                                          "noticeList" : [data],
+                                                          "length":0
+                                                        }
+                                                      );
+                                                    }else{
+                                                      await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
+                                                    }
                                                     setState(()  {
-                                                      if (widget.username.containsKey('tokenNotice')){
-                                                         _notificationService.requestNotificationPermissions();
-                                                        // print("Token: " + widget.username['tokenNotice']);
-                                                         sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                         _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                                      }
                                                       _initializeData(); //ให้มันไปรี query พวกไอเท็มๆ ต่างๆใหม่บรรทัดสำคัญเพราะว่ามันจะทำให้สี status เปลี่ยนทันที
                                                     });
                                                   },
@@ -169,13 +182,33 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                         'longitude': null,
                                                     });
                                                     await updateStatus(order,1,index);
-                                                    setState(() async {
-                                                      if (widget.username.containsKey('tokenNotice')){
-                                                        await _notificationService.requestNotificationPermissions();
-                                                        // print("Token: " + widget.username['tokenNotice']);
-                                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                                      }
+                                                    Map<String,dynamic> data = {
+                                                      'status':'On the way',
+                                                      'time' : DateTime.now(),
+                                                      'sellerName' : order['product']['seller']['username'],
+                                                      'customer' : order['username']['username']
+                                                    };
+                                                    print('Notice-----------------------');
+                                                    DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
+                                                    final docSnapshot = await noticeRef.get();
+                                                    if (!docSnapshot.exists) {
+                                                      await noticeRef.set(
+                                                          {
+                                                            "noticeList" : [data],
+                                                            "length":0
+                                                          }
+                                                      );
+                                                    }else{
+                                                      await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
+                                                    }
+                                                    if (order['username'].containsKey('tokenNotice')){
+                                                      await _notificationService.requestNotificationPermissions();
+                                                      // print("Token: " + widget.username['tokenNotice']);
+                                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                      // await _notificationService.sendNotification(order['username']['tokenNotice'],'Hello');
+                                                    }
+                                                    setState(()  {
+
                                                       _initializeData();
                                                     });
                                                   },
@@ -204,13 +237,33 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                         'longitude': null,
                                                     });
                                                     await updateStatus(order,2,index);
-                                                    setState(() async {
-                                                      if (widget.username.containsKey('tokenNotice')){
-                                                        await _notificationService.requestNotificationPermissions();
-                                                        // print("Token: " + widget.username['tokenNotice']);
-                                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                                      }
+                                                    Map<String,dynamic> data = {
+                                                      'status':'At Place',
+                                                      'time' : DateTime.now(),
+                                                      'sellerName' : order['product']['seller']['username'],
+                                                      'customer' : order['username']['username']
+                                                    };
+                                                    print('Notice-----------------------');
+                                                    DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
+                                                    final docSnapshot = await noticeRef.get();
+                                                    if (!docSnapshot.exists) {
+                                                      await noticeRef.set(
+                                                          {
+                                                            "noticeList" : [data],
+                                                            "length":0
+                                                          }
+                                                      );
+                                                    }else{
+                                                      await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
+                                                    }
+                                                    if (order['username'].containsKey('tokenNotice')){
+                                                      await _notificationService.requestNotificationPermissions();
+                                                      // print("Token: " + widget.username['tokenNotice']);
+                                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                      // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                                    }
+                                                    setState(()  {
+
                                                       _initializeData();
                                                     });
                                                   },
@@ -280,12 +333,31 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       });
                                                       // ถ้าเกิดคนกดเป็นคือคนขายก็จะถือว่า updata status ปกติ
                                                       await updateStatus(order,3,index);
-                                                        if (widget.username.containsKey('tokenNotice')){
-                                                          await _notificationService.requestNotificationPermissions();
+                                                      Map<String,dynamic> data = {
+                                                        'status':'On the way',
+                                                        'time' : DateTime.now(),
+                                                        'sellerName' : order['product']['seller']['username'],
+                                                        'customer' : order['username']['username']
+                                                      };
+                                                      print('Notice-----------------------');
+                                                      DocumentReference noticeRef = FirebaseFirestore.instance.collection("Notice").doc(order['username']['username']);
+                                                      final docSnapshot = await noticeRef.get();
+                                                      if (!docSnapshot.exists) {
+                                                        await noticeRef.set(
+                                                            {
+                                                              "noticeList" : [data],
+                                                              "length":0
+                                                            }
+                                                        );
+                                                      }else{
+                                                        await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
+                                                      }
+                                                      if (widget.username.containsKey('tokenNotice')){
+                                                        await _notificationService.requestNotificationPermissions();
                                                           // print("Token: " + widget.username['tokenNotice']);
-                                                          await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                          await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                                        }
+                                                        await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                                      }
                                                     }
                                                                                 
                                                     setState(() {

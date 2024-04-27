@@ -39,9 +39,9 @@ class _InboxScreenState extends State<InboxScreen> {
 
   Future<void> _refreshData() async {
     await Future.delayed(const Duration(seconds: 0)); // Simulate a delay
-    widget.username['shoppingmode'] 
+    widget.username['shoppingmode']
     ? Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 3) ),(Route<dynamic> route) => false)
-    : Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => Navigation(username: widget.username,temp: 3) ),(Route<dynamic> route) => false); 
+    : Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => Navigation(username: widget.username,temp: 3) ),(Route<dynamic> route) => false);
   }
 
   Future<void> _initializeData() async {
@@ -51,22 +51,25 @@ class _InboxScreenState extends State<InboxScreen> {
       //     widget.username['username'], widget.username['shoppingMode']);
       List<DocumentSnapshot> temp2 = await getChatRoom(
           widget.username['username'], widget.username['shoppingMode']);
-        
-      print('temp2 ----------');
-      print(temp2);
-      // for (DocumentSnapshot roomSnapshot in temp2) {
-      //   String chatId = roomSnapshot.id;
-      //   String name = roomSnapshot == widget.username['username'] ? widget.username['username'] : roomSnapshot['customer']['username'];
-      //   print(chatId);
-      //   print(name);
-      //   Map<String, dynamic>? lastMessageData = await lastMessage(chatId, name);
-      //   storeLast.add(lastMessageData);
-      //
-      // }
-      
+
+      // print('temp2 ----------');
+      // print(temp2);
+      for (DocumentSnapshot roomSnapshot in temp2) {
+        String chatId = roomSnapshot.id;
+        String name = roomSnapshot == widget.username['username'] ? widget.username['username'] : roomSnapshot['customer']['username'];
+        print(chatId);
+        print(name);
+        Map<String, dynamic>? lastMessageData = await lastMessage(chatId, name);
+        // print('---------- last -----------');
+        // print(lastMessageData);
+        storeLast.add(lastMessageData);
+
+      }
+      print('--------- last ');
+      print(storeLast.length);
       if (mounted) {
         setState(() {
-          // orders = temp;
+          last_message = storeLast;
           chatRooms = temp2;
         });
       }
@@ -125,30 +128,33 @@ class _InboxScreenState extends State<InboxScreen> {
     //       .get();
     // }
 
-    
+
   }
-  // Future<Map<String, dynamic>?> lastMessage(chatId,senderName) async {
-  //   Map<String, dynamic>? lastMessageData;
-  //   print('-----in');
-  //   print(chatId);
-  //   print(senderName);
-  //   QuerySnapshot querySnapshot = await FirebaseFirestore.instance
-  //       .collection('ChatRoom')
-  //       .doc(chatId)
-  //       .collection('Message').orderBy('time', descending: true)
-  //       .where('sender', isEqualTo: senderName) // Filter by sender name
-  //
-  //       .get();
-  //
-  //   // if (querySnapshot.docs.isNotEmpty) {
-  //   //   lastMessageData = querySnapshot.docs.first.data() as Map<String, dynamic>;
-  //   //   // lastMessageData['time'] = (lastMessageData['time'] as Timestamp).toDate(); // Convert timestamp to DateTime
-  //   // }
-  //   print(querySnapshot);
-  //   print(lastMessageData);
-  //   print('end-------');
-  //   return lastMessageData;
-  // }
+  Future<Map<String, dynamic>?> lastMessage(chatId,senderName) async {
+    Map<String, dynamic>? lastMessageData;
+    print('-----in');
+    print(chatId);
+    print(senderName);
+    QuerySnapshot querySnapshot = await FirebaseFirestore.instance
+        .collection('ChatRoom')
+        .doc(chatId)
+        .collection('Message')
+        // .where('sender', isEqualTo: senderName) // Filter by sender name
+        .orderBy('time', descending: true).limit(1)
+        .get();
+    if (querySnapshot.docs.isNotEmpty) {
+      // Access the first document
+      var firstDocument = querySnapshot.docs.first;
+      // Convert document data to a map
+      lastMessageData = firstDocument.data() as Map<String, dynamic>?;
+    } else {
+      // No documents found
+    }
+    print(querySnapshot);
+    print(lastMessageData);
+    print('end-------');
+    return lastMessageData;
+  }
 
 
   Future<Map<String, dynamic>?> message(id) async {
@@ -207,6 +213,9 @@ class _InboxScreenState extends State<InboxScreen> {
                         : chatRoom['customer']['fname'] +
                             " " +
                             chatRoom['customer']['lname'];
+                    String lastMessage = last_message![index]['message'] != null ? last_message![index]['message'] :
+                                        last_message![index]['link'] != null ? "Image" : "Map";
+
                     // print(sellerName);
                     // print('-------');
                     // print(order);
@@ -236,9 +245,10 @@ class _InboxScreenState extends State<InboxScreen> {
                                 fontSize: 20,
                                 color: Color.fromRGBO(54, 91, 109, 1.0)),
                             // subtitleTextStyle: ,
-          
+
                             leading: CircleAvatar(),
                             title: Text(sellerName),
+                            subtitle: Text(lastMessage),
                           ),
                         ),
                       ),
