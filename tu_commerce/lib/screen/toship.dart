@@ -82,7 +82,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                             // status ที่ 0 คือเริ่มต้น
                               IgnorePointer(
                                 ignoring: (status > 0) , 
-                                child:IconButton(onPressed: () async{
+                                child:IconButton(onPressed: () async {
                                     await updateStatus(order,0,index); // เปลี่ยน status หลังกด
                                     // if (widget.username.containsKey('tokenNotice')){
                                     //   await _notificationService.requestNotificationPermissions();
@@ -91,13 +91,13 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     //   await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                     //
                                     // }
-                                    setState(() async {
                                       if (widget.username.containsKey('tokenNotice')){
                                         await _notificationService.requestNotificationPermissions();
                                         // print("Token: " + widget.username['tokenNotice']);
-                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                        await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
                                         await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                       }
+                                    setState(() {
                                       _initializeData(); //ให้มันไปรี query พวกไอเท็มๆ ต่างๆใหม่บรรทัดสำคัญเพราะว่ามันจะทำให้สี status เปลี่ยนทันที
                                     });
                                   }, icon: Icon(Icons.star),color: status == 0 ? Colors.red : Colors.grey, // 
@@ -112,20 +112,22 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
                                         'sender': widget.username['username'],
                                         'reciever': order['username']['username'],
-                                        'time':DateTime.now(),
+                                        'time':FieldValue.serverTimestamp(),
                                         'message': 'On The Way', // แก้ข้อความตรงนี้นะ
                                         'link': null,
                                         'latitude': null,
                                         'longitude': null,
                                     });
+                                    if (widget.username.containsKey('tokenNotice')){
+                                      print('notice');
+                                      print(widget.username);
+                                      await _notificationService.requestNotificationPermissions();
+                                      // print("Token: " + widget.username['tokenNotice']);
+                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                    }
                                     await updateStatus(order,1,index);
-                                    setState(() async {
-                                      if (widget.username.containsKey('tokenNotice')){
-                                        await _notificationService.requestNotificationPermissions();
-                                        // print("Token: " + widget.username['tokenNotice']);
-                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                      }
+                                    setState(() {
                                       _initializeData();
                                     });
                                 }, icon: Icon(Icons.directions_car),color: status == 1 ? Colors.red : Colors.grey,)
@@ -137,20 +139,20 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
                                         'sender': widget.username['username'],
                                         'reciever': order['username']['username'],
-                                        'time':DateTime.now(), 
+                                        'time':FieldValue.serverTimestamp(), 
                                         'message': 'At Place', // แก้ข้อความตรงนี้นะ
                                         'link': null, 
                                         'latitude': null,
                                         'longitude': null,
                                     });
                                     await updateStatus(order,2,index);
-                                    setState(() async {
-                                      if (widget.username.containsKey('tokenNotice')){
-                                        await _notificationService.requestNotificationPermissions();
-                                        // print("Token: " + widget.username['tokenNotice']);
-                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                      }
+                                    if (widget.username.containsKey('tokenNotice')){
+                                      await _notificationService.requestNotificationPermissions();
+                                      // print("Token: " + widget.username['tokenNotice']);
+                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                    }
+                                    setState(() {
                                       _initializeData();
                                     });
                                 }, icon: Icon(Icons.location_on),color: status == 2 ? Colors.red : Colors.grey,),
@@ -202,7 +204,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     await FirebaseFirestore.instance.collection('ChatRoom').doc(nameRoom).collection('Message').add({
                                         'sender': widget.username['username'],
                                         'reciever': order['username']['username'],
-                                        'time':DateTime.now(), 
+                                        'time':FieldValue.serverTimestamp(), 
                                         'message': 'Finish', // แก้ข้อความตรงนี้นะ
                                         'link': null, 
                                         'latitude': null,
@@ -210,12 +212,12 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                     });
                                     // ถ้าเกิดคนกดเป็นคือคนขายก็จะถือว่า updata status ปกติ
                                     await updateStatus(order,3,index);
-                                      if (widget.username.containsKey('tokenNotice')){
-                                        await _notificationService.requestNotificationPermissions();
-                                        // print("Token: " + widget.username['tokenNotice']);
-                                        await sendNotificationToUser(widget.username['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
-                                      }
+                                    if (widget.username.containsKey('tokenNotice')){
+                                      await _notificationService.requestNotificationPermissions();
+                                      // print("Token: " + widget.username['tokenNotice']);
+                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                    }
                                   }
 
                                   setState(() {
