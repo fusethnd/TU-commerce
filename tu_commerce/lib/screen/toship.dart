@@ -28,15 +28,17 @@ class _ToShipScreenState extends State<ToShipScreen> {
   final NotificationService _notificationService = NotificationService();
   @override
   void initState() {
-    super.initState();
+    // super.initState();
     _initializeData();
   }
 
   Future<void> _initializeData() async {
     List<DocumentSnapshot> temp = await getOrders(widget.username['username'], widget.username['shoppingMode']); // query หา order ตาม Mode
-    setState(() {
-      orders = temp;
-    });
+    if (mounted) {
+      setState(() {
+        orders = temp;
+      });
+    }
   }
 
   @override
