@@ -57,18 +57,21 @@ class _ProfileState extends State<Profile> {
         .get())
         .data();
     print(tempMap);
-    if (tempMap != null) {
+    if (mounted){
+      if (tempMap != null) {
         setState(() {
           allNotice = tempMap;
           notReadNotice = tempMap!['noticeList'].length - tempMap['length'];
         });
 
-    }else{
-      setState(() {
-        allNotice = null;
-        notReadNotice = 0;
-      });
+      }else{
+        setState(() {
+          allNotice = null;
+          notReadNotice = 0;
+        });
+      }
     }
+
 
 
   }
