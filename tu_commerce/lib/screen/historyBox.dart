@@ -18,7 +18,7 @@ class HistoryBox extends StatelessWidget {
   @override 
   Widget build(BuildContext context) { 
     return Card(
-      margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+      margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
       color: const Color.fromRGBO(242, 241, 236, 1),
       surfaceTintColor: Colors.transparent,
       shadowColor: Colors.transparent,
@@ -36,7 +36,10 @@ class HistoryBox extends StatelessWidget {
               ),
               const Spacer(),
               Text(
-                status == 3 ? "Completed" : "Not Completed",
+                status == 3 ? "Completed" : 
+                status == 2 ? "At Place" :
+                status == 1 ? "On the Way" :
+                status == 0 ? "To Ship" : "Canceled",
                 style: const TextStyle(fontSize: 15),
               )
             ],
@@ -92,8 +95,11 @@ class HistoryBox extends StatelessWidget {
               )
             ],
           ),
-          const Divider()
-          
+          const SizedBox(height: 10,),
+          const Divider(
+            height: BorderSide.strokeAlignOutside,
+            color: Color.fromRGBO(38, 174, 236, 0.3),
+          ),
         ],
       ) 
     );

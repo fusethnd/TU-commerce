@@ -223,7 +223,7 @@ class _InboxScreenState extends State<InboxScreen> {
                                       )));
                         },
                         child: Card(
-                          color: Color.fromRGBO(242, 241, 236, 1),
+                          color: const Color.fromRGBO(242, 241, 236, 1),
                           surfaceTintColor: Colors.transparent,
                           shadowColor: Colors.transparent,
                           shape: RoundedRectangleBorder(
@@ -242,7 +242,7 @@ class _InboxScreenState extends State<InboxScreen> {
                           ),
                         ),
                       ),
-                      Divider(
+                      const Divider(
                         color: Color.fromRGBO(219, 241, 240, 1.0),
                       )
                     ]);
