@@ -269,16 +269,40 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 Container(
-                  child: IconButton(onPressed: () async {
+                  child: Stack(
+                    children: [
+                      IconButton(
+                        onPressed: () async {
+                          int noticeLength = allNotice != null ? allNotice!['noticeList'].length : 0;
 
-                        if (allNotice != null){
-                          await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': allNotice!['noticeList'].length});
+                          await FirebaseFirestore.instance
+                              .collection('Notice')
+                              .doc(widget.email['username'])
+                              .update({'length': noticeLength});
 
-                        }else{
-                          await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': 0});
-                        }
-                        Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email,)));
-                  }, icon: Icon(Icons.notifications))
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email)),
+                          );
+                        },
+                        icon: Icon(Icons.notifications),
+                      ),
+                      Positioned(
+                        right: 0,
+                        child: Container(
+                          padding: EdgeInsets.all(4),
+                          decoration: BoxDecoration(
+                            color: Colors.red, // You can customize the color as you like
+                            shape: BoxShape.circle,
+                          ),
+                          child: Text(
+                            allNotice != null ? allNotice!['noticeList'].length.toString() : '0',
+                            style: TextStyle(color: Colors.white, fontSize: 12),
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
                 )
               ],
             )));
