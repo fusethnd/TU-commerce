@@ -42,7 +42,9 @@ class _StockScreenState extends State<StockScreen> {
     return Scaffold(
       appBar: AppBar(title: const Text('My Stock'),),
 
-      body: Column(
+      body: allProduct == null
+          ? const Center(child: CircularProgressIndicator())
+          : Column(
         children: [
           Expanded(
           child: ListView.builder(

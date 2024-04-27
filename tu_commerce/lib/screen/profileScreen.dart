@@ -269,18 +269,16 @@ class _ProfileState extends State<Profile> {
                   ),
                 ),
                 Container(
-                  child: ElevatedButton(
-                    onPressed: () async {
-                      if (allNotice != null){
-                        await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': allNotice!['noticeList'].length});
+                  child: IconButton(onPressed: () async {
 
-                      }else{
-                        await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': 0});
-                      }
-                      Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email,)));
-                    },
-                    child: Text("Notice $notReadNotice"),
-                  ),
+                        if (allNotice != null){
+                          await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': allNotice!['noticeList'].length});
+
+                        }else{
+                          await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length': 0});
+                        }
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email,)));
+                  }, icon: Icon(Icons.notifications))
                 )
               ],
             )));
