@@ -8,7 +8,7 @@ class Product{
   late String details;
   String category;
   late String imageUrl;
-  late String linkUrl;
+  String? linkUrl;
   late bool instock;
   late Map<String, dynamic>? seller;
   late DateTime time;

@@ -70,6 +70,9 @@ class _SellerHomeState extends State<SellerHome> {
         "noticeList":[]
       };
     }
+    if (tempOrder == null) {
+      tempOrder = [];
+    }
     if (mounted){
       setState(() {
         allNotice = tempMap;
