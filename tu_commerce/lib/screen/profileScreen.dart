@@ -13,6 +13,7 @@ import 'package:tu_commerce/screen/noticeScreen.dart';
 import 'package:tu_commerce/screen/profilePicture.dart';
 import 'package:tu_commerce/screen/toship.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
+import 'package:tu_commerce/screen/login.dart';
 
 class Profile extends StatefulWidget {
   final Map<String, dynamic> email;
@@ -32,7 +33,7 @@ class _ProfileState extends State<Profile> {
     await FirebaseAuth.instance.signOut();
     Navigator.pushAndRemoveUntil(
       context,
-      MaterialPageRoute(builder: (context) => const HomeScreen()),
+      MaterialPageRoute(builder: (context) => const Login()),
       (Route<dynamic> route) => false,
     );
   }
@@ -157,9 +158,10 @@ class _ProfileState extends State<Profile> {
                               child: Row(
                                 children: [
                                   Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
-                                      const Text("MY CREDIT", style: TextStyle(fontWeight: FontWeight.bold),),
-                                      Text('${widget.email['username']}'),
+                                      const Text("Email", style: TextStyle(fontWeight: FontWeight.bold),),
+                                      Text('${widget.email['email']}'),
                                     ],
                                   ),
                                   const Spacer(),
@@ -351,11 +353,11 @@ class _ProfileState extends State<Profile> {
                                     children: [
                                       const Expanded(
                                         child: Text(
-                                          'Email',
+                                          'Phone Number',
                                           style: TextStyle(fontWeight: FontWeight.bold),
                                         )
                                       ),
-                                      Text(widget.email['email']),
+                                      Text(widget.email['phone']),
                                     ],
                                   ),
                                   const SizedBox(height: 10,),
@@ -363,11 +365,11 @@ class _ProfileState extends State<Profile> {
                                     children: [
                                       const Expanded(
                                         child: Text(
-                                          'Phone Number',
+                                          'Address',
                                           style: TextStyle(fontWeight: FontWeight.bold),
                                         )
                                       ),
-                                      Text(widget.email['phone']),
+                                      Text(widget.email['address']),
                                     ],
                                   ),
                                 ],

@@ -88,18 +88,30 @@ class _WalletScreenState extends State<WalletScreen> {
         appBar: AppBar(
           title: const Text('Wallet'),
         ),
-        body: Column(
-          children: [
-            ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => CreateCredit()))
-                      .then((value) => setState(() {}));
-                },
-                child: Text("Create Credit")),
-          ],
+        body: Container(
+          alignment: Alignment.center,
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              const Text(
+                "No credit available.",
+                style: TextStyle(
+                  fontSize: 30,
+                  fontWeight: FontWeight.bold 
+                ),
+              ),
+              const SizedBox(height: 30,),
+              ElevatedButton(
+                  onPressed: () {
+                    Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => CreateCredit()))
+                        .then((value) => setState(() {}));
+                  },
+                  child: Text("Create Credit")),
+            ],
+          ),
         ),
       );
     }

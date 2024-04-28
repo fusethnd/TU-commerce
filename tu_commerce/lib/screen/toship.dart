@@ -123,15 +123,12 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                       Spacer(),
                                       Visibility(
                                         visible: status == 0,
-                                        child: ElevatedButton(
-                                          style: ButtonStyle(
-                                            backgroundColor: MaterialStateProperty.all(Colors.red),
-                                            shape: MaterialStateProperty.all(
-                                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
-                                            ),
-                                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15))
+                                        child: GestureDetector(
+                                          child: const Text(
+                                            "Cancel",
+                                            style: TextStyle(decoration: TextDecoration.underline, color: Colors.red, decorationColor: Colors.red),
                                           ),
-                                          onPressed: () async {
+                                          onTap:  () async {
                                             QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('Orders').where('date',isEqualTo: order['date']).where('username.username',isEqualTo: order['username']['username']).where('product.seller.username',isEqualTo: order['product']['seller']['username']).get();
                                             String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
                                             print(orders!.length);
@@ -153,10 +150,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                             for (DocumentSnapshot<Map<String, dynamic>> document in data.docs) {
                                                 await document.reference.delete();              
                                             }
-  // ===============================        
-                                          }, 
-                                          child: const Text('Cancel')
-                                        ),
+                                          }
+                                        )
                                       )
                                     ],
                                   ),

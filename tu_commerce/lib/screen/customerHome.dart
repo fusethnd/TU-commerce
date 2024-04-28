@@ -150,7 +150,7 @@ class CustomerHomeState extends State<CustomerHome> {
                   right: 20,
                   child: IconButton(
                     icon: const Icon(Icons.notifications, size: 30,),
-                    color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Color.fromRGBO(54, 91, 109, 1.0),
+                    color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : const Color.fromRGBO(54, 91, 109, 1.0),
                     onPressed: () async{
                       print(allNotice!['noticeList'].isEmpty);
                       print(allNotice!['noticeList'] != []);
@@ -213,22 +213,55 @@ class CustomerHomeState extends State<CustomerHome> {
                     mainAxisAlignment: MainAxisAlignment.spaceAround,
                     children: [
                       ElevatedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                          iconSize: MaterialStateProperty.all(35)
+                        ),
                         onPressed: (){ // โชว์ถาม category
                           Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'Normal',allItem: allItem,)));
                         }, 
-                        child: const Text('Normal Category')
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const Icon(Icons.storefront),
+                            Text("Normal")
+                          ],
+                        )
                       ),
                       ElevatedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                          iconSize: MaterialStateProperty.all(35)
+                        ),
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'electric',allItem: allItem)));
                         }, 
-                        child: const Text('Electric Category')
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.devices_other),
+                            Text("Electronics")
+                          ],
+                        )
                       ),
                       ElevatedButton(
+                        style: ButtonStyle(
+                          padding: MaterialStateProperty.all(EdgeInsets.zero),
+                          foregroundColor: MaterialStateProperty.all(Colors.white),
+                          iconSize: MaterialStateProperty.all(35)
+                        ),
                         onPressed: () {
                           Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'fashion',allItem: allItem)));
                         }, 
-                        child: const Text('Fashion Category')
+                        child: const Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Icon(Icons.checkroom),
+                            Text("Fashion")
+                          ],
+                        )
                       )
                     ],
                   ),
@@ -262,7 +295,7 @@ class CustomerHomeState extends State<CustomerHome> {
                     imageUrl: imageUrl,
                     prodName: searchItem[index]['prodName'].toString(),
                     prodDetail: searchItem[index]['details'].toString(),
-                    price: searchItem[index]['price'].toString(),
+                    price: searchItem[index]['price'].toStringAsFixed(2),
                     onPressed: () async {
                                 updateFavoriteStatus(index);
                               },

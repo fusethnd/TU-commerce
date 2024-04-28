@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/model/Credit.dart';
 import 'package:tu_commerce/model/bankAccount.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 
 class CreateCredit extends StatefulWidget {
@@ -58,42 +59,124 @@ class _createCreditState extends State<CreateCredit> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text("Create Credit")),
+      appBar: AppBar(
+        centerTitle: true,
+        leading: const GoBackButton(),
+        title: const Text(
+          'Create Credit',
+          style: TextStyle(
+            color: Color.fromRGBO(54, 91, 109, 1.0),
+            fontWeight: FontWeight.bold,
+          ),
+        ),
+        backgroundColor: Color.fromRGBO(65, 193, 186, 1.0),
+        toolbarHeight: 100,
+      ),
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            TextFormField(
-              decoration: const InputDecoration(labelText: 'Bank number'),
-              validator: (value) =>
-                  value!.isEmpty ? 'Enter your bank number' : null,
-              onSaved: (String? bankNumber) {
-                bankAccount.bankNumber = bankNumber!;
-              },
+        child: Padding(
+          padding: const EdgeInsets.all(40.0),
+          child: MaterialApp(
+            theme: ThemeData(
+                inputDecorationTheme: InputDecorationTheme(
+                  enabledBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderSide: const BorderSide(color: Colors.transparent),
+                    borderRadius: BorderRadius.circular(50),
+                  ),
+                  hintStyle: const TextStyle(color: Colors.grey),
+                  filled: true,
+                  fillColor: Color.fromRGBO(219, 241, 240, 1.0),
+                  contentPadding: const EdgeInsets.only(left: 25),
+                ),
+                elevatedButtonTheme: ElevatedButtonThemeData(
+                    style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all( Color.fromRGBO(98, 221, 214, 1.0)),
+                        foregroundColor: MaterialStateProperty.all(Color.fromRGBO(54, 91, 109,1.0)),
+                        minimumSize: MaterialStateProperty.all(
+                            const Size(double.infinity, 50))))),
+            home: SingleChildScrollView(
+              child: SizedBox(
+                height: 300,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    TextFormField(
+                      decoration: const InputDecoration(labelText: 'Bank number'),
+                      validator: (value) =>
+                          value!.isEmpty ? 'Enter your bank number' : null,
+                      onSaved: (String? bankNumber) {
+                        bankAccount.bankNumber = bankNumber!;
+                      },
+                    ),
+                    TextFormField(
+                        decoration: const InputDecoration(labelText: 'Bank name'),
+                        validator: (value) =>
+                            value!.isEmpty ? 'Enter your bank name' : null,
+                        onSaved: (String? bankName) {
+                          bankAccount.bankName = bankName!;
+                        }),
+                    TextFormField(
+                        decoration: const InputDecoration(labelText: 'Name'),
+                        validator: (value) => value!.isEmpty ? 'Enter your name' : null,
+                        onSaved: (String? name) {
+                          bankAccount.name = name!;
+                        }),
+                    ElevatedButton(
+                      onPressed: () {
+                        _formKey.currentState!.save();
+                        _createCredit();
+                      },
+                      child: const Text('Create'),
+                    ),
+                  ],
+                ),
+              ),
             ),
-            TextFormField(
-                decoration: const InputDecoration(labelText: 'Bank name'),
-                validator: (value) =>
-                    value!.isEmpty ? 'Enter your bank name' : null,
-                onSaved: (String? bankName) {
-                  bankAccount.bankName = bankName!;
-                }),
-            TextFormField(
-                decoration: const InputDecoration(labelText: 'Name'),
-                validator: (value) => value!.isEmpty ? 'Enter your name' : null,
-                onSaved: (String? name) {
-                  bankAccount.name = name!;
-                }),
-            ElevatedButton(
-              onPressed: () {
-                _formKey.currentState!.save();
-                _createCredit();
-              },
-              child: const Text('Create'),
-            ),
-          ],
+          ),
         ),
       ),
     );
+    // return Scaffold(
+    //   appBar: AppBar(title: Text("Create Credit")),
+    //   body: Form(
+    //     key: _formKey,
+    //     child: Column(
+    //       children: [
+    //         TextFormField(
+    //           decoration: const InputDecoration(labelText: 'Bank number'),
+    //           validator: (value) =>
+    //               value!.isEmpty ? 'Enter your bank number' : null,
+    //           onSaved: (String? bankNumber) {
+    //             bankAccount.bankNumber = bankNumber!;
+    //           },
+    //         ),
+    //         TextFormField(
+    //             decoration: const InputDecoration(labelText: 'Bank name'),
+    //             validator: (value) =>
+    //                 value!.isEmpty ? 'Enter your bank name' : null,
+    //             onSaved: (String? bankName) {
+    //               bankAccount.bankName = bankName!;
+    //             }),
+    //         TextFormField(
+    //             decoration: const InputDecoration(labelText: 'Name'),
+    //             validator: (value) => value!.isEmpty ? 'Enter your name' : null,
+    //             onSaved: (String? name) {
+    //               bankAccount.name = name!;
+    //             }),
+    //         ElevatedButton(
+    //           onPressed: () {
+    //             _formKey.currentState!.save();
+    //             _createCredit();
+    //           },
+    //           child: const Text('Create'),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 }
