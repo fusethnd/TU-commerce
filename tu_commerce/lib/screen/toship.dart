@@ -121,19 +121,34 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                         ),
                                       ),
                                       Spacer(),
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          backgroundColor: MaterialStateProperty.all(Colors.red),
-                                          shape: MaterialStateProperty.all(
-                                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                                      Visibility(
+                                        visible: status == 0,
+                                        child: ElevatedButton(
+                                          style: ButtonStyle(
+                                            backgroundColor: MaterialStateProperty.all(Colors.red),
+                                            shape: MaterialStateProperty.all(
+                                              RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                                            ),
+                                            padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15))
                                           ),
-                                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15))
+                                          onPressed: () async {
+                                            QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('Orders').where('date',isEqualTo: order['date']).where('username.username',isEqualTo: order['username']['username']).where('product.seller.username',isEqualTo: order['product']['seller']['username']).get();
+                                            for (DocumentSnapshot<Map<String, dynamic>> document in data.docs) {
+                                                await document.reference.delete();              
+                                            }
+                                            String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
+                                            if (orders!.length == 1){
+                                              await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).delete();
+                                              await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).collection('Message').get().then((snapshot) {
+                                                for (DocumentSnapshot doc in snapshot.docs) {
+                                                  doc.reference.delete();
+                                                }
+                                              });}
+  // ===============================        
+                                          }, 
+                                          child: const Text('Cancel')
                                         ),
-                                        onPressed: () {
-// ===============================
-                                        }, 
-                                        child: const Text('Cencel')
-                                      ),
+                                      )
                                     ],
                                   ),
                                   Row(
@@ -341,7 +356,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                           for (DocumentSnapshot doc in snapshot.docs) {
                                                             doc.reference.delete();
                                                           }
-                                                        });                                    }
+                                                        });}
                                                       
                                                     }
                                                     else {
