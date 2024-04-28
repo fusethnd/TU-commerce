@@ -131,7 +131,9 @@ class _StockScreenState extends State<StockScreen> {
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
                                 Text(
-                                    '฿ ${item['price'] ?? 'N/A'}'), // Display the price
+                                    '฿ ${item['price'] ?? 'N/A'}',
+                                    style: const TextStyle(fontSize: 15),
+                                ), 
                               ],
                             ),
                             onTap: () {

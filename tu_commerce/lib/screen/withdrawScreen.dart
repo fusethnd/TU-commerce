@@ -68,6 +68,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
         appBar: AppBar(
           centerTitle: true,
@@ -92,7 +93,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
               ),
               Container(
                 padding: const EdgeInsets.all(20.0),
-                width: 350.0,
+                width: screenWidth*0.75,
                 height: 120.0,
                 decoration: BoxDecoration(
                     borderRadius: BorderRadius.circular(20),
@@ -114,7 +115,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                         child: SizedBox(height: 40),
                       ),
                       TextSpan(
-                        text: "฿ ${widget.userCredit["balance"]}",
+                        text: "${widget.userCredit["balance"].toStringAsFixed(2)} ฿",
                         style: const TextStyle(
                           color: Color.fromRGBO(54, 91, 109, 1.0),
                           fontSize: 30,
@@ -133,7 +134,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                 child: Column(children: [
                   Container(
                       padding: const EdgeInsets.all(20.0),
-                      width: 350.0,
+                      width: screenWidth*0.75,
                       height: 200.0,
                       decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(20),
@@ -148,6 +149,7 @@ class _WithdrawScreeState extends State<WithdrawScreen> {
                             style: TextStyle(
                               color: Color.fromRGBO(54, 91, 109, 1.0),
                               fontSize: 16,
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
                           Row(

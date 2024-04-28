@@ -58,7 +58,7 @@ class _MyAppState extends State<MyApp> {
               backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(54, 91, 109, 1.0)),
               foregroundColor: MaterialStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
               textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 16,),),
-              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal:40),),
+              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal:40, vertical: 15),),
             ),
           )
           

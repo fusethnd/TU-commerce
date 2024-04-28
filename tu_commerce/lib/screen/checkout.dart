@@ -88,13 +88,25 @@ class _CheckOutState extends State<CheckOut> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.product!['price'].toStringAsFixed(2) + " ฿",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Color.fromRGBO(54, 91, 109, 1.0)
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          widget.product!['price'].toStringAsFixed(2) + " ฿",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            color: Color.fromRGBO(54, 91, 109, 1.0)
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          "@" + widget.product!['seller']['username'].toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(54, 91, 109, 1.0)
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),

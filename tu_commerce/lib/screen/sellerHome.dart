@@ -12,7 +12,7 @@ import 'package:tu_commerce/screen/historySeller.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
 import 'package:tu_commerce/screen/profilePicture.dart';
-import 'package:tu_commerce/screen/noticeScreen.dart';
+import 'package:tu_commerce/screen/noticeSeller.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 
 class SellerHome extends StatefulWidget {
@@ -272,7 +272,7 @@ class _SellerHomeState extends State<SellerHome> {
                       print('in notice if ---------');
                       await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
                     }
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.username)));
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSeller(username: widget.username)));
                     if (mounted){
                       setState(() {
                         _initializeData();

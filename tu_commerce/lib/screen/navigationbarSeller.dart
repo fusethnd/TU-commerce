@@ -78,12 +78,16 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     _initialState();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenWidth < 430;
 
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
         color: Colors.white,
         backgroundColor: Color.fromRGBO(32, 157, 214, 1),
+        activeColor: const Color.fromRGBO(54, 91, 109, 1.0),
+        iconSize: isSmallScreen ? 20 : 30,
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
           setState(() {
@@ -91,24 +95,24 @@ class _NavigationState extends State<Navigation> {
           });
         },
         tabs: [
-          GButton(
+          const GButton(
             icon: Icons.inventory,
             // text: 'Stock',
           ),
-          GButton(
+          const GButton(
             icon: Icons.wallet,
             // text: 'Wallet',
           ),
           GButton(
             icon: Icons.home,
+            iconSize: isSmallScreen ? 35 : 50,
             // text: 'Home',
           ),
-          GButton(
-            icon: Icons.inbox,
+          const GButton(
+            icon: Icons.email,
             // text: 'Inbox',
           ),
           GButton(
-            
             icon: Icons.notifications,
             iconColor:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) 
              ? Colors.red 

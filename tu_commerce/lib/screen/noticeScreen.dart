@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_commerce/main.dart';
 
 class NoticeSreen extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -42,7 +43,8 @@ class _NoticeSreenState extends State<NoticeSreen> {
     // print(allNotice!['noticeList']);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Kuy'),
+        title: const Text('Notifications'),
+        leading: const GoBackButton(),
       ),
 
       body: allNotice == null || allNotice!['noticeList'] == null
@@ -51,11 +53,16 @@ class _NoticeSreenState extends State<NoticeSreen> {
             children: [
                 Expanded( // Wrap ListView.builder with Expanded
                   child: ListView.builder(
+                    padding: const EdgeInsets.all(10),
                     itemCount: allNotice!['noticeList'].length,
                     itemBuilder: (context, index) {
                       Map<String, dynamic> notice = allNotice!['noticeList'][index];
                       String status = notice['status'];
                       return Card(
+                        shape: const RoundedRectangleBorder(),
+                        // color: Colors.grey[200],
+                        // shadowColor: Colors.transparent,
+                        // color: Colors.red,
                         child: ListTile(
                           title: Text('Status: $status'),
                         ),
@@ -63,17 +70,20 @@ class _NoticeSreenState extends State<NoticeSreen> {
                     }
                   ),
                 ),
-                ElevatedButton(
-                  onPressed: () async {
-                    if (allNotice!['noticeList'].isEmpty == false){
-                      await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).delete();
-                    }
-                    // setState(() {
-                    //   allNotice = null;
-                    // });
-                    _initialState();
-                  },
-                  child: const Text('Delete')
+                Padding(
+                  padding: const EdgeInsets.all(20),
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      if (allNotice!['noticeList'].isEmpty == false){
+                        await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).delete();
+                      }
+                      // setState(() {
+                      //   allNotice = null;
+                      // });
+                      _initialState();
+                    },
+                    child: const Text('Clear')
+                  ),
                 )
             ],
           )
