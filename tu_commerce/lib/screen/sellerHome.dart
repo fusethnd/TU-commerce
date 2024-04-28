@@ -301,8 +301,8 @@ class _SellerHomeState extends State<SellerHome> {
                       ],
                     ),
                     // Text('data')
-                    Expanded(child: 
-                      ListView.builder(
+                    Expanded(
+                      child: ListView.builder(
                             itemCount: allOrders!.length,
                             itemBuilder: (context, index) {
                               Map<String, dynamic> order = allOrders![index].data();
