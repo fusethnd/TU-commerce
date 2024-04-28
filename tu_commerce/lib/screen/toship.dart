@@ -112,11 +112,29 @@ class _ToShipScreenState extends State<ToShipScreen> {
                               Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
-                                  const Text(
-                                    "STATUS",
-                                    style: TextStyle(
-                                      fontWeight: FontWeight.bold,
-                                    ),
+                                  Row(
+                                    children: [
+                                      const Text(
+                                        "STATUS",
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                        ),
+                                      ),
+                                      Spacer(),
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                          backgroundColor: MaterialStateProperty.all(Colors.red),
+                                          shape: MaterialStateProperty.all(
+                                            RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
+                                          ),
+                                          padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15))
+                                        ),
+                                        onPressed: () {
+// ===============================
+                                        }, 
+                                        child: const Text('Cencel')
+                                      ),
+                                    ],
                                   ),
                                   Row(
                                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

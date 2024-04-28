@@ -14,6 +14,7 @@ import 'package:tu_commerce/screen/walletscreen.dart';
 import 'package:tu_commerce/screen/profilePicture.dart';
 import 'package:tu_commerce/screen/noticeSeller.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:intl/intl.dart';
 
 class SellerHome extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -108,261 +109,277 @@ class _SellerHomeState extends State<SellerHome> {
       body: isLoading ? const Center(child: CircularProgressIndicator()) // เอาไว้เช็คว่า query เสร็จยังถ้ายังมันจะหมุนๆ
           : Stack(
             children: [
-              
                 Column(
                   children: [
-                    Column(
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                width: 100,
-                                height: 100,
-                                child: ClipRRect(
-                                  borderRadius: const BorderRadius.all(Radius.circular(50)),
-                                  child: Container(
-                                    color: const Color.fromRGBO(219, 232, 231, 1),
-                                    child: ProfilePicture(user: userData)
-                                  )
-                                ),
-                              ),
-                              const SizedBox(width: 20,),
-                              Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children:[
-                                  Text(
-                                    '${userData['fname']} ${userData['lname']}',
-                                  ),
-                                  const SizedBox(height: 5,),
-                                  Text(
-                                    '@${userData['username']}',
-                                  ),
-                                ],
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          padding: const EdgeInsets.symmetric(horizontal: 20),
-                          child: Row(
-                            children: [
-                              Column(
-                                children: [
-                                  const Text("MY CREDIT", style: TextStyle(fontWeight: FontWeight.bold),),
-                                  Text('${userData['username']}'),
-                                ],
-                              ),
-                              const Spacer(),
-                              ElevatedButton(
-                                onPressed: () {
-                                  Navigator.push(
-                                    context, MaterialPageRoute(
-                                      builder: (context){
-                                        return Navigation(username: widget.username,temp: 1);
-                                      }
-                                    )
-                                  );
-                                },
-                                child: const Text('MY WALLET'),
+                    Container(
+                      padding: const EdgeInsets.only(left: 20, top: 40, bottom: 20),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 100,
+                            height: 100,
+                            child: ClipRRect(
+                              borderRadius: const BorderRadius.all(Radius.circular(50)),
+                              child: Container(
+                                color: const Color.fromRGBO(219, 232, 231, 1),
+                                child: ProfilePicture(user: userData)
                               )
-                            ],
+                            ),
                           ),
-                        ),
-                        const SizedBox(height: 10,),
-                        Container(
-                          color: const Color.fromRGBO(219, 232, 231, 1),
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
+                          const SizedBox(width: 20,),
+                          Column(
                             crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              const Text(
-                                'MENU',
-                                style: TextStyle(
-                                  fontWeight: FontWeight.bold,
-                                  fontSize: 20,
-                                ),
+                            children:[
+                              Text(
+                                '${userData['fname']} ${userData['lname']}',
                               ),
                               const SizedBox(height: 5,),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                crossAxisAlignment: CrossAxisAlignment.start,
+                              Text(
+                                '@${userData['username']}',
+                              ),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Row(
+                        children: [
+                          Column(
+                            children: [
+                              const Text("MY CREDIT", style: TextStyle(fontWeight: FontWeight.bold),),
+                              Text('${userData['username']}'),
+                            ],
+                          ),
+                          const Spacer(),
+                          ElevatedButton(
+                            onPressed: () {
+                              Navigator.push(
+                                context, MaterialPageRoute(
+                                  builder: (context){
+                                    return Navigation(username: widget.username,temp: 1);
+                                  }
+                                )
+                              );
+                            },
+                            child: const Text('MY WALLET'),
+                          )
+                        ],
+                      ),
+                    ),
+                    Container(
+                      margin: EdgeInsets.symmetric(vertical: 10),
+                      color: const Color.fromRGBO(219, 232, 231, 1),
+                      padding: const EdgeInsets.all(20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'MENU',
+                            style: TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                            ),
+                          ),
+                          const SizedBox(height: 5,),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              // SingleChildScrollView(
+                              //   child: Column(),
+                              // ),
+                              Column(
                                 children: [
-                                  // SingleChildScrollView(
-                                  //   child: Column(),
-                                  // ),
-                                  Column(
-                                    children: [
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              
-                                              builder: (context) => Navigation(username: widget.username,temp: 7),
-                                            )
-                                          );
-                                          // Navigator.pushAndRemoveUntil(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                              
-                                          //     builder: (context) => Navigation(username: widget.username,temp: 7),
-                                          //   ),(Route<dynamic> route) => false
-                                          // );
-                                        },
-                                        child: const Icon(Icons.directions_car),
-                                      ),
-                                      const SizedBox(height: 10,),
-                                      const Text("TO SHIP")
-                                    ],
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          
+                                          builder: (context) => Navigation(username: widget.username,temp: 7),
+                                        )
+                                      );
+                                      // Navigator.pushAndRemoveUntil(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                          
+                                      //     builder: (context) => Navigation(username: widget.username,temp: 7),
+                                      //   ),(Route<dynamic> route) => false
+                                      // );
+                                    },
+                                    child: const Icon(Icons.directions_car),
                                   ),
-                                  Column(
-                                    children: [
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
-                                        ),
-                                        onPressed: () {
-                                          Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => Navigation(username: widget.username,temp: 6),
-                                            )
-                                          );
-                                          // Navigator.pushAndRemoveUntil(
-                                          //   context,
-                                          //   MaterialPageRoute(
-                                          //     builder: (context) => Navigation(username: widget.username,temp: 6),
-                                          //   ),(Route<dynamic> route) => false
-                                          // );
-                                        },
-                                        child: const Icon(Icons.history),
-                                      ),
-                                      const SizedBox(height: 10,),
-                                      const Text("HISTORY")
-                                    ],
+                                  const SizedBox(height: 10,),
+                                  const Text("TO SHIP")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                    ),
+                                    onPressed: () {
+                                      Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => Navigation(username: widget.username,temp: 6),
+                                        )
+                                      );
+                                      // Navigator.pushAndRemoveUntil(
+                                      //   context,
+                                      //   MaterialPageRoute(
+                                      //     builder: (context) => Navigation(username: widget.username,temp: 6),
+                                      //   ),(Route<dynamic> route) => false
+                                      // );
+                                    },
+                                    child: const Icon(Icons.history),
                                   ),
-                                  Column(
-                                    children: [
-                                      ElevatedButton(
-                                        style: ButtonStyle(
-                                          minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
-                                        ),
-                                        onPressed: () async {
-
-                                          Navigator.pushAndRemoveUntil(
-                                            context,
-                                            MaterialPageRoute(
-                                              builder: (context) => NavigationCustomer(email:widget.username['email'],temp: 4,),
-                                            ),(Route<dynamic> route) => false
-                                          );
-                                        },
-                                        child: const Icon(Icons.sell_outlined),
-                                      ),
-                                      const SizedBox(height: 10,),
-                                      SizedBox(
-                                        width: boxSize, 
-                                        child: const Text("SHOPPING MODE", textAlign: TextAlign.center,)
-                                      )
-                                    ],
+                                  const SizedBox(height: 10,),
+                                  const Text("HISTORY")
+                                ],
+                              ),
+                              Column(
+                                children: [
+                                  ElevatedButton(
+                                    style: ButtonStyle(
+                                      minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                    ),
+                                    onPressed: () async {
+                    
+                                      Navigator.pushAndRemoveUntil(
+                                        context,
+                                        MaterialPageRoute(
+                                          builder: (context) => NavigationCustomer(email:widget.username['email'],temp: 4,),
+                                        ),(Route<dynamic> route) => false
+                                      );
+                                    },
+                                    child: const Icon(Icons.sell_outlined),
                                   ),
+                                  const SizedBox(height: 10,),
+                                  SizedBox(
+                                    width: boxSize, 
+                                    child: const Text("SHOPPING MODE", textAlign: TextAlign.center,)
+                                  )
                                 ],
                               ),
                             ],
                           ),
-                        ),
-                
-                        Container(
-                          padding: const EdgeInsets.all(20),
-                          child: Column(
-                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                            children: [
-                              Container(
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  'Shipping List',
-                                  style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 20
-                                  ),
-                                )
+                        ],
+                      ),
+                    ),
+                                    
+                    Container(
+                      padding: const EdgeInsets.symmetric(horizontal: 20),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                        children: [
+                          Container(
+                            // color: Colors.amber,
+                            alignment: Alignment.topLeft,
+                            child: const Text(
+                              'Shipping List',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: 20
                               ),
-
-                            ],
+                            )
                           ),
-                        ),
-                        // Text('data')
-
-                        
-                      ],
+                    
+                        ],
+                      ),
                     ),
                     // Text('data')
                     Expanded(child: 
                       ListView.builder(
+                            padding: EdgeInsets.zero,
                             itemCount: allOrders!.length,
                             itemBuilder: (context, index) {
                               Map<String, dynamic> order = allOrders![index].data();
                               print(order);
-                                  return Column(
-                                    children: [
-                                      ListTile(
-                                        leading: order['product']['link'] != null
-                                            ? Container(
-                                                width: 100,
-                                                height: 100,
-                                                decoration: const BoxDecoration(
-                                                  color: Colors.white,
+                              DateTime timestamp = order!['date'].toDate(); 
+                              String formattedDate = DateFormat.yMMMd().format(timestamp); 
+                              return Card(
+                                margin: const EdgeInsets.only(top: 15, left: 20, right: 20),
+                                color: const Color.fromRGBO(242, 241, 236, 1),
+                                surfaceTintColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                child: Column(
+                                  children: [
+                                    Row(
+                                      crossAxisAlignment: CrossAxisAlignment.start,
+                                      children: [
+                                        Container(
+                                          width: 100,
+                                          height: 100,
+                                          decoration: const BoxDecoration(color: Colors.white),
+                                          child: Image.network(order['product']['link'], fit: BoxFit.contain,),
+                                        ),
+                                        Flexible(
+                                          child: Container(
+                                            padding: const EdgeInsets.only(left: 20),
+                                            height: 100,
+                                            child: Column(
+                                              crossAxisAlignment: CrossAxisAlignment.start,
+                                              children: [
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      order['product']['prodName'],
+                                                      style: const TextStyle(
+                                                        fontSize: 20,
+                                                        fontWeight: FontWeight.bold,
+                                                        color: Color.fromRGBO(54, 91, 109, 1.0),
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Text(order['product']['price'].toStringAsFixed(2) + " ฿"),
+                                                  ],
                                                 ),
-                                                child: Image.network(
-                                                  order['product']['link'],
-                                                  // fit: BoxFit.contain,
+                                                Text(
+                                                  order['product']['details'],
+                                                  maxLines: 2,
+                                                  style: const TextStyle(
+                                                    color: Color.fromRGBO(54, 91, 109, 1.0),
+                                                  ),
                                                 ),
-                                              )
-                                            : const SizedBox(
-                                                width: 100,
-                                                height: 100,
-                                              ),
-                                        title: Text(
-                                          order['product']['prodName'] ?? 'No Product Name',
-                                          style: const TextStyle(
-                                            color: Color.fromRGBO(60, 91, 109, 1.0),
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                        subtitle: Column(
-                                          crossAxisAlignment: CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                                'Category: ${order['product']['category'] ?? 'No Category'}'),
-                                            const SizedBox(height: 30,),
-                                            Text(order['product']['details'] ??
-                                                'No Details'), // Display details
-                                          ],
-                                        ),
-                                        trailing: Column(
-                                          mainAxisAlignment: MainAxisAlignment.center,
-                                          children: [
-                                            Text(
-                                                '฿ ${order['product']['price'].toStringAsFixed(2) ?? 'N/A'}',
-                                                style: const TextStyle(fontSize: 15),
-                                            ), 
-                                          ],
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        width: MediaQuery.of(context).size.width *0.9,
-                                        child: const Divider(
-                                          color: Color.fromRGBO(174, 190, 199,1),
-                                          thickness: 1,
-                                          height: 0,
-                                        ),
-                                      ),
-                                    ],
-                                  );
+                                                const Spacer(),
+                                                Row(
+                                                  children: [
+                                                    Text(
+                                                      "Customer: @" + order['username']['username'],
+                                                      style: const TextStyle(
+                                                        color: Color.fromRGBO(54, 91, 109, 0.7),
+                                                      ),
+                                                    ),
+                                                    const Spacer(),
+                                                    Text(
+                                                      formattedDate,
+                                                      style: const TextStyle(
+                                                        color: Color.fromRGBO(54, 91, 109, 0.7),
+                                                      ),
+                                                    ),
+                                                  ],
+                                                ),
+                                              ],
+                                            )
+                                          )
+                                        )
+                                      ],
+                                    ),
+                                    const SizedBox(height: 10,),
+                                    const Divider(
+                                      height: BorderSide.strokeAlignOutside,
+                                      color: Color.fromRGBO(38, 174, 236, 0.3),
+                                    ),
+                                  ],
+                                ) 
+                              );
                             }
                           ),
                     )
