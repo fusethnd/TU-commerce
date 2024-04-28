@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/screen/profilePicture.dart';
 
 class HistoryBox extends StatelessWidget { 
   final Map<String, dynamic> partner;
@@ -27,7 +28,18 @@ class HistoryBox extends StatelessWidget {
         children: [
           Row(
             children: [
-              checkContainkeyProfile(partner) ? Image.network(partner['profilePicture'],width: 50,height: 50,) : Icon(Icons.person),
+              SizedBox(
+                width: 40,
+                height: 40,
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                  child: Container(
+                    color: const Color.fromRGBO(219, 232, 231, 1),
+                    child: ProfilePicture(user: partner)
+                  )
+                ),
+              ),
+              // Image.network(partner['profilePicture'],width: 50,height: 50,) : Icon(Icons.person),
               const SizedBox(width: 10,),
               Text(
                 "@" + partner['username'],

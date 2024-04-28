@@ -116,8 +116,12 @@ class _SellerHomeState extends State<SellerHome> {
                               SizedBox(
                                 width: 100,
                                 height: 100,
-                                child: CircleAvatar(
-                                  child: ProfilePicture(user: userData)
+                                child: ClipRRect(
+                                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                  child: Container(
+                                    color: const Color.fromRGBO(219, 232, 231, 1),
+                                    child: ProfilePicture(user: userData)
+                                  )
                                 ),
                               ),
                               const SizedBox(width: 20,),
@@ -270,7 +274,79 @@ class _SellerHomeState extends State<SellerHome> {
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                             children: [
-                              Text('Shopping List')
+                              Container(
+                                alignment: Alignment.centerLeft,
+                                child: const Text(
+                                  'Shipping List',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    fontSize: 20
+                                  ),
+                                )
+                              ),
+                              allOrders != null ? ListView.builder(
+                                itemCount: allOrders!.length,
+                                itemBuilder: (context, index) {
+                                  Map<String, dynamic> order = allOrders![index];
+                                  return Column(
+                                    children: [
+                                      ListTile(
+                                        leading: order['product']['link'] != null
+                                            ? Container(
+                                                width: 100,
+                                                height: 100,
+                                                decoration: const BoxDecoration(
+                                                  color: Colors.white,
+                                                ),
+                                                child: Image.network(
+                                                  order['product']['link'],
+                                                  // fit: BoxFit.contain,
+                                                ),
+                                              )
+                                            : const SizedBox(
+                                                width: 100,
+                                                height: 100,
+                                              ),
+                                        title: Text(
+                                          order['product']['prodName'] ?? 'No Product Name',
+                                          style: const TextStyle(
+                                            color: Color.fromRGBO(60, 91, 109, 1.0),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                        subtitle: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                                'Category: ${order['product']['category'] ?? 'No Category'}'),
+                                            const SizedBox(height: 30,),
+                                            Text(order['product']['details'] ??
+                                                'No Details'), // Display details
+                                          ],
+                                        ),
+                                        trailing: Column(
+                                          mainAxisAlignment: MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                                '฿ ${order['product']['price'].toStringAsFixed(2) ?? 'N/A'}',
+                                                style: const TextStyle(fontSize: 15),
+                                            ), 
+                                          ],
+                                        ),
+                                      ),
+                                      SizedBox(
+                                        width: MediaQuery.of(context).size.width *0.9,
+                                        child: const Divider(
+                                          color: Color.fromRGBO(174, 190, 199,1),
+                                          thickness: 1,
+                                          height: 0,
+                                        ),
+                                      ),
+                                    ],
+                                  );
+                                }
+                              )
+                              : Text("data")
                             ],
                           ),
                         ),

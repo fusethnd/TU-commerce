@@ -122,14 +122,18 @@ class _ProfileState extends State<Profile> {
                         Column(
                           children: [
                             Container(
-                              padding: EdgeInsets.all(20),
+                              padding: const EdgeInsets.all(20),
                               child: Row(
                                 children: [
                                   SizedBox(
                                     width: 100,
                                     height: 100,
-                                    child: CircleAvatar(
-                                      child: ProfilePicture(user: widget.email)
+                                    child: ClipRRect(
+                                      borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                      child: Container(
+                                        color: const Color.fromRGBO(219, 232, 231, 1),
+                                        child: ProfilePicture(user: widget.email)
+                                      )
                                     ),
                                   ),
                                   const SizedBox(width: 20,),

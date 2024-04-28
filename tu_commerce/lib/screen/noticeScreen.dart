@@ -64,7 +64,6 @@ class _NoticeSreenState extends State<NoticeSreen> {
                       
                       DateTime timestamp = notice!['time'].toDate(); 
                       String formattedDate = DateFormat.yMMMd().format(timestamp); 
-                      String title = status == 3 ? "Order Completed." : status == 2 ? "Seller has arrived!" : "Seller is on the way";
 
                       return Card(
                         shape: const RoundedRectangleBorder(),
@@ -97,7 +96,7 @@ class _NoticeSreenState extends State<NoticeSreen> {
                                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                           children: [
                                             Text(
-                                              title,
+                                              (status),
                                               style: const TextStyle(
                                                 fontWeight: FontWeight.bold,
                                                 fontSize: 17

@@ -145,8 +145,12 @@ class _EditProfileState extends State<EditProfile> {
               SizedBox(
                 width: 100,
                 height: 100,
-                child: CircleAvatar(
-                  child: ProfilePicture(user: widget.user),
+                child: ClipRRect(
+                  borderRadius: const BorderRadius.all(Radius.circular(50)),
+                  child: Container(
+                    color: const Color.fromRGBO(219, 232, 231, 1),
+                    child: ProfilePicture(user: widget.user)
+                  )
                 ),
               ),
               const SizedBox(height: 20,),
