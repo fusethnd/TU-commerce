@@ -198,11 +198,11 @@ class _CheckOutState extends State<CheckOut> {
                     }else{
                       await noticeRef.update({"noticeList":FieldValue.arrayUnion([data])});
                     }
-                    if (order!.product!['seller']['username'].containsKey('tokenNotice')){
+                    if (order!.product!['seller'].containsKey('tokenNotice')){
                       await _notificationService.requestNotificationPermissions();
                         // print("Token: " + widget.username['tokenNotice']);
-                      await sendNotificationToUser(order!.product!['seller']['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                      await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                      await sendNotificationToUser(order!.product!['seller']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                      await _notificationService.sendNotification(order!.product!['seller']['tokenNotice'],'Hello');
                     }
                     Navigator.pushReplacement(
                       context, 
