@@ -62,14 +62,15 @@ class _SellerHomeState extends State<SellerHome> {
         .doc(widget.username['username'])
         .get())
         .data();
-    // print('---------- data');
-    // print(tempOrder[0].data());
+    print('---------- data');
+    print(tempOrder);
     if (tempMap == null) {
       tempMap = {
         "length":0,
         "noticeList":[]
       };
     }
+    
     if (tempOrder == null) {
       tempOrder = [];
     }
@@ -107,8 +108,8 @@ class _SellerHomeState extends State<SellerHome> {
       body: isLoading ? const Center(child: CircularProgressIndicator()) // เอาไว้เช็คว่า query เสร็จยังถ้ายังมันจะหมุนๆ
           : Stack(
             children: [
-              Expanded(
-                child: ListView(
+              
+                Column(
                   children: [
                     Column(
                       children: [
@@ -188,6 +189,9 @@ class _SellerHomeState extends State<SellerHome> {
                                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
+                                  // SingleChildScrollView(
+                                  //   child: Column(),
+                                  // ),
                                   Column(
                                     children: [
                                       ElevatedButton(
@@ -287,10 +291,22 @@ class _SellerHomeState extends State<SellerHome> {
                                   ),
                                 )
                               ),
-                              allOrders != null ? ListView.builder(
-                                itemCount: allOrders!.length,
-                                itemBuilder: (context, index) {
-                                  Map<String, dynamic> order = allOrders![index];
+
+                            ],
+                          ),
+                        ),
+                        // Text('data')
+
+                        
+                      ],
+                    ),
+                    // Text('data')
+                    Expanded(child: 
+                      ListView.builder(
+                            itemCount: allOrders!.length,
+                            itemBuilder: (context, index) {
+                              Map<String, dynamic> order = allOrders![index].data();
+                              print(order);
                                   return Column(
                                     children: [
                                       ListTile(
@@ -347,17 +363,13 @@ class _SellerHomeState extends State<SellerHome> {
                                       ),
                                     ],
                                   );
-                                }
-                              )
-                              : Text("data")
-                            ],
+                            }
                           ),
-                        ),
-                      ],
-                    ),
+                    )
                   ],
                 ),
-              ),
+              // Text('data'),
+              
               Positioned(
                 top: 50,
                 right: 20,
