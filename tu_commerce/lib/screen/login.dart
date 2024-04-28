@@ -18,7 +18,7 @@ class _LoginState extends State<Login> {
   final _formKey = GlobalKey<FormState>();
   final _usernameController = TextEditingController();
   final _passwordController = TextEditingController();
-
+  bool _isButtonClicked = false;
   @override
   void dispose() {
     _usernameController.dispose();
@@ -29,10 +29,14 @@ class _LoginState extends State<Login> {
   Future<void> _loginUser() async {
     if (_formKey.currentState!.validate()) {
       try {
+          setState(() {
+            _isButtonClicked = true;
+          });
         final userLogin = await FirebaseFirestore.instance
             .collection('users')
             .where('username', isEqualTo: _usernameController.text.trim())
             .get();
+          
         if (userLogin.docs.isNotEmpty) {
           final email = userLogin.docs.first.data()['email'];
           await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -45,6 +49,9 @@ class _LoginState extends State<Login> {
           );
         }
       } on FirebaseAuthException {
+          setState(() {
+            _isButtonClicked = false;
+          });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login Failed')),
         );
@@ -140,8 +147,9 @@ class _LoginState extends State<Login> {
                         obscureText: true,
                       ),
                       const SizedBox(height: 50),
+                      // -------------------------------------  Login bottom -------------------------------------
                       ElevatedButton(
-                        onPressed: _loginUser,
+                        onPressed: _isButtonClicked ? null : _loginUser,
                         style:  ButtonStyle(
                           textStyle: MaterialStateProperty.all(
                             const TextStyle(
@@ -155,6 +163,7 @@ class _LoginState extends State<Login> {
                         ),
                         child: const Text('Login'),
                       ),
+                      // -------------------------------------  Login bottom -------------------------------------
                       const Spacer(),
                       Row(
                         children: [
