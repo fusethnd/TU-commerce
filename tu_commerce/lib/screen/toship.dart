@@ -133,10 +133,15 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                           ),
                                           onPressed: () async {
                                             QuerySnapshot<Map<String, dynamic>> data = await FirebaseFirestore.instance.collection('Orders').where('date',isEqualTo: order['date']).where('username.username',isEqualTo: order['username']['username']).where('product.seller.username',isEqualTo: order['product']['seller']['username']).get();
-                                            for (DocumentSnapshot<Map<String, dynamic>> document in data.docs) {
-                                                await document.reference.delete();              
-                                            }
                                             String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
+                                            print(orders!.length);
+
+                                            DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Credit').doc(order['username']['Credit']).get(); 
+                                            Map<String, dynamic> credit = snapshot.data() as  Map<String, dynamic>;
+                                            await FirebaseFirestore.instance.collection('Credit').doc(order['username']['Credit']).update({
+                                            'balance': double.parse(credit['balance'].toString()) + double.parse(order['product']['price'].toString()) }  );
+
+
                                             if (orders!.length == 1){
                                               await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).delete();
                                               await FirebaseFirestore.instance.collection('ChatRoom').doc(chatRoom).collection('Message').get().then((snapshot) {
@@ -144,6 +149,10 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                   doc.reference.delete();
                                                 }
                                               });}
+                                            
+                                            for (DocumentSnapshot<Map<String, dynamic>> document in data.docs) {
+                                                await document.reference.delete();              
+                                            }
   // ===============================        
                                           }, 
                                           child: const Text('Cancel')
@@ -348,6 +357,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       Map<String, dynamic> credit = snapshot.data() as  Map<String, dynamic>;
                                                       await FirebaseFirestore.instance.collection('Credit').doc(order['product']['seller']['Credit']).update({
                                                       'balance': double.parse(credit['balance'].toString()) + double.parse(order['product']['price'].toString())});
+
                                                       await FirebaseFirestore.instance.collection('Orders').doc(orders![index].id).delete();
                                                       String chatRoom = order['username']['username'] + '-' + order['product']['seller']['username'];
                                                       if (orders!.length == 1){
