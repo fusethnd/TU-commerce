@@ -354,7 +354,7 @@ class _SellerHomeState extends State<SellerHome> {
                                                     Text(
                                                       "Customer: @" + order['username']['username'],
                                                       style: const TextStyle(
-                                                        color: Color.fromRGBO(54, 91, 109, 0.7),
+                                                        color: Color.fromRGBO(54, 91, 109, 1),
                                                       ),
                                                     ),
                                                     const Spacer(),

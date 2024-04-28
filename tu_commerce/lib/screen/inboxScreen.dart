@@ -7,6 +7,7 @@ import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/chat.dart';
 import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
+import 'package:tu_commerce/screen/profilePicture.dart';
 
 class InboxScreen extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -285,7 +286,17 @@ class _InboxScreenState extends State<InboxScreen> {
                                             Color.fromRGBO(54, 91, 109, 1.0)),
                                     // subtitleTextStyle: ,
 
-                                    leading: checkContainkeyProfile(userData!) ? Image.network(userData!['profilePicture']) : Icon(Icons.person),
+                                    leading: SizedBox(
+                                      width: 100,
+                                      height: 100,
+                                      child: ClipRRect(
+                                        borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                        child: Container(
+                                          color: const Color.fromRGBO(219, 232, 231, 1),
+                                          child: ProfilePicture(user: userData!)
+                                        )
+                                      ),
+                                    ),
                                     title: Text(sellerName),
                                     subtitle: Text(lastMessage),
                                   ),
