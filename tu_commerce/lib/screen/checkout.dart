@@ -206,7 +206,10 @@ class _CheckOutState extends State<CheckOut> {
                     }
                     Navigator.pushReplacement(
                       context, 
-                      MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
+                      // MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
+                      
+                      MaterialPageRoute(builder: (context) => ChatScreen(username: widget.username,order: orderMap,seller: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
+                                         
                     );
                   }else {
                       ScaffoldMessenger.of(context).showSnackBar(

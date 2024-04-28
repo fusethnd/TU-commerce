@@ -181,7 +181,9 @@ class _ChatScreenState extends State<ChatScreen> {
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.circular(12),
                           color: isImg ? Colors.transparent 
-                                : isSender ? const Color.fromRGBO(65, 193, 186, 1.0) : const Color.fromRGBO(219, 232, 231, 1)
+                                : !isSender ? const Color.fromRGBO(219, 232, 231, 1)
+                                : widget.username['shoppingMode'] ? const Color.fromRGBO(65, 193, 186, 1.0)
+                                : const Color.fromRGBO(38, 174, 236, 1),
                         ),
                         child: isImg 
                             ? Column(

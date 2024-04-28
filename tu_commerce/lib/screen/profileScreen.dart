@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/historyCustomer.dart';
 import 'package:tu_commerce/screen/home.dart';
@@ -57,20 +60,33 @@ class _ProfileState extends State<Profile> {
         .get())
         .data();
     print(tempMap);
-    if (mounted){
-      if (tempMap != null) {
-        setState(() {
-          allNotice = tempMap;
-          notReadNotice = tempMap!['noticeList'].length - tempMap['length'];
-        });
-
-      }else{
-        setState(() {
-          allNotice = null;
-          notReadNotice = 0;
-        });
-      }
+    
+    if (tempMap == null) {
+      tempMap = {
+        "length":0,
+        "noticeList":[]
+      };
     }
+    if (mounted){
+      setState(() {
+        allNotice = tempMap;
+      });
+
+    }
+    // if (mounted){
+    //   if (tempMap != null) {
+    //     setState(() {
+    //       allNotice = tempMap;
+    //       notReadNotice = tempMap!['noticeList'].length - tempMap['length'];
+    //     });
+
+    //   }else{
+    //     setState(() {
+    //       allNotice = null;
+    //       notReadNotice = 0;
+    //     });
+    //   }
+    // }
 
 
 
@@ -80,256 +96,369 @@ class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     _init();
-    return Scaffold(
-        appBar: AppBar(
-          title: Text('Profile'),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final boxSize = screenWidth * 0.65 / 3;
+    return MaterialApp(
+      theme: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(65, 193, 186, 1.0)),
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder()),
+            foregroundColor: MaterialStateProperty.all(Colors.white),
+            iconSize: MaterialStateProperty.all(boxSize*0.4),
+          ),
         ),
-        body: RefreshIndicator(
-            onRefresh: _refreshData,
-            child: ListView(
-              children: [
-                Container(
-                  height: 500,
-                  child: Column(
-                    children: <Widget>[
-                      Row(
-                        children: [
-                          ProfilePicture(user: widget.email),
-                          Column(
-                            children: <Widget>[
-                              Text(
-                                '${widget.email['fname']} ${widget.email['lname']}',
-                                style: TextStyle(
-                                    fontWeight: FontWeight.bold,
-                                    fontSize: 18.0),
-                              ),
-                              Text(
-                                '@${widget.email['username']}',
-                                style: TextStyle(fontSize: 18.0),
-                              ),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Column(
-                            children: <Widget>[
-                              Text("MY CREDIT"),
-                              Text('${widget.email['username']}'),
-                              // Text("${widget.credit}")
-                            ],
-                          ),
-                          Spacer(),
-                          // Add button before but it's lost
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pushAndRemoveUntil(context,
-                                  MaterialPageRoute(builder: (context) {
-                                return NavigationCustomer(
-                                  email: widget.email['email'],
-                                  temp: 0,
-                                );
-                              }), (Route<dynamic> route) => false);
-                            },
-                            child: const Text('MY WALLET'),
-                          )
-                        ],
-                      ),
-                    ],
-                  ),
-                ),
-                //-------------- จบ container แรก -------------------
-                Container(
-                  // ทำตัวลิ้ง ไป stock กับอื่นแต่ตอนนี้ลิ้งมั่วนะ
-                  decoration: BoxDecoration(color: Color(0xFFF2F1EC)),
-                  child: Row(
-                    children: [
-                      Text(
-                        'MENU',
-                        style: TextStyle(
-                            fontWeight: FontWeight.bold, fontSize: 18.0),
-                      ),
-                      Expanded(
-                        child: Column(
+        textTheme: Theme.of(context).textTheme.apply(bodyColor: const Color.fromRGBO(54, 91, 109, 1.0), fontSizeDelta: 3),
+      ),
+      home: Scaffold(
+          body: RefreshIndicator(
+              onRefresh: _refreshData,
+              child: Stack(
+                children: [
+                  Expanded(
+                    child: ListView(
+                      children: [
+                        Column(
                           children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NavigationCustomer(
-                                        email: widget.email['email'],
-                                        temp: 9,
+                            Container(
+                              padding: EdgeInsets.all(20),
+                              child: Row(
+                                children: [
+                                  SizedBox(
+                                    width: 100,
+                                    height: 100,
+                                    child: CircleAvatar(
+                                      child: ProfilePicture(user: widget.email)
+                                    ),
+                                  ),
+                                  const SizedBox(width: 20,),
+                                  Column(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children:[
+                                      Text(
+                                        '${widget.email['fname']} ${widget.email['lname']}',
                                       ),
-                                    ),
-                                    (Route<dynamic> route) => false);
-                              },
-                              child: const Text('TO SHIP'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => NavigationCustomer(
-                                        email: widget.email['email'],
-                                        temp: 10,
+                                      const SizedBox(height: 5,),
+                                      Text(
+                                        '@${widget.email['username']}',
                                       ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 20),
+                              child: Row(
+                                children: [
+                                  Column(
+                                    children: [
+                                      const Text("MY CREDIT", style: TextStyle(fontWeight: FontWeight.bold),),
+                                      Text('${widget.email['username']}'),
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  ElevatedButton(
+                                    onPressed: () {
+                                      Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) {
+                                        return NavigationCustomer(
+                                          email: widget.email['email'],
+                                          temp: 0,
+                                        );
+                                      }),
+                                      (Route<dynamic> route) => false);
+                                    },
+                                    child: const Text('MY WALLET'),
+                                  )
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: 10,),
+                            Container(
+                              color: const Color.fromRGBO(219, 232, 231, 1),
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  const Text(
+                                    'MENU',
+                                    style: TextStyle(
+                                      fontWeight: FontWeight.bold,
+                                      fontSize: 20,
                                     ),
-                                    (Route<dynamic> route) => false);
-                              },
-                              child: const Text('HISTORY'),
+                                  ),
+                                  SizedBox(height: 5,),
+                                  Row(
+                                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    children: [
+                                      Column(
+                                        children: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => NavigationCustomer(
+                                                      email: widget.email['email'],
+                                                      temp: 9,
+                                                    ),
+                                                  ),
+                                                  (Route<dynamic> route) => false);
+                                            },
+                                            child: const Icon(Icons.directions_car),
+                                          ),
+                                          const SizedBox(height: 10,),
+                                          const Text("TO SHIP")
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) => NavigationCustomer(
+                                                      email: widget.email['email'],
+                                                      temp: 10,
+                                                    ),
+                                                  ),
+                                                  (Route<dynamic> route) => false);
+                                            },
+                                            child: const Icon(Icons.history),
+                                          ),
+                                          const SizedBox(height: 10,),
+                                          const Text("HISTORY")
+                                        ],
+                                      ),
+                                      Column(
+                                        children: [
+                                          ElevatedButton(
+                                            style: ButtonStyle(
+                                              minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                            ),
+                                            onPressed: () {
+                                              Navigator.pushAndRemoveUntil(
+                                                  context,
+                                                  MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        Navigation(username: widget.email),
+                                                  ),
+                                                  (Route<dynamic> route) => false);
+                                            },
+                                            child: const Icon(Icons.sell_outlined),
+                                          ),
+                                          const SizedBox(height: 10,),
+                                          const Text("SELLER MODE")
+                                        ],
+                                      ),
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ),
+                    
+                            Container(
+                              padding: const EdgeInsets.all(20),
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          'MY ACCOUNT', 
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        )
+                                      ),
+                                      GestureDetector(
+                                        child: const Text(
+                                          "Edit Profile",
+                                          style: TextStyle(decoration: TextDecoration.underline),
+                                        ),
+                                        onTap: () {
+                                          Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => NavigationCustomer(
+                                                email: widget.email['email'],
+                                                temp: 5,
+                                              ),
+                                            ));
+                                        },
+                                      )
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          'Name',
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        )
+                                      ),
+                                      Text(
+                                          '${widget.email['fname']} ${widget.email['lname']}'),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          'Username',
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        )
+                                      ),
+                                      Text(widget.email['username']),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          'Email',
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        )
+                                      ),
+                                      Text(widget.email['email']),
+                                    ],
+                                  ),
+                                  const SizedBox(height: 10,),
+                                  Row(
+                                    children: [
+                                      const Expanded(
+                                        child: Text(
+                                          'Phone Number',
+                                          style: TextStyle(fontWeight: FontWeight.bold),
+                                        )
+                                      ),
+                                      Text(widget.email['phone']),
+                                    ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ],
                         ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-
-                                Navigator.pushAndRemoveUntil(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          Navigation(username: widget.email),
-                                    ),
-                                    (Route<dynamic> route) => false);
-                              },
-                              child: const Text('Seller MODE'),
-                            ),
-                          ],
+                    
+                        // Container(
+                        //   child: Column(
+                        //     children: [
+                        //       ElevatedButton(onPressed: logout, child: Text('log out')),
+                              // FutureBuilder(
+                              //   future: isEmailVerified(),
+                              //   builder: (context,snapshot){
+                              //     if (snapshot.connectionState == ConnectionState.waiting) {
+                              //       return CircularProgressIndicator();
+                              //     }else{
+                              //       bool emailVerified = snapshot.data ?? false;
+                              //       return Visibility(
+                              //         visible: !emailVerified,
+                              //         child: ElevatedButton(
+                              //           onPressed: () async{
+                              //             if (!emailVerified) {
+                              //               await sendEmailVerification();
+                              //               logout;
+                              //             } else {
+                              //               print('Email already verified');
+                              //             }
+                              //           }, child: Text('Verify'),
+                              //         )
+                              //       );
+                              //     }
+                              //   }
+                              //   )
+                        //     ],
+                        //   ),
+                        // ),
+                        // Container(
+                        //   child: Stack(
+                        //     children: [
+                        //       IconButton(
+                        //         onPressed: () async {
+                        //           int noticeLength = allNotice != null ? allNotice!['noticeList'].length : 0;
+                    
+                        //           await FirebaseFirestore.instance
+                        //               .collection('Notice')
+                        //               .doc(widget.email['username'])
+                        //               .update({'length': noticeLength});
+                    
+                        //           Navigator.push(
+                        //             context,
+                        //             MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email)),
+                        //           );
+                        //         },
+                        //         icon: Icon(Icons.notifications),
+                        //       ),
+                        //       Positioned(
+                        //         right: 0,
+                        //         child: Container(
+                        //           padding: EdgeInsets.all(4),
+                        //           decoration: BoxDecoration(
+                        //             color: Colors.red, // You can customize the color as you like
+                        //             shape: BoxShape.circle,
+                        //           ),
+                        //           child: Text(
+                        //             allNotice != null ? allNotice!['noticeList'].length.toString() : '0',
+                        //             style: TextStyle(color: Colors.white, fontSize: 12),
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // )
+                      ],
+                    ),
+                  ),
+                  Positioned(
+                    bottom: 20,
+                    right: 30,
+                    left: 30,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.red),
+                        shape: MaterialStateProperty.all(
+                          RoundedRectangleBorder(borderRadius: BorderRadius.circular(50))
                         ),
+                        padding: MaterialStateProperty.all(EdgeInsets.symmetric(vertical: 15))
                       ),
-                    ],
+                      onPressed: logout, 
+                      child: const Text('Log Out')
+                    ),
                   ),
-                ),
-                // จบ---- container 3 ปุ่ม-----------
-
-                Container(
-                  child: Column(
-                    children: [
-                      Row(
-                        children: [
-                          Expanded(child: Text('MY ACCOUNT')),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => NavigationCustomer(
-                                      email: widget.email['email'],
-                                      temp: 5,
-                                    ),
-                                  ));
-                            },
-                            child: const Text('Edit Profile'),
-                          ),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: Text('Username')),
-                          Text(widget.email['username']),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: Text('Email-Address')),
-                          Text(widget.email['email']),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: Text('Phone Number')),
-                          Text(widget.email['phone']),
-                        ],
-                      ),
-                      Row(
-                        children: [
-                          Expanded(child: Text('Name')),
-                          Text(
-                              '${widget.email['fname']} ${widget.email['lname']}'),
-                        ],
-                      ),
-                    ],
+                  Positioned(
+                    top: 50,
+                    right: 20,
+                    child: IconButton(
+                      icon: const Icon(Icons.notifications, size: 30,),
+                      color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Color.fromRGBO(54, 91, 109, 1.0),
+                      onPressed: () async{
+                        if (allNotice!['noticeList'].isEmpty == false) {
+                          print('in notice if ---------');
+                          await FirebaseFirestore.instance.collection('Notice').doc(widget.email['username']).update({'length':allNotice!['noticeList'].length});
+                        }
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email)));
+                        if (mounted){
+                          setState(() {
+                            _init();
+                          });
+                        }
+                      },
+                    )
                   ),
-                ),
-                Container(
-                  child: Column(
-                    children: [
-                      ElevatedButton(onPressed: logout, child: Text('log out')),
-                      // FutureBuilder(
-                      //   future: isEmailVerified(),
-                      //   builder: (context,snapshot){
-                      //     if (snapshot.connectionState == ConnectionState.waiting) {
-                      //       return CircularProgressIndicator();
-                      //     }else{
-                      //       bool emailVerified = snapshot.data ?? false;
-                      //       return Visibility(
-                      //         visible: !emailVerified,
-                      //         child: ElevatedButton(
-                      //           onPressed: () async{
-                      //             if (!emailVerified) {
-                      //               await sendEmailVerification();
-                      //               logout;
-                      //             } else {
-                      //               print('Email already verified');
-                      //             }
-                      //           }, child: Text('Verify'),
-                      //         )
-                      //       );
-                      //     }
-                      //   }
-                      //   )
-                    ],
-                  ),
-                ),
-                // Container(
-                //   child: Stack(
-                //     children: [
-                //       IconButton(
-                //         onPressed: () async {
-                //           int noticeLength = allNotice != null ? allNotice!['noticeList'].length : 0;
-
-                //           await FirebaseFirestore.instance
-                //               .collection('Notice')
-                //               .doc(widget.email['username'])
-                //               .update({'length': noticeLength});
-
-                //           Navigator.push(
-                //             context,
-                //             MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.email)),
-                //           );
-                //         },
-                //         icon: Icon(Icons.notifications),
-                //       ),
-                //       Positioned(
-                //         right: 0,
-                //         child: Container(
-                //           padding: EdgeInsets.all(4),
-                //           decoration: BoxDecoration(
-                //             color: Colors.red, // You can customize the color as you like
-                //             shape: BoxShape.circle,
-                //           ),
-                //           child: Text(
-                //             allNotice != null ? allNotice!['noticeList'].length.toString() : '0',
-                //             style: TextStyle(color: Colors.white, fontSize: 12),
-                //           ),
-                //         ),
-                //       ),
-                //     ],
-                //   ),
-                // )
-              ],
-            )));
+                ],
+              )
+            )
+          ),
+    );
   }
 }

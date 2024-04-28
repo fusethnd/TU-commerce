@@ -136,12 +136,11 @@ class CustomerHomeState extends State<CustomerHome> {
                 automaticallyImplyLeading: false,
               ),
               Positioned(
-                top: 30,
-                right: 30,
-                // child: Icon(Icons.notifications, color: Colors.black,)
+                top: 50,
+                right: 20,
                 child: IconButton(
-                  icon: Icon(Icons.notifications),
-                  color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Colors.white,
+                  icon: const Icon(Icons.notifications, size: 30,),
+                  color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Color.fromRGBO(54, 91, 109, 1.0),
                   onPressed: () async{
                     print(allNotice!['noticeList'].isEmpty);
                     print(allNotice!['noticeList'] != []);
