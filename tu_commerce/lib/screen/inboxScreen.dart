@@ -40,8 +40,18 @@ class _InboxScreenState extends State<InboxScreen> {
   Future<void> _refreshData() async {
     await Future.delayed(const Duration(seconds: 0)); // Simulate a delay
     widget.username['shoppingmode']
-    ? Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 3) ),(Route<dynamic> route) => false)
-    : Navigator.pushAndRemoveUntil(context,MaterialPageRoute(builder: (context) => Navigation(username: widget.username,temp: 3) ),(Route<dynamic> route) => false);
+        ? Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NavigationCustomer(
+                    email: widget.username['email'], temp: 3)),
+            (Route<dynamic> route) => false)
+        : Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    Navigation(username: widget.username, temp: 3)),
+            (Route<dynamic> route) => false);
   }
 
   Future<void> _initializeData() async {
@@ -56,14 +66,15 @@ class _InboxScreenState extends State<InboxScreen> {
       // print(temp2);
       for (DocumentSnapshot roomSnapshot in temp2) {
         String chatId = roomSnapshot.id;
-        String name = roomSnapshot == widget.username['username'] ? widget.username['username'] : roomSnapshot['customer']['username'];
+        String name = roomSnapshot == widget.username['username']
+            ? widget.username['username']
+            : roomSnapshot['customer']['username'];
         print(chatId);
         print(name);
         Map<String, dynamic>? lastMessageData = await lastMessage(chatId, name);
         // print('---------- last -----------');
         // print(lastMessageData);
         storeLast.add(lastMessageData);
-
       }
       print('--------- last ');
       print(storeLast.length);
@@ -77,21 +88,24 @@ class _InboxScreenState extends State<InboxScreen> {
       print('Error initializing data: $e');
     }
   }
-  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getChatRoom(String username, bool shoppingMode) async {
-    CollectionReference chatRoomCollection = FirebaseFirestore.instance.collection('ChatRoom');
+
+  Future<List<DocumentSnapshot<Map<String, dynamic>>>> getChatRoom(
+      String username, bool shoppingMode) async {
+    CollectionReference chatRoomCollection =
+        FirebaseFirestore.instance.collection('ChatRoom');
     QuerySnapshot snapshot = await chatRoomCollection.get();
     List<String> documentIds = snapshot.docs.map((doc) => doc.id).toList();
     List<String> temp = [];
-    for (String data in documentIds){
-      if (data.contains(username)){
+    for (String data in documentIds) {
+      if (data.contains(username)) {
         List<String> parts = data.split("-");
         int index = parts.indexOf(username);
         print(shoppingMode);
-        if ((shoppingMode == true) &&( index == 0)){
+        if ((shoppingMode == true) && (index == 0)) {
           print('in 0');
           temp.add(data);
         }
-        if ((shoppingMode == false) && (index == 1)){
+        if ((shoppingMode == false) && (index == 1)) {
           print('in 1');
           temp.add(data);
         }
@@ -104,7 +118,8 @@ class _InboxScreenState extends State<InboxScreen> {
     // await FirebaseFirestore.instance.collection('ChatRoom').where(username,arrayContains: temp).get();
     List<DocumentSnapshot<Map<String, dynamic>>> documents = [];
     for (String docID in temp) {
-      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore.instance
+      DocumentSnapshot<Map<String, dynamic>> snapshot = await FirebaseFirestore
+          .instance
           .collection('ChatRoom')
           .doc(docID)
           .get();
@@ -127,10 +142,9 @@ class _InboxScreenState extends State<InboxScreen> {
     //           isGreaterThanOrEqualTo: '-$username', isLessThan: '~$username')
     //       .get();
     // }
-
-
   }
-  Future<Map<String, dynamic>?> lastMessage(chatId,senderName) async {
+
+  Future<Map<String, dynamic>?> lastMessage(chatId, senderName) async {
     Map<String, dynamic>? lastMessageData;
     print('-----in');
     print(chatId);
@@ -140,7 +154,8 @@ class _InboxScreenState extends State<InboxScreen> {
         .doc(chatId)
         .collection('Message')
         // .where('sender', isEqualTo: senderName) // Filter by sender name
-        .orderBy('time', descending: true).limit(1)
+        .orderBy('time', descending: true)
+        .limit(1)
         .get();
     if (querySnapshot.docs.isNotEmpty) {
       // Access the first document
@@ -156,7 +171,6 @@ class _InboxScreenState extends State<InboxScreen> {
     return lastMessageData;
   }
 
-
   Future<Map<String, dynamic>?> message(id) async {
     List<Map<String, dynamic>> messages = await getMessages(id);
     if (messages.isNotEmpty) {
@@ -166,6 +180,10 @@ class _InboxScreenState extends State<InboxScreen> {
       // Handle the case where there are no messages
       return null; // or you can return an empty map {} depending on your use case
     }
+  }
+
+  bool checkContainkeyProfile(Map<String, dynamic> username) {
+    return username.containsKey('profilePicture');
   }
 
   @override
@@ -204,6 +222,7 @@ class _InboxScreenState extends State<InboxScreen> {
                   // print('---------- length ');
                   // print(chatRooms!.length);
                   // print(chatRoom);
+                  // getUserByEmail(widget.username);
                   String sellerName = widget.username['shoppingMode']
                       ? (chatRoom['seller']['fname'] +
                           " " +
@@ -211,53 +230,84 @@ class _InboxScreenState extends State<InboxScreen> {
                       : chatRoom['customer']['fname'] +
                           " " +
                           chatRoom['customer']['lname'];
-                  String lastMessage = last_message![index]['message'] != null ? last_message![index]['message'] :
-                                      last_message![index]['link'] != null ? "Image" : "Map";
-        
+                  String lastMessage = last_message![index]['message'] != null
+                      ? last_message![index]['message']
+                      : last_message![index]['link'] != null
+                          ? "Image"
+                          : "Map";
+
+                  String link_image = widget.username['shoppingMode']
+                      ? chatRoom['seller']['email']
+                      : chatRoom['customer']['email'];
+                  print('------- check');
+                  print(link_image);
                   // print(sellerName);
-                  // print('-------');
                   // print(order);
-                  return Column(children: [
-                    GestureDetector(
-                      onTap: () {
-                        Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => ChatScreen(
-                                      username: widget.username,
-                                      order: chatRoom,
-                                      seller: sellerName,
-                                    )));
-                      },
-                      child: Card(
-                        color: const Color.fromRGBO(242, 241, 236, 1),
-                        surfaceTintColor: Colors.transparent,
-                        shadowColor: Colors.transparent,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(0)),
-                        child: ListTile(
-                          contentPadding: const EdgeInsets.all(10),
-                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                          titleTextStyle: const TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: 20,
-                              color: Color.fromRGBO(54, 91, 109, 1.0)),
-                          // subtitleTextStyle: ,
-        
-                          leading: CircleAvatar(),
-                          title: Text(sellerName),
-                          subtitle: Text(lastMessage),
-                        ),
-                      ),
-                    ),
-                    const Divider(
-                      height: BorderSide.strokeAlignOutside,
-                      color: Color.fromRGBO(38, 174, 236, 0.3),
-                    ),
-                    // const Divider(
-                    //   color: Color.fromRGBO(219, 241, 240, 1.0),
-                    // )
-                  ]);
+                  return FutureBuilder(
+                      future: getUserByEmail(link_image),
+                      builder: (BuildContext context,
+                          AsyncSnapshot<dynamic> snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          // While the future is being resolved, you can display a loading indicator.
+                          return Center(child: CircularProgressIndicator());
+                        } else {
+                          if (snapshot.hasData && snapshot.data != null) {
+                            // If data is available, you can access it using snapshot.data.
+                            // Here, you can extract and display the user information.
+                            Map<String, dynamic>? userData = snapshot.data;
+                            // Example: Display user's name
+                            print(userData);
+
+                            return Column(children: [
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                      context,
+                                      MaterialPageRoute(
+                                          builder: (context) => ChatScreen(
+                                                username: widget.username,
+                                                order: chatRoom,
+                                                seller: sellerName,
+                                              )));
+                                },
+                                child: Card(
+                                  color: const Color.fromRGBO(242, 241, 236, 1),
+                                  surfaceTintColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(0)),
+                                  child: ListTile(
+                                    contentPadding: const EdgeInsets.all(10),
+                                    // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                    titleTextStyle: const TextStyle(
+                                        fontWeight: FontWeight.bold,
+                                        fontSize: 20,
+                                        color:
+                                            Color.fromRGBO(54, 91, 109, 1.0)),
+                                    // subtitleTextStyle: ,
+
+                                    leading: checkContainkeyProfile(userData!) ? Image.network(userData!['profilePicture']) : Icon(Icons.person),
+                                    title: Text(sellerName),
+                                    subtitle: Text(lastMessage),
+                                  ),
+                                ),
+                              ),
+                              const Divider(
+                                height: BorderSide.strokeAlignOutside,
+                                color: Color.fromRGBO(38, 174, 236, 0.3),
+                              ),
+                              // const Divider(
+                              //   color: Color.fromRGBO(219, 241, 240, 1.0),
+                              // )
+                            ]);
+                          } else {
+                            // If there's no data, it might mean the user doesn't exist or there was an error.
+                            // You can display an appropriate message.
+                            return Text('User not found');
+                          }
+                        }
+                      });
                 },
               ),
       ),

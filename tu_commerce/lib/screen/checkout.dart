@@ -218,7 +218,7 @@ class _CheckOutState extends State<CheckOut> {
                     if (order!.product!['seller'].containsKey('tokenNotice')){
                       await _notificationService.requestNotificationPermissions();
                         // print("Token: " + widget.username['tokenNotice']);
-                      await sendNotificationToUser(order!.product!['seller']['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                      await sendNotificationToUser(order!.product!['seller']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
                       // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                     }
                     Navigator.pushReplacement(

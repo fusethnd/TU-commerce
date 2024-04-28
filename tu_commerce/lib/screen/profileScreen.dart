@@ -95,7 +95,7 @@ class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
-    _init();
+    // _init();
     final screenWidth = MediaQuery.of(context).size.width;
     final boxSize = screenWidth * 0.65 / 3;
     return MaterialApp(

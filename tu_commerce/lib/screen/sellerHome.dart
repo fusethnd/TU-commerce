@@ -27,6 +27,7 @@ class SellerHome extends StatefulWidget {
 class _SellerHomeState extends State<SellerHome> {
 
   Map<String, dynamic>? allNotice;
+  List<dynamic>? allOrders;
   int? notReadNotice;
   // Map<String, dynamic>? userData;
   late Map<String, dynamic> userData; // Holding user
@@ -55,12 +56,14 @@ class _SellerHomeState extends State<SellerHome> {
 
   
   Future<void> _initializeData() async {
+    List<dynamic>? tempOrder =  await getOrders(widget.username['username'],widget.username['shoppingMode']);
     Map<String, dynamic>? tempMap = (await FirebaseFirestore.instance
         .collection('Notice')
         .doc(widget.username['username'])
         .get())
         .data();
-    
+    // print('---------- data');
+    // print(tempOrder[0].data());
     if (tempMap == null) {
       tempMap = {
         "length":0,
@@ -70,6 +73,7 @@ class _SellerHomeState extends State<SellerHome> {
     if (mounted){
       setState(() {
         allNotice = tempMap;
+        allOrders = tempOrder;
       });
 
     }
@@ -80,8 +84,10 @@ class _SellerHomeState extends State<SellerHome> {
   Widget build(BuildContext context) {
     final screenWidth = MediaQuery.of(context).size.width;
     final boxSize = screenWidth * 0.65 / 3;
-
-    return MaterialApp(
+    
+    return allOrders == null
+            ? const Center(child: CircularProgressIndicator()) :
+            MaterialApp(
       theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
