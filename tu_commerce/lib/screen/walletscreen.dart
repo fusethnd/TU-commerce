@@ -133,7 +133,7 @@ class _WalletScreenState extends State<WalletScreen> {
                 borderRadius: BorderRadius.circular(20),
                 color: widget.username['shoppingMode']
                     ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
-                    : Color.fromRGBO(38, 174, 236, 1)),
+                    : Color.fromRGBO(79, 184, 238, 1)),
             child: RichText(
               text: TextSpan(
                 children: [
@@ -236,7 +236,7 @@ class _WalletScreenState extends State<WalletScreen> {
               borderRadius: BorderRadius.circular(20),
               color: widget.username['shoppingMode']
                   ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
-                  : Color.fromRGBO(38, 174, 236, 1),
+                  : Color.fromRGBO(79, 184, 238, 1),
             ),
             child: Row(
               children: [

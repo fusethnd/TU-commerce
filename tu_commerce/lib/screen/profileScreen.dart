@@ -100,6 +100,7 @@ class _ProfileState extends State<Profile> {
     final boxSize = screenWidth * 0.65 / 3;
     return MaterialApp(
       theme: ThemeData(
+        scaffoldBackgroundColor: const Color.fromRGBO(242, 241, 236, 1),
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
             backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(65, 193, 186, 1.0)),

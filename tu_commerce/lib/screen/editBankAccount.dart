@@ -96,8 +96,7 @@ class _EditBankAccountState extends State<EditBankAccount> {
                             widget.username['shoppingMode']
                                 ? Color.fromRGBO(
                                     98, 221, 214, 1.0) // True condition
-                                : Color.fromRGBO(
-                                    38, 174, 236, 1) // False condition
+                                : Color.fromRGBO(79, 184, 238, 1) // False condition
                             ),
                         foregroundColor: MaterialStateProperty.all(
                             widget.username['shoppingMode']

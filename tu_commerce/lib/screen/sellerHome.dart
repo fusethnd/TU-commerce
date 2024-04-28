@@ -92,6 +92,7 @@ class _SellerHomeState extends State<SellerHome> {
           ),
         ),
         textTheme: Theme.of(context).textTheme.apply(bodyColor: const Color.fromRGBO(54, 91, 109, 1.0), fontSizeDelta: 1),
+        scaffoldBackgroundColor: const Color.fromRGBO(242, 241, 236, 1),
       ),
       home: Scaffold(
       body: isLoading ? const Center(child: CircularProgressIndicator()) // เอาไว้เช็คว่า query เสร็จยังถ้ายังมันจะหมุนๆ

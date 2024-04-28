@@ -2,6 +2,8 @@ import 'dart:ffi';
 import 'dart:io';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
 import 'package:form_field_validator/form_field_validator.dart';
 import 'package:path/path.dart' as path;
 import 'package:flutter/material.dart';
@@ -75,107 +77,186 @@ class _AddProductState extends State<AddProduct> {
   @override
   Widget build(BuildContext context) {
 
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
-      appBar: AppBar(title: const Text("Add Product"),),
-      body: Form(
-        key: _formKey,
-        child: Column(
-          children: [
-            // ----------- ปุ่มกดเลือกภาพ -----------
-            ElevatedButton(
-              onPressed: pickImageFromGallery, // เรียฟังชั่นเลือกภาพ
-              child: const Text('Select Image')
-              
+      body: MaterialApp(
+        theme: ThemeData(
+          inputDecorationTheme: InputDecorationTheme(
+            enabledBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(50),
             ),
-            
-            // ----------- ช่องใส่ product name ---------
-            const Text("product name"),
-            TextFormField(
-              validator: RequiredValidator(errorText: "Need product name").call,
-              onSaved: (name) {
-                product.prodName = name!;
-                product.imageUrl = "product/${product.prodName}.png";
-                product.seller = widget.username; // แอบ save Username ไปด้วย
-                product.prodID = uuid;
-                product.instock = true;
-                product.time = DateTime.now();
-                
-              },
+            focusedBorder: OutlineInputBorder(
+              borderSide: const BorderSide(color: Colors.transparent),
+              borderRadius: BorderRadius.circular(50),
             ),
-            // ---------- จบช้อง product name -------------
-
-            // ---------- ช่องใส่ describtion -------------
-            const Text("product describtion"),
-            TextFormField(
-              validator: RequiredValidator(errorText: "Need describtion").call,
-              onSaved: (describ) {
-                product.details = describ!;
-              },
+            hintStyle: const TextStyle(color: Colors.grey),
+            filled: true,
+            fillColor: const Color.fromRGBO(219, 241, 240, 1.0),
+            contentPadding: const EdgeInsets.only(left: 25),
+          ),
+          elevatedButtonTheme: ElevatedButtonThemeData(
+            style: ButtonStyle(
+              backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(54, 91, 109, 1.0)),
+              foregroundColor: MaterialStateProperty.all(const Color.fromRGBO(255, 255, 255, 1)),
+              textStyle: MaterialStateProperty.all(const TextStyle(fontSize: 16,),),
+              padding: MaterialStateProperty.all(const EdgeInsets.symmetric(horizontal:40),),
             ),
-            // ---------- จบช่อง product describtion -------------
-
-            // ----------- ใส่ catagory -----------
-            const Text("Category"),
-            DropdownButton<String>(
-              value: product.category, 
-              items: const [
-                DropdownMenuItem<String>(value: "normal",child: Text('ของใช้ทั่วไป'),),
-                DropdownMenuItem<String>(value: 'electric',child: Text('ของใช้ไฟฟ้า'),),
-              ],
-              onChanged: (value){
-                setState(() {
-                  product.category = value!;
-                });
-              },
-            ),
-            // ---------- จบ category ----------
-            // ---------- ช่องใส่ ราคา ------------
-            const Text("Price"),
-            TextFormField(
-              validator: RequiredValidator(errorText: "Need Price").call,
-              onSaved: (price) {
-                product.price = double.parse(price!);
-              },
-            ),
-            // ---------- จบ ช่องใส่ ราคา ------------
-            // ---------- ปุ่ม เซฟ      -------------
-            ElevatedButton(
-              onPressed: _isButtonClicked ? null : () async {
-                if (_formKey.currentState!.validate()) {
-                  
-                  _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
-                  if (widget.username.containsKey('Credit') == false){
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
-                      );
-                  }else {
-                      setState(() {
-                        _isButtonClicked = true;
-                      });
-                      await uploadImageToFirebase(context);
-                      // _formKey.currentState!.save();
-                      // product.linkUrl = url;
-                      print('------------ url -------------');
-                      print(product.imageUrl);
-                      print('-------------link url --------');
-                      print(product.linkUrl);
-                      await saveProductDB(product);
-                      // _formKey.currentState!.reset();
-                      Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
-                          return Navigation(username: widget.username, temp: 0);
-                      }
-                    ),(Route<dynamic> route) => false);
-                  }
-                }
-              }, 
-              child: const Text('Save'),
-            )
-            // ---------------------------
-          ],
+          )
+        ),
+        home: Form(
+          key: _formKey,
+          child: Stack(
+            children: [
+              Container(),
+              Stack(
+                children: [
+                  Container(
+                    color: Colors.white,
+                    height: screenHeight * 0.6,
+                    child: SizedBox(
+                      width: double.infinity,
+                      child: Image.asset(
+                        'assets/images/DefaultImg.jpg',
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  Positioned(
+                    top: 0,
+                    left: 0,
+                    right: 0,
+                    bottom: 0,
+                    child: ElevatedButton(
+                      style: ButtonStyle(
+                        backgroundColor: MaterialStateProperty.all(Colors.transparent),
+                        surfaceTintColor: MaterialStateProperty.all(Colors.transparent),
+                        shadowColor: MaterialStateProperty.all(Colors.transparent),
+                      ),
+                      onPressed: pickImageFromGallery,
+                      child: const Icon(
+                        Icons.add_circle_rounded,
+                        size: 70,
+                        color: Color.fromRGBO(54, 91, 109, 1.0),
+                      )
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                bottom: 0,
+                left: 0,
+                right: 0,
+                child: SingleChildScrollView(
+                  child: Container(
+                    padding: const EdgeInsets.all(30),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(20),
+                      color: Color.fromRGBO(242, 241, 236, 1),
+                    ),
+                    height: screenHeight * 0.4,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        TextFormField(
+                          validator: RequiredValidator(errorText: "Need product name").call,
+                          onSaved: (name) {
+                            product.prodName = name!;
+                            product.imageUrl = "product/${product.prodName}.png";
+                            product.seller = widget.username; // แอบ save Username ไปด้วย
+                            product.prodID = uuid;
+                            product.instock = true;
+                            product.time = DateTime.now();
+                          },
+                          decoration: const InputDecoration(labelText: 'Product Name'),
+                        ),
+                        TextFormField(
+                          validator: RequiredValidator(errorText: "Need describtion").call,
+                          onSaved: (describ) {
+                            product.details = describ!;
+                          },
+                          decoration: const InputDecoration(labelText: 'Description'),
+                        ),
+                        DecoratedBox(
+                          decoration: BoxDecoration(
+                            color: Color.fromRGBO(219, 241, 240, 1.0),
+                            borderRadius: BorderRadius.circular(20)
+                          ),
+                          child: DropdownButton<String>(
+                            padding: EdgeInsets.symmetric(horizontal: 20),
+                            isExpanded: true,
+                            value: product.category, 
+                            items: const [
+                              DropdownMenuItem<String>(value: "normal",child: Text('ของใช้ทั่วไป'),),
+                              DropdownMenuItem<String>(value: 'electric',child: Text('ของใช้ไฟฟ้า'),),
+                            ],
+                            onChanged: (value){
+                              setState(() {
+                                product.category = value!;
+                              });
+                            },
+                          ),
+                        ),
+                        TextFormField(
+                          validator: RequiredValidator(errorText: "Need Price").call,
+                          onSaved: (price) {
+                            product.price = double.parse(price!);
+                          },
+                          decoration: const InputDecoration(labelText: 'Price'),
+                        ),
+                        ElevatedButton(
+                          onPressed: _isButtonClicked ? null : () async {
+                            if (_formKey.currentState!.validate()) {
+                              
+                              _formKey.currentState!.save(); // update status ของ Text From Field ที่ใส่มาทั้งหมด
+                              if (widget.username.containsKey('Credit') == false){
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                    const SnackBar(content: Text('')),
+                                  );
+                              }else {
+                                  setState(() {
+                                    _isButtonClicked = true;
+                                  });
+                                  await uploadImageToFirebase(context);
+                                  // _formKey.currentState!.save();
+                                  // product.linkUrl = url;
+                                  print('------------ url -------------');
+                                  print(product.imageUrl);
+                                  print('-------------link url --------');
+                                  print(product.linkUrl);
+                                  await saveProductDB(product);
+                                  // _formKey.currentState!.reset();
+                                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                                      return Navigation(username: widget.username, temp: 0);
+                                  }
+                                ),(Route<dynamic> route) => false);
+                              }
+                            }
+                          }, 
+                          child: const Text('Save'),
+                        )
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              // Positioned(
+              //   top: 40,
+              //   left: 20,
+              //   child: RawMaterialButton(
+              //     padding: const EdgeInsets.all(10),
+              //     constraints: const BoxConstraints(minWidth: 36),
+              //     shape: const CircleBorder(),
+              //     fillColor: const Color.fromRGBO(54, 91, 109, 1.0),
+              //     onPressed: () => Navigator.of(context).pop(),
+              //     child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white,),
+              //   )
+              // )
+            ],
+          ),
         ),
       ),
-    );   
+    );
   }
-
-
 }
