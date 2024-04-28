@@ -86,7 +86,7 @@ class _WalletScreenState extends State<WalletScreen> {
     if (!isHaveCredit) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Wallet'),
+          title: const Text('Wallet'),
         ),
         body: Column(
           children: [

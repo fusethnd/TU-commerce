@@ -200,15 +200,23 @@ class _ProfileState extends State<Profile> {
                                               minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
                                             ),
                                             onPressed: () {
-                                              Navigator.pushAndRemoveUntil(
+                                              Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) => NavigationCustomer(
                                                       email: widget.email['email'],
                                                       temp: 9,
                                                     ),
-                                                  ),
-                                                  (Route<dynamic> route) => false);
+                                                  ));
+                                              // Navigator.pushAndRemoveUntil(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //       builder: (context) => NavigationCustomer(
+                                              //         email: widget.email['email'],
+                                              //         temp: 9,
+                                              //       ),
+                                              //     ),
+                                              //     (Route<dynamic> route) => false);
                                             },
                                             child: const Icon(Icons.directions_car),
                                           ),
@@ -223,15 +231,24 @@ class _ProfileState extends State<Profile> {
                                               minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
                                             ),
                                             onPressed: () {
-                                              Navigator.pushAndRemoveUntil(
+                                              Navigator.push(
                                                   context,
                                                   MaterialPageRoute(
                                                     builder: (context) => NavigationCustomer(
                                                       email: widget.email['email'],
                                                       temp: 10,
                                                     ),
-                                                  ),
-                                                  (Route<dynamic> route) => false);
+                                                  )
+                                              );
+                                              // Navigator.pushAndRemoveUntil(
+                                              //     context,
+                                              //     MaterialPageRoute(
+                                              //       builder: (context) => NavigationCustomer(
+                                              //         email: widget.email['email'],
+                                              //         temp: 10,
+                                              //       ),
+                                              //     ),
+                                              //     (Route<dynamic> route) => false);
                                             },
                                             child: const Icon(Icons.history),
                                           ),

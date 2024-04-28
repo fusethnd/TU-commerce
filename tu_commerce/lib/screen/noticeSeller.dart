@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:tu_commerce/main.dart';
 
 class NoticeSeller extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -45,7 +46,7 @@ class _NoticeSellerState extends State<NoticeSeller> {
     // print(allNotice!['noticeList']);
     return Scaffold(
       appBar: AppBar(
-        title: Text('Notifications'),
+        title: const Text('Notifications'),
       ),
 
       body: allNotice == null || allNotice!['noticeList'] == null

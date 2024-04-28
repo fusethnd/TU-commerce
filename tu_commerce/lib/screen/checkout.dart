@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/model/noticeApi.dart';
 import 'package:tu_commerce/model/order.dart';
 import 'package:tu_commerce/model/product.dart';
@@ -136,7 +137,10 @@ class _CheckOutState extends State<CheckOut> {
             bottom: 20,
             left: 30,
             right: 30,
-            child: ElevatedButton(
+            
+            // =====================================
+            
+            child: widget.username['shoppingMode'] ? ElevatedButton(
               style: ButtonStyle(
                 textStyle: MaterialStateProperty.all(const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
@@ -238,8 +242,12 @@ class _CheckOutState extends State<CheckOut> {
                   Text('Check Out'),
                 ],
               )
-            ),
+            )
+            : Text("seller")
           ),
+
+
+
           Positioned(
             top: 40,
             left: 20,

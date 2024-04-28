@@ -73,10 +73,7 @@ class _StockScreenState extends State<StockScreen> {
                     itemCount: allProduct!.length,
                     itemBuilder: (context, index) {
                       Map<String, dynamic> item =
-                          allProduct![index]; // Safely assume non-null with '!'
-                      print(
-                          item); // Debugging statement to see the data structure
-                      print(allProduct); // Debugging statement to see all data
+                          allProduct![index];
 
                       return Column(
                         children: [
@@ -94,22 +91,21 @@ class _StockScreenState extends State<StockScreen> {
                                 ? Container(
                                     width: 100,
                                     height: 100,
-                                    decoration: BoxDecoration(
+                                    decoration: const BoxDecoration(
                                       color: Colors.white,
-                                      // Optional: Add border radius for rounded corners
                                     ),
                                     child: Image.network(
                                       item['link'],
                                       // fit: BoxFit.contain,
                                     ),
                                   )
-                                : SizedBox(
+                                : const SizedBox(
                                     width: 100,
                                     height: 100,
                                   ),
                             title: Text(
                               item['prodName'] ?? 'No Product Name',
-                              style: TextStyle(
+                              style: const TextStyle(
                                 color: Color.fromRGBO(60, 91, 109, 1.0),
                                 fontWeight: FontWeight.bold,
                               ),
@@ -119,10 +115,7 @@ class _StockScreenState extends State<StockScreen> {
                               children: [
                                 Text(
                                     'Category: ${item['category'] ?? 'No Category'}'),
-                                SizedBox(
-                                  height: 30,
-                                ),
-                                // Display the category
+                                const SizedBox(height: 30,),
                                 Text(item['details'] ??
                                     'No Details'), // Display details
                               ],
@@ -137,17 +130,16 @@ class _StockScreenState extends State<StockScreen> {
                               ],
                             ),
                             onTap: () {
-                              // Action when the entire ListTile is tapped, e.g., navigate to a detail page
+                              Navigator.push(context,
+                              MaterialPageRoute(builder: (context) => Navigation(username: widget.email,temp: 8,product: item),));
                             },
                           ),
-                          Container(
-                            width: MediaQuery.of(context).size.width *
-                                0.9, // Set width to 80% of the screen width
-                            child: Divider(
-                              color: Color.fromRGBO(174, 190, 199,
-                                  1), // Set the color of the divider
-                              thickness: 1, // Set the thickness of the divider
-                              height: 0, // Set the height of the divider
+                          SizedBox(
+                            width: MediaQuery.of(context).size.width *0.9,
+                            child: const Divider(
+                              color: Color.fromRGBO(174, 190, 199,1),
+                              thickness: 1,
+                              height: 0,
                             ),
                           ),
                         ],
@@ -156,19 +148,24 @@ class _StockScreenState extends State<StockScreen> {
                   ),
                 ),
                 Padding(
-                  padding:
-                      EdgeInsets.all(20), // Adjust the padding values as needed
+                  padding:const EdgeInsets.all(20),
                   child: Align(
                     alignment: Alignment.centerRight,
                     child: ElevatedButton(
                       onPressed: () {
-                        Navigator.pushAndRemoveUntil(
+                        Navigator.push(
                           context,
                           MaterialPageRoute(
                               builder: (context) =>
-                                  Navigation(username: widget.email, temp: 5)),
-                          (Route<dynamic> route) => false,
+                                  Navigation(username: widget.email, temp: 5))
                         );
+                        // Navigator.pushAndRemoveUntil(
+                        //   context,
+                        //   MaterialPageRoute(
+                        //       builder: (context) =>
+                        //           Navigation(username: widget.email, temp: 5)),
+                        //   (Route<dynamic> route) => false,
+                        // );
                       },
                       style: ElevatedButton.styleFrom(
                         shape: CircleBorder(),

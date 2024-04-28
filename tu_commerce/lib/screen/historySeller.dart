@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:intl/intl.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/historyBox.dart';
 
 class HistorySeller extends StatefulWidget {
@@ -60,6 +61,7 @@ class _HistorySellerState extends State<HistorySeller> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
+        leading: const GoBackButton(),
       ),
       body: Column(
         children: [

@@ -10,6 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/navigationbarSeller.dart';
 import 'package:uuid/uuid.dart'; 
@@ -241,18 +242,18 @@ class _AddProductState extends State<AddProduct> {
                   ),
                 ),
               ),
-              // Positioned(
-              //   top: 40,
-              //   left: 20,
-              //   child: RawMaterialButton(
-              //     padding: const EdgeInsets.all(10),
-              //     constraints: const BoxConstraints(minWidth: 36),
-              //     shape: const CircleBorder(),
-              //     fillColor: const Color.fromRGBO(54, 91, 109, 1.0),
-              //     onPressed: () => Navigator.of(context).pop(),
-              //     child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white,),
-              //   )
-              // )
+              Positioned(
+                top: 40,
+                left: 20,
+                child: RawMaterialButton(
+                  padding: const EdgeInsets.all(10),
+                  constraints: const BoxConstraints(minWidth: 36),
+                  shape: const CircleBorder(),
+                  fillColor: const Color.fromRGBO(54, 91, 109, 1.0),
+                  onPressed: () => Navigator.of(context).pop(),
+                  child: const Icon(Icons.arrow_back_ios_new_rounded, color: Colors.white,),
+                )
+              )
             ],
           ),
         ),

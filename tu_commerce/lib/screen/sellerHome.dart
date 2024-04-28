@@ -182,14 +182,20 @@ class _SellerHomeState extends State<SellerHome> {
                                           minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
                                         ),
                                         onPressed: () {
-
-                                          Navigator.pushAndRemoveUntil(
+                                          Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               
                                               builder: (context) => Navigation(username: widget.username,temp: 7),
-                                            ),(Route<dynamic> route) => false
+                                            )
                                           );
+                                          // Navigator.pushAndRemoveUntil(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                              
+                                          //     builder: (context) => Navigation(username: widget.username,temp: 7),
+                                          //   ),(Route<dynamic> route) => false
+                                          // );
                                         },
                                         child: const Icon(Icons.directions_car),
                                       ),
@@ -204,12 +210,18 @@ class _SellerHomeState extends State<SellerHome> {
                                           minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
                                         ),
                                         onPressed: () {
-                                          Navigator.pushAndRemoveUntil(
+                                          Navigator.push(
                                             context,
                                             MaterialPageRoute(
                                               builder: (context) => Navigation(username: widget.username,temp: 6),
-                                            ),(Route<dynamic> route) => false
+                                            )
                                           );
+                                          // Navigator.pushAndRemoveUntil(
+                                          //   context,
+                                          //   MaterialPageRoute(
+                                          //     builder: (context) => Navigation(username: widget.username,temp: 6),
+                                          //   ),(Route<dynamic> route) => false
+                                          // );
                                         },
                                         child: const Icon(Icons.history),
                                       ),

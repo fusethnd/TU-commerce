@@ -46,7 +46,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
     initState();
     return Scaffold(
       appBar: AppBar(
-        title: Text('TO SHIP'),
+        title: const Text('TO SHIP'),
+        leading: const GoBackButton(),
       ),
       body: orders == null
           ? Center(child: CircularProgressIndicator()) //  ฝากแก้ด้วยละกันให้ถ้าไม่มี orders ให้แก้เเป็น text
