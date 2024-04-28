@@ -21,7 +21,9 @@ Future<Map<String, dynamic>?> getUserByEmail(String email) async {
   }
   return null;
 }
-
+bool checkContainkeyProfile(Map<String, dynamic> username) {
+  return username.containsKey('profilePicture');
+}
 Future<String?> getUserIDByEmail(String email) async {
   var querySnapshot = await FirebaseFirestore.instance
       .collection("users")

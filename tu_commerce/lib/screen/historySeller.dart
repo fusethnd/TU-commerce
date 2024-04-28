@@ -86,7 +86,7 @@ class _HistorySellerState extends State<HistorySeller> {
                 String formattedDate = DateFormat.yMMMd().format(timestamp); 
 
                 return HistoryBox(
-                  partner: item['product']['seller'],
+                  partner: item['username'],
                   product: item['product'],
                   date: formattedDate,
                   status: item['status'],

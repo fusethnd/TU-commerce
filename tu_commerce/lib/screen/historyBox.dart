@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
+import 'package:tu_commerce/function/Firebase.dart';
 
 class HistoryBox extends StatelessWidget { 
   final Map<String, dynamic> partner;
@@ -26,7 +27,7 @@ class HistoryBox extends StatelessWidget {
         children: [
           Row(
             children: [
-              const CircleAvatar(),
+              checkContainkeyProfile(partner) ? Image.network(partner['profilePicture'],width: 50,height: 50,) : Icon(Icons.person),
               const SizedBox(width: 10,),
               Text(
                 "@" + partner['username'],
