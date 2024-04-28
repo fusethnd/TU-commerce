@@ -1,12 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/model/message.dart';
-import 'package:tu_commerce/screen/navigationbarCustomer.dart';
+// import 'package:tu_commerce/screen/navigationbarCustomer.dart';
 import 'map_screen.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
@@ -153,108 +154,152 @@ class _ChatScreenState extends State<ChatScreen> {
       ),
       body: Column(
         children: [
-          Expanded(
-            child: allMessage != null? ListView.builder(
+          Flexible(
+            child: allMessage != null ? ListView.builder(
               reverse: true,
               itemCount: allMessage?.length,
               itemBuilder: (context, index) {
                 Map<String, dynamic>? messageData = allMessage?[index];
+            
+                bool isSender = messageData?['sender'] == widget.username['username'];
+                bool isImg = messageData?['link'] != null;
+                bool isText = messageData?['message'] != null;
+                bool isLocation = messageData?['latitude'] != null;
+            
+                final screenWidth = MediaQuery.of(context).size.width;
+                final screenHeight = MediaQuery.of(context).size.height;
 
-                bool isSender = messageData?['sender'] ==
-                    widget.username['username'];
-
-                return Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: 16, vertical: 8),
-                    margin: EdgeInsets.symmetric(
-                        vertical: 4, horizontal: 8),
-                    decoration: BoxDecoration(
-                      // ใส่กรอบ
-                      color: isSender ? Colors.blue : Colors.grey[300],
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                    alignment: isSender
-                        ? Alignment.centerRight
-                        : Alignment
-                            .centerLeft, // เอาไว้เช็คว่าเป็นคนส่งมั้ยถ้าเป็นจะโยนแชทไว้ฝั่งขวา
-
-                    child: messageData?['link'] !=
-                            null // เช็ค 3 อย่างถ้าเป็นแบบไหนจะโชว์อันนั้น เช็คว่าเป็นภาพมั้ยจาก field link
-                        ? Image.network(messageData!['link']) //
-                        : (messageData?['message'] !=
-                                null // เช็คว่า เป็น field message มั้ยจะโชว์เป็น text
-                            ? Text(messageData!['message']) //
-                            : (messageData?['latitude'] !=
-                                    null // เช็คว่า เป็น latitude มั้ยจะโชว์เป็น map
-                                ? SizedBox(
-                                    width: 500,
-                                    height: 500,
-                                    child: GoogleMap(
-                                      initialCameraPosition:
-                                          CameraPosition(
-                                        target: LatLng(
-                                            messageData?['latitude'],
-                                            messageData?['longitude']),
-                                        zoom: 15,
-                                      ),
-                                      onMapCreated: (controller) {
-                                        mapController = controller;
-                                      },
-                                      markers: {
-                                        Marker(
-                                          markerId: MarkerId('Marker'),
-                                          position: LatLng(
-                                              messageData?['latitude'],
-                                              messageData?[
-                                                  'longitude']),
-                                          infoWindow: InfoWindow(
-                                            title: 'Your Location',
-                                          ),
-                                        ),
-                                      },
-                                      onTap: _onMapTapped,
+                return Row(
+                  mainAxisAlignment: isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
+                  children: [
+                    Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 8),
+                        margin: EdgeInsets.only(bottom: 10, left: isImg ? 10 : 20, right: isImg ? 10 : 20),
+                        constraints: isLocation 
+                          ? BoxConstraints(maxWidth: screenWidth*0.9, maxHeight: screenHeight*0.5)
+                          : BoxConstraints(maxWidth: screenWidth*0.7, maxHeight: screenHeight*0.5),
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(12),
+                          color: isImg ? Colors.transparent 
+                                : !isSender ? const Color.fromRGBO(219, 232, 231, 1)
+                                : widget.username['shoppingMode'] ? const Color.fromRGBO(65, 193, 186, 1.0)
+                                : const Color.fromRGBO(38, 174, 236, 1),
+                        ),
+                        child: isImg 
+                            ? Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ClipRRect(
+                                  borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+                                  child: Image.network(
+                                    messageData!['link'],
+                                    fit: BoxFit.fill,
+                                  ),
+                                ),
+                                Container(
+                                  alignment: Alignment.center,
+                                  width: double.infinity,
+                                  height: 50,
+                                  decoration: const BoxDecoration(
+                                    color: Color.fromRGBO(65, 193, 186, 1.0),
+                                    borderRadius: BorderRadius.vertical(bottom: Radius.circular(10))
+                                  ),
+                                  child: Text(
+                                    messageData['message'],
+                                    style: const TextStyle(
+                                      color: Colors.white,
                                     ),
                                   )
-                                : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
+                                )
+                              ],
                             )
-                          )
-                        );
-                      },
-                    )
-                  : CircularProgressIndicator()),
+                            : isText ? Text(messageData!['message'])
+                            : isLocation != null ? SizedBox(
+                                width: 500,
+                                height: 500,
+                                child: GoogleMap(
+                                  initialCameraPosition:
+                                      CameraPosition(
+                                    target: LatLng(
+                                        messageData?['latitude'],
+                                        messageData?['longitude']),
+                                    zoom: 15,
+                                  ),
+                                  onMapCreated: (controller) {
+                                    mapController = controller;
+                                  },
+                                  markers: {
+                                    Marker(
+                                      markerId: MarkerId('Marker'),
+                                      position: LatLng(
+                                          messageData?['latitude'],
+                                          messageData?[
+                                              'longitude']),
+                                      infoWindow: InfoWindow(
+                                        title: 'Your Location',
+                                      ),
+                                    ),
+                                  },
+                                  onTap: _onMapTapped,
+                                ),
+                              )
+                              : Container() // อันนี้ไม่รู้แต่ไว้งี้หละ 5555
+                    ),
+                  ],
+                );
+              },
+            )
+            : CircularProgressIndicator()
+          ),
           Form(
-              key: _formKey,
+            key: _formKey,
+            child: Container(
+              padding: const EdgeInsets.all(10),
+              color: widget.username['shoppingMode'] ? const Color.fromRGBO(65, 193, 186, 1.0) : const Color.fromRGBO(38, 174, 236, 1),
               child: Row(
                 children: [
-                  Expanded(
-                      child: IconButton(
-                          onPressed: _getCurrentLocation,
-                          icon: const Icon(Icons
-                              .add)) // ปุ่มกด location กดแล้วจะโชว์ map ทันที
-                      ),
-                  // Expanded(
-                  //   child: IconButton(
-                  //     onPressed: () {},
-                  //     icon: const Icon(Icons.image))
-                  // ),
+                  IconButton(
+                    onPressed: _getCurrentLocation,
+                    icon: const Icon(Icons.add),
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white),
+                    ),
+                  ),
+                  const SizedBox(width: 5,),
                   Expanded(
                     child: TextFormField(
-                      // ช่องพิมพ์
+                      decoration: InputDecoration(
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 10),
+                        enabledBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderSide: const BorderSide(color: Colors.transparent),
+                          borderRadius: BorderRadius.circular(50),
+                        ),
+                        filled: true,
+                        fillColor: Colors.white,
+                        hintText: 'Message here',
+                      ),
                       controller: _textEditingController,
                       onChanged: (context) {
                         message.message = context;
                         // message.time = FieldValue.serverTimestamp() as DateTime?;
                       },
-                      decoration:
-                          const InputDecoration(hintText: 'Message here'),
                     ),
                   ),
-                  Expanded(
-                      // ปุ่มกดส่ง
-                      child: IconButton(
-                          onPressed: addMessage, icon: const Icon(Icons.send)))
+                  const SizedBox(width: 5,),
+                  IconButton(
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(Colors.white)
+                    ),
+                    onPressed: addMessage, icon: const Icon(Icons.send)
+                  )
                 ],
-              ))
+              ),
+            )
+          )
         ],
       ),
     );

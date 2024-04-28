@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:intl/intl.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/screen/historyBox.dart';
 
 class HistoryCustomer extends StatefulWidget {
@@ -64,6 +65,7 @@ class _HistoryCustomerState extends State<HistoryCustomer> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('History'),
+        leading: const GoBackButton(),
       ),
       body: Column(
         children: [

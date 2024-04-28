@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:tu_commerce/screen/addProduct.dart';
+import 'package:tu_commerce/screen/checkout.dart';
 import 'package:tu_commerce/screen/editProfile.dart';
 import 'package:tu_commerce/screen/historySeller.dart';
 import 'package:tu_commerce/screen/inboxScreen.dart';
@@ -16,9 +17,10 @@ import 'package:tu_commerce/screen/walletscreen.dart';
 
 class Navigation extends StatefulWidget {
   final Map<String, dynamic> username;
+  final Map<String, dynamic>? product;
   final int temp;
 
-  Navigation({Key? key, required this.username, this.temp = 2})
+  Navigation({Key? key, required this.username, this.temp = 2, this.product})
       : super(key: key);
   // const Navigation({super.key});
 
@@ -52,6 +54,10 @@ class _NavigationState extends State<Navigation> {
       AddProduct(username: widget.username),
       HistorySeller(username: widget.username),
       ToShipScreen(username: widget.username),
+      CheckOut(
+        username: widget.username,
+        product: widget.product,
+      ),
     ];
   }
   Future<void> _initialState() async {
@@ -78,12 +84,16 @@ class _NavigationState extends State<Navigation> {
   @override
   Widget build(BuildContext context) {
     _initialState();
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isSmallScreen = screenWidth < 430;
 
     return Scaffold(
       body: _widgetOptions.elementAt(_selectedIndex),
       bottomNavigationBar: GNav(
         color: Colors.white,
         backgroundColor: Color.fromRGBO(32, 157, 214, 1),
+        activeColor: const Color.fromRGBO(54, 91, 109, 1.0),
+        iconSize: isSmallScreen ? 20 : 30,
         selectedIndex: _selectedIndex,
         onTabChange: (index) {
           setState(() {
@@ -91,24 +101,24 @@ class _NavigationState extends State<Navigation> {
           });
         },
         tabs: [
-          GButton(
+          const GButton(
             icon: Icons.inventory,
             // text: 'Stock',
           ),
-          GButton(
+          const GButton(
             icon: Icons.wallet,
             // text: 'Wallet',
           ),
           GButton(
             icon: Icons.home,
+            iconSize: isSmallScreen ? 35 : 50,
             // text: 'Home',
           ),
-          GButton(
-            icon: Icons.inbox,
+          const GButton(
+            icon: Icons.email,
             // text: 'Inbox',
           ),
           GButton(
-            
             icon: Icons.notifications,
             iconColor:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) 
              ? Colors.red 

@@ -185,80 +185,81 @@ class _InboxScreenState extends State<InboxScreen> {
                 height: 10,
               ),
               Divider(
-                color: Color.fromRGBO(219, 241, 240, 1.0),
+                color: Color.fromRGBO(38, 174, 236, 0.3),
               )
             ],
           ),
           automaticallyImplyLeading: false,
         ),
-        body: RefreshIndicator(
-          onRefresh: _refreshData,
-          child: chatRooms == null
-              ? const Center(child: CircularProgressIndicator())
-              : ListView.builder(
-                  // padding: EdgeInsets.all(10),
-                  itemCount: chatRooms!.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    // Map<String, dynamic> order =
-                    //     orders![index].data() as Map<String, dynamic>;
-                    Map<String, dynamic> chatRoom =
-                        chatRooms![index].data() as Map<String, dynamic>;
-                    // print('---------- length ');
-                    // print(chatRooms!.length);
-                    // print(chatRoom);
-                    String sellerName = widget.username['shoppingMode']
-                        ? (chatRoom['seller']['fname'] +
-                            " " +
-                            chatRoom['seller']['lname'])
-                        : chatRoom['customer']['fname'] +
-                            " " +
-                            chatRoom['customer']['lname'];
-                    String lastMessage = last_message![index]['message'] != null ? last_message![index]['message'] :
-                                        last_message![index]['link'] != null ? "Image" : "Map";
-
-                    // print(sellerName);
-                    // print('-------');
-                    // print(order);
-                    return Column(children: [
-                      GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                  builder: (context) => ChatScreen(
-                                        username: widget.username,
-                                        order: chatRoom,
-                                        seller: sellerName,
-                                      )));
-                        },
-                        child: Card(
-                          color: const Color.fromRGBO(242, 241, 236, 1),
-                          surfaceTintColor: Colors.transparent,
-                          shadowColor: Colors.transparent,
-                          shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(0)),
-                          child: ListTile(
-                            contentPadding: const EdgeInsets.all(20),
-                            // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                            titleTextStyle: const TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 20,
-                                color: Color.fromRGBO(54, 91, 109, 1.0)),
-                            // subtitleTextStyle: ,
-
-                            leading: CircleAvatar(),
-                            title: Text(sellerName),
-                            subtitle: Text(lastMessage),
-                          ),
+        body: chatRooms == null
+            ? const Center(child: CircularProgressIndicator())
+            : ListView.builder(
+                padding: const EdgeInsets.all(10),
+                itemCount: chatRooms!.length,
+                itemBuilder: (BuildContext context, int index) {
+                  // Map<String, dynamic> order =
+                  //     orders![index].data() as Map<String, dynamic>;
+                  Map<String, dynamic> chatRoom =
+                      chatRooms![index].data() as Map<String, dynamic>;
+                  // print('---------- length ');
+                  // print(chatRooms!.length);
+                  // print(chatRoom);
+                  String sellerName = widget.username['shoppingMode']
+                      ? (chatRoom['seller']['fname'] +
+                          " " +
+                          chatRoom['seller']['lname'])
+                      : chatRoom['customer']['fname'] +
+                          " " +
+                          chatRoom['customer']['lname'];
+                  String lastMessage = last_message![index]['message'] != null ? last_message![index]['message'] :
+                                      last_message![index]['link'] != null ? "Image" : "Map";
+        
+                  // print(sellerName);
+                  // print('-------');
+                  // print(order);
+                  return Column(children: [
+                    GestureDetector(
+                      onTap: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => ChatScreen(
+                                      username: widget.username,
+                                      order: chatRoom,
+                                      seller: sellerName,
+                                    )));
+                      },
+                      child: Card(
+                        color: const Color.fromRGBO(242, 241, 236, 1),
+                        surfaceTintColor: Colors.transparent,
+                        shadowColor: Colors.transparent,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(0)),
+                        child: ListTile(
+                          contentPadding: const EdgeInsets.all(10),
+                          // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                          titleTextStyle: const TextStyle(
+                              fontWeight: FontWeight.bold,
+                              fontSize: 20,
+                              color: Color.fromRGBO(54, 91, 109, 1.0)),
+                          // subtitleTextStyle: ,
+        
+                          leading: CircleAvatar(),
+                          title: Text(sellerName),
+                          subtitle: Text(lastMessage),
                         ),
                       ),
-                      const Divider(
-                        color: Color.fromRGBO(219, 241, 240, 1.0),
-                      )
-                    ]);
-                  },
-                ),
-        ),
+                    ),
+                    const Divider(
+                      height: BorderSide.strokeAlignOutside,
+                      color: Color.fromRGBO(38, 174, 236, 0.3),
+                    ),
+                    // const Divider(
+                    //   color: Color.fromRGBO(219, 241, 240, 1.0),
+                    // )
+                  ]);
+                },
+              ),
       ),
     );
   }

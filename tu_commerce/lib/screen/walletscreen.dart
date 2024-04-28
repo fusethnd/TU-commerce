@@ -75,6 +75,7 @@ class _WalletScreenState extends State<WalletScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final screenWidth = MediaQuery.of(context).size.width;
     if (isLoading) {
       return Center(
         child: CircularProgressIndicator(),
@@ -85,7 +86,7 @@ class _WalletScreenState extends State<WalletScreen> {
     if (!isHaveCredit) {
       return Scaffold(
         appBar: AppBar(
-          title: Text('Wallet'),
+          title: const Text('Wallet'),
         ),
         body: Column(
           children: [
@@ -127,13 +128,13 @@ class _WalletScreenState extends State<WalletScreen> {
           ),
           Container(
             padding: EdgeInsets.all(20.0),
-            width: 350.0,
+            width: screenWidth*0.75,
             height: 120.0,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: widget.username['shoppingMode']
                     ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
-                    : Color.fromRGBO(38, 174, 236, 1)),
+                    : Color.fromRGBO(79, 184, 238, 1)),
             child: RichText(
               text: TextSpan(
                 children: [
@@ -149,7 +150,7 @@ class _WalletScreenState extends State<WalletScreen> {
                     child: SizedBox(height: 40),
                   ),
                   TextSpan(
-                    text: "฿ ${balance.toString()}",
+                    text: "${balance.toStringAsFixed(2)} ฿",
                     style: const TextStyle(
                       color: Color.fromRGBO(54, 91, 109, 1.0),
                       fontSize: 30,
@@ -194,49 +195,41 @@ class _WalletScreenState extends State<WalletScreen> {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: 16.0), // Add horizontal padding to the container
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment
-                  .spaceAround, // Aligns the children with space between them
-              children: [
-                const Text(
-                  "Your Bank Account",
-                  style: TextStyle(
-                    fontSize: 16, // Adjust the font size as needed
-                    // Add other text styling as needed
-                  ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              const Text(
+                "Your Bank Account",
+                style: TextStyle(
+                  fontSize: 16, // Adjust the font size as needed
                 ),
-                ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => EditBankAccount(
-                              bankAccountID: bankAccountID,
-                              username: widget.username)),
-                    );
-                  },
-                  style: ElevatedButton.styleFrom(
-                    foregroundColor: Color.fromARGB(255, 119, 119, 119),
-                    backgroundColor: Colors.transparent,
-                    splashFactory: NoSplash.splashFactory,
-                    elevation: 0,
-                  ),
-                  child: Text("Edit"),
+              ),
+              GestureDetector(
+                child: const Text(
+                  "Edit",
+                  style: TextStyle(decoration: TextDecoration.underline),
                 ),
-              ],
-            ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => EditBankAccount(
+                        bankAccountID: bankAccountID,
+                        username: widget.username)),
+                  );
+                }
+              )
+            ],
           ),
+          const SizedBox(height: 10,),
           Container(
             padding: EdgeInsets.all(20.0),
-            width: 350.0,
+            width: screenWidth*0.75,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
               color: widget.username['shoppingMode']
                   ? Color.fromRGBO(98, 221, 214, 1.0) // True condition
-                  : Color.fromRGBO(38, 174, 236, 1),
+                  : Color.fromRGBO(79, 184, 238, 1),
             ),
             child: Row(
               children: [

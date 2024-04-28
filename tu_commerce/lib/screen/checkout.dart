@@ -5,10 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:tu_commerce/function/Firebase.dart';
+import 'package:tu_commerce/main.dart';
 import 'package:tu_commerce/model/noticeApi.dart';
 import 'package:tu_commerce/model/order.dart';
 import 'package:tu_commerce/model/product.dart';
 import 'package:tu_commerce/screen/chat.dart';
+import 'package:tu_commerce/screen/navigationbarSeller.dart';
 import 'dart:ui';  // Import dart:ui for ImageFiltered
 
 import 'navigationbarCustomer.dart';
@@ -88,13 +90,25 @@ class _CheckOutState extends State<CheckOut> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text(
-                      widget.product!['price'].toStringAsFixed(2) + " ฿",
-                      style: const TextStyle(
-                        fontWeight: FontWeight.bold,
-                        fontSize: 25,
-                        color: Color.fromRGBO(54, 91, 109, 1.0)
-                      ),
+                    Row(
+                      children: [
+                        Text(
+                          widget.product!['price'].toStringAsFixed(2) + " ฿",
+                          style: const TextStyle(
+                            fontWeight: FontWeight.bold,
+                            fontSize: 25,
+                            color: Color.fromRGBO(54, 91, 109, 1.0)
+                          ),
+                        ),
+                        Spacer(),
+                        Text(
+                          "@" + widget.product!['seller']['username'].toString(),
+                          style: const TextStyle(
+                            fontSize: 20,
+                            color: Color.fromRGBO(54, 91, 109, 1.0)
+                          ),
+                        ),
+                      ],
                     ),
                     Padding(
                       padding: const EdgeInsets.symmetric(vertical: 15),
@@ -124,7 +138,10 @@ class _CheckOutState extends State<CheckOut> {
             bottom: 20,
             left: 30,
             right: 30,
-            child: ElevatedButton(
+            
+            // =====================================
+            
+            child: widget.username['shoppingMode'] ? ElevatedButton(
               style: ButtonStyle(
                 textStyle: MaterialStateProperty.all(const TextStyle(fontWeight: FontWeight.bold, fontSize: 20)),
                 padding: MaterialStateProperty.all(const EdgeInsets.symmetric(vertical: 15)),
@@ -136,7 +153,7 @@ class _CheckOutState extends State<CheckOut> {
                 order!.time = DateTime.now(); // เพิ่มเวลา
                 if (widget.username.containsKey('Credit') == false){ // ยังไม่เพิ่ม บัตร Credit
                     ScaffoldMessenger.of(context).showSnackBar(
-                      const SnackBar(content: Text('ไปเพิ่ม Credit ก่อนไอเวร')),
+                      const SnackBar(content: Text('No credit.')),
                     );
                 } else {
                   DocumentSnapshot snapshot = await FirebaseFirestore.instance.collection('Credit').doc(widget.username['Credit']).get(); 
@@ -159,7 +176,7 @@ class _CheckOutState extends State<CheckOut> {
                         'sender':widget.username['username'],
                         'reciever':widget.product!['seller']['username'],
                         'time':FieldValue.serverTimestamp(),
-                        'message':null,
+                        'message':widget.product!['prodName'],
                         'link':widget.product!['link'],
                         'latitude': null,
                         'longitude': null,
@@ -201,16 +218,19 @@ class _CheckOutState extends State<CheckOut> {
                     if (order!.product!['seller'].containsKey('tokenNotice')){
                       await _notificationService.requestNotificationPermissions();
                         // print("Token: " + widget.username['tokenNotice']);
-                      await sendNotificationToUser(order!.product!['seller']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                      await _notificationService.sendNotification(order!.product!['seller']['tokenNotice'],'Hello');
+                      await sendNotificationToUser(order!.product!['seller']['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                      // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                     }
                     Navigator.pushReplacement(
                       context, 
-                      MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
+                      // MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 8,order: orderMap,chatName: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
+                      
+                      MaterialPageRoute(builder: (context) => ChatScreen(username: widget.username,order: orderMap,seller: widget.product!['seller']['fname'] + ' ' + widget.product!['seller']['lname'],))
+                                         
                     );
                   }else {
                       ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(content: Text('เงินไม่พอ ไอเวร')),
+                        const SnackBar(content: Text('Your balance is not enough.')),
                       );
                   }
                 }
@@ -223,8 +243,23 @@ class _CheckOutState extends State<CheckOut> {
                   Text('Check Out'),
                 ],
               )
-            ),
+            )
+            : ElevatedButton(
+                onPressed: () async {
+                  QuerySnapshot  querySnapshot = await FirebaseFirestore.instance.collection('Product').where('prodID',isEqualTo: widget.product!['prodID']).get();
+                  querySnapshot.docs.forEach((doc) {
+                      doc.reference.delete();
+                  });
+                  Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context){
+                    return Navigation(username: widget.username, temp: 0);
+                  }),(Route<dynamic> route) => false);
+                }, 
+                child: Text('Delete')
+              )
           ),
+
+
+
           Positioned(
             top: 40,
             left: 20,
