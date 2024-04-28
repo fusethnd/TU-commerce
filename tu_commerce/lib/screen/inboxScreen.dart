@@ -182,9 +182,7 @@ class _InboxScreenState extends State<InboxScreen> {
     }
   }
 
-  bool checkContainkeyProfile(Map<String, dynamic> username) {
-    return username.containsKey('profilePicture');
-  }
+
 
   @override
   Widget build(BuildContext context) {

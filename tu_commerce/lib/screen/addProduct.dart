@@ -43,6 +43,7 @@ class _AddProductState extends State<AddProduct> {
     setState(() {
       _image = File(returnedImage.path); // save path ที่เจอลง _image เป็น global variable
     });
+    print('-image----');
     print(_image);
   }
   
@@ -62,8 +63,8 @@ class _AddProductState extends State<AddProduct> {
     print('----complete---');
     print(snapshot);
     String? urlCheck = await snapshot?.ref.getDownloadURL();
-    // print('pass');
-    // print(product.linkUrl);
+    print('pass');
+    print(product.linkUrl);
     // print('Dowload link: $url');
     if (mounted){
       print('pass mounted------------');
@@ -71,6 +72,8 @@ class _AddProductState extends State<AddProduct> {
           // url = urlCheck!;
         product.linkUrl = urlCheck!;
       });
+      print('---------');
+      // print(product.linkUrl);
     }
   }
 
@@ -129,6 +132,7 @@ class _AddProductState extends State<AddProduct> {
                     left: 0,
                     right: 0,
                     bottom: 0,
+                    
                     child: ElevatedButton(
                       style: ButtonStyle(
                         backgroundColor: MaterialStateProperty.all(Colors.transparent),
@@ -136,7 +140,7 @@ class _AddProductState extends State<AddProduct> {
                         shadowColor: MaterialStateProperty.all(Colors.transparent),
                       ),
                       onPressed: pickImageFromGallery,
-                      child: const Icon(
+                      child: _image != null ? Image.file(_image!) : const Icon(
                         Icons.add_circle_rounded,
                         size: 70,
                         color: Color.fromRGBO(54, 91, 109, 1.0),
