@@ -1,6 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 import 'package:tu_commerce/main.dart';
+import 'package:intl/intl.dart';
 
 class NoticeSreen extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -58,14 +61,61 @@ class _NoticeSreenState extends State<NoticeSreen> {
                     itemBuilder: (context, index) {
                       Map<String, dynamic> notice = allNotice!['noticeList'][index];
                       String status = notice['status'];
+                      
+                      DateTime timestamp = notice!['time'].toDate(); 
+                      String formattedDate = DateFormat.yMMMd().format(timestamp); 
+                      String title = status == 3 ? "Order Completed." : status == 2 ? "Seller has arrived!" : "Seller is on the way";
+
                       return Card(
                         shape: const RoundedRectangleBorder(),
                         // color: Colors.grey[200],
                         // shadowColor: Colors.transparent,
                         // color: Colors.red,
-                        child: ListTile(
-                          title: Text('Status: $status'),
-                        ),
+                        // child: ListTile(
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: Image.network(
+                                  notice['product']['link'],
+                                  fit: BoxFit.contain,
+                                ),
+                              ),
+                              Expanded(
+                                child: Container(
+                                  padding: EdgeInsets.all(10),
+                                  color: Colors.grey[300],
+                                  height: 100,
+                                  child: Row(
+                                    crossAxisAlignment: CrossAxisAlignment.start,
+                                    children: [
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment: CrossAxisAlignment.start,
+                                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                          children: [
+                                            Text(
+                                              title,
+                                              style: const TextStyle(
+                                                fontWeight: FontWeight.bold,
+                                                fontSize: 17
+                                              ),
+                                            ),
+                                            Text("Product: " + notice['product']['prodName']),
+                                            Text("@" + notice['product']['seller']['username']),
+                                          ],
+                                        ),
+                                      ),
+                                      Text(formattedDate),
+                                    ],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        // ),
                       );
                     }
                   ),
