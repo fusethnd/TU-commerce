@@ -29,13 +29,14 @@ class _LoginState extends State<Login> {
   Future<void> _loginUser() async {
     if (_formKey.currentState!.validate()) {
       try {
-        setState(() {
-          _isButtonClicked = true;
-        });
+          setState(() {
+            _isButtonClicked = true;
+          });
         final userLogin = await FirebaseFirestore.instance
             .collection('users')
             .where('username', isEqualTo: _usernameController.text.trim())
             .get();
+          
         if (userLogin.docs.isNotEmpty) {
           final email = userLogin.docs.first.data()['email'];
           await FirebaseAuth.instance.signInWithEmailAndPassword(
@@ -48,6 +49,9 @@ class _LoginState extends State<Login> {
           );
         }
       } on FirebaseAuthException {
+          setState(() {
+            _isButtonClicked = false;
+          });
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login Failed')),
         );
