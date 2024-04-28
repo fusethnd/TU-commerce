@@ -11,6 +11,8 @@ import 'package:tu_commerce/screen/stockscreen.dart';
 import 'package:tu_commerce/screen/historySeller.dart';
 import 'package:google_nav_bar/google_nav_bar.dart';
 import 'package:tu_commerce/screen/walletscreen.dart';
+import 'package:tu_commerce/screen/profilePicture.dart';
+import 'package:tu_commerce/screen/noticeScreen.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 
 class SellerHome extends StatefulWidget {
@@ -24,6 +26,8 @@ class SellerHome extends StatefulWidget {
 
 class _SellerHomeState extends State<SellerHome> {
 
+  Map<String, dynamic>? allNotice;
+  int? notReadNotice;
   // Map<String, dynamic>? userData;
   late Map<String, dynamic> userData; // Holding user
   bool isLoading = true; 
@@ -43,112 +47,244 @@ class _SellerHomeState extends State<SellerHome> {
   void initState() {
     User? user = FirebaseAuth.instance.currentUser;
     String? email = user!.email;
+    _initializeData();
     super.initState();
     getData(email!);
     print(widget.username['shoppingMode']);
   }
+
+  
+  Future<void> _initializeData() async {
+    Map<String, dynamic>? tempMap = (await FirebaseFirestore.instance
+        .collection('Notice')
+        .doc(widget.username['username'])
+        .get())
+        .data();
+    
+    if (tempMap == null) {
+      tempMap = {
+        "length":0,
+        "noticeList":[]
+      };
+    }
+    if (mounted){
+      setState(() {
+        allNotice = tempMap;
+      });
+
+    }
+  }
+
   // ใส่ container เข้าไป
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(title: const Text('Home')),
+    final screenWidth = MediaQuery.of(context).size.width;
+    final boxSize = screenWidth * 0.65 / 3;
+
+    return MaterialApp(
+      theme: ThemeData(
+        elevatedButtonTheme: ElevatedButtonThemeData(
+          style: ButtonStyle(
+            backgroundColor: MaterialStateProperty.all(const Color.fromRGBO(38, 174, 236, 1)),
+            shape: MaterialStateProperty.all(const RoundedRectangleBorder()),
+            foregroundColor: MaterialStateProperty.all(Colors.white),
+            iconSize: MaterialStateProperty.all(boxSize*0.4),
+          ),
+        ),
+        textTheme: Theme.of(context).textTheme.apply(bodyColor: const Color.fromRGBO(54, 91, 109, 1.0), fontSizeDelta: 1),
+      ),
+      home: Scaffold(
       body: isLoading ? const Center(child: CircularProgressIndicator()) // เอาไว้เช็คว่า query เสร็จยังถ้ายังมันจะหมุนๆ
-          : Column(
-              children: [
-                // ตอนนี้โชว์แค่ ชื่อ หาต่อได้ที่ userDataมีตามใน firebase กับโชว์ลิ้งไป wallet
-                Container( 
-                  decoration: BoxDecoration(color: Colors.red),
-                  height: 100,
-                  child: Row(
-                    children: [
-                      Expanded(child: Text('${userData['fname']} ${userData['lname']}')), 
-                      Expanded(child: ElevatedButton(
-                        onPressed: () {
-                          Navigator.push(
-                            context, MaterialPageRoute(
-                              builder: (context){
-                                return Navigation(username: widget.username,temp: 1);
-                              }
-                            )
-                          );
-                        },
-                        child: const Text('MY WALLET'),))
-                    ],
-                  ),
-                ),
-                //-------------- จบ container แรก -------------------
-                Container( // ทำตัวลิ้ง ไป stock กับอื่นแต่ตอนนี้ลิ้งมั่วนะ 
-                  child: Row(
-                    children: [
-                      Expanded(
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
+          : Stack(
+            children: [
+              Expanded(
+                child: ListView(
+                  children: [
+                    Column(
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                width: 100,
+                                height: 100,
+                                child: CircleAvatar(
+                                  child: ProfilePicture(user: userData)
+                                ),
+                              ),
+                              const SizedBox(width: 20,),
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children:[
+                                  Text(
+                                    '${userData['fname']} ${userData['lname']}',
+                                  ),
+                                  const SizedBox(height: 5,),
+                                  Text(
+                                    '@${userData['username']}',
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
+                        ),
+                        Container(
+                          padding: const EdgeInsets.symmetric(horizontal: 20),
+                          child: Row(
+                            children: [
+                              Column(
+                                children: [
+                                  const Text("MY CREDIT", style: TextStyle(fontWeight: FontWeight.bold),),
+                                  Text('${userData['username']}'),
+                                ],
+                              ),
+                              const Spacer(),
+                              ElevatedButton(
+                                onPressed: () {
+                                  Navigator.push(
+                                    context, MaterialPageRoute(
+                                      builder: (context){
+                                        return Navigation(username: widget.username,temp: 1);
+                                      }
+                                    )
+                                  );
+                                },
+                                child: const Text('MY WALLET'),
+                              )
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 10,),
+                        Container(
+                          color: const Color.fromRGBO(219, 232, 231, 1),
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              const Text(
+                                'MENU',
+                                style: TextStyle(
+                                  fontWeight: FontWeight.bold,
+                                  fontSize: 20,
+                                ),
+                              ),
+                              const SizedBox(height: 5,),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Column(
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                          minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                        ),
+                                        onPressed: () {
 
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    
-                                    builder: (context) => Navigation(username: widget.username,temp: 7),
-                                  ),(Route<dynamic> route) => false
-                                );
-                              },
-                              child: const Text('TO SHIP'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () {
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => Navigation(username: widget.username,temp: 6),
-                                  ),(Route<dynamic> route) => false
-                                );
-                              },
-                              child: const Text('HISTORY'),
-                            ),
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                        child: Column(
-                          children: [
-                            ElevatedButton(
-                              onPressed: () async {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              
+                                              builder: (context) => Navigation(username: widget.username,temp: 7),
+                                            ),(Route<dynamic> route) => false
+                                          );
+                                        },
+                                        child: const Icon(Icons.directions_car),
+                                      ),
+                                      const SizedBox(height: 10,),
+                                      const Text("TO SHIP")
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                          minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                        ),
+                                        onPressed: () {
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => Navigation(username: widget.username,temp: 6),
+                                            ),(Route<dynamic> route) => false
+                                          );
+                                        },
+                                        child: const Icon(Icons.history),
+                                      ),
+                                      const SizedBox(height: 10,),
+                                      const Text("HISTORY")
+                                    ],
+                                  ),
+                                  Column(
+                                    children: [
+                                      ElevatedButton(
+                                        style: ButtonStyle(
+                                          minimumSize: MaterialStateProperty.all(Size(boxSize, boxSize)),
+                                        ),
+                                        onPressed: () async {
 
-                                Navigator.pushAndRemoveUntil(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => NavigationCustomer(email:widget.username['email'],temp: 4,),
-                                  ),(Route<dynamic> route) => false
-                                );
-                              },
-                              child: const Text('SHOPPING MODE'),
-                            ),
-                          ],
+                                          Navigator.pushAndRemoveUntil(
+                                            context,
+                                            MaterialPageRoute(
+                                              builder: (context) => NavigationCustomer(email:widget.username['email'],temp: 4,),
+                                            ),(Route<dynamic> route) => false
+                                          );
+                                        },
+                                        child: const Icon(Icons.sell_outlined),
+                                      ),
+                                      const SizedBox(height: 10,),
+                                      SizedBox(
+                                        width: boxSize, 
+                                        child: const Text("SHOPPING MODE", textAlign: TextAlign.center,)
+                                      )
+                                    ],
+                                  ),
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
-                      ),  
-                    ],
-                  ),
-                ),
-                // จบ---- container 3 ปุ่ม-----------
                 
-                Container(
-                  child: const Column(
-                    children: [
-                      Text('Shopping List')
-                    ],
-                  ),
+                        Container(
+                          padding: const EdgeInsets.all(20),
+                          child: Column(
+                            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                            children: [
+                              Text('Shopping List')
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
-
-              ],
-            ),
+              ),
+              Positioned(
+                top: 50,
+                right: 20,
+                child: IconButton(
+                  icon: const Icon(Icons.notifications, size: 30,),
+                  color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Color.fromRGBO(54, 91, 109, 1.0),
+                  onPressed: () async{
+                    if (allNotice!['noticeList'].isEmpty == false) {
+                      print('in notice if ---------');
+                      await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
+                    }
+                    Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSreen(username: widget.username)));
+                    if (mounted){
+                      setState(() {
+                        _initializeData();
+                      });
+                    }
+                  },
+                )
+              ),
+            ],
+          )
+          ),
     );
+
+
   }
 }

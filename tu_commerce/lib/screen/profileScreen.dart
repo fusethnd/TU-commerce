@@ -108,7 +108,7 @@ class _ProfileState extends State<Profile> {
             iconSize: MaterialStateProperty.all(boxSize*0.4),
           ),
         ),
-        textTheme: Theme.of(context).textTheme.apply(bodyColor: const Color.fromRGBO(54, 91, 109, 1.0), fontSizeDelta: 3),
+        textTheme: Theme.of(context).textTheme.apply(bodyColor: const Color.fromRGBO(54, 91, 109, 1.0), fontSizeDelta: 1),
       ),
       home: Scaffold(
           body: RefreshIndicator(
@@ -190,6 +190,7 @@ class _ProfileState extends State<Profile> {
                                   SizedBox(height: 5,),
                                   Row(
                                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                    crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
                                       Column(
                                         children: [
@@ -255,7 +256,10 @@ class _ProfileState extends State<Profile> {
                                             child: const Icon(Icons.sell_outlined),
                                           ),
                                           const SizedBox(height: 10,),
-                                          const Text("SELLER MODE")
+                                          SizedBox(
+                                            width: boxSize, 
+                                            child: const Text("SELLING MODE", textAlign: TextAlign.center,)
+                                          )
                                         ],
                                       ),
                                     ],
