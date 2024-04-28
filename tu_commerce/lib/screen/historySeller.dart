@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:tu_commerce/function/Firebase.dart';
 import 'package:intl/intl.dart';
+import 'package:tu_commerce/screen/historyBox.dart';
 
 class HistorySeller extends StatefulWidget {
   final Map<String, dynamic> username;
@@ -57,14 +58,20 @@ class _HistorySellerState extends State<HistorySeller> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: AppBar(title: const Text('History'),),
+      appBar: AppBar(
+        title: const Text('History'),
+      ),
       body: Column(
         children: [
           Container(
+            padding: const EdgeInsets.all(20),
             child: TextFormField(
               onChanged: filterItem,
               decoration: const InputDecoration(
-                hintText: 'Search here'
+                border: InputBorder.none,
+                hintText: 'Search',
+                fillColor: Colors.white,
+                filled: true
               ),
             )
           ),
@@ -76,16 +83,13 @@ class _HistorySellerState extends State<HistorySeller> {
                 DateTime timestamp = item!['date'].toDate(); 
                 String formattedDate = DateFormat.yMMMd().format(timestamp); 
 
-                return Card(
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      child: Image.network(item?['product']['link']),
-                    ),
-                    title: Text(item['product']['prodName'] ?? ''),
-                    subtitle: Text(formattedDate),
-                      
-                  )
-                );
+                return HistoryBox(
+                  partner: item['product']['seller'],
+                  product: item['product'],
+                  date: formattedDate,
+                  status: item['status'],
+                ); 
+                
               } 
             ),
           ),
@@ -95,8 +99,9 @@ class _HistorySellerState extends State<HistorySeller> {
             _initializeData();
                 
             }, 
-            child: Text('Remove History')
-          )
+            child: const Text('Clear History')
+          ),
+          const SizedBox(height: 10,)
         ],
       )
     );
