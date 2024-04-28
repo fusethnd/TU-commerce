@@ -43,7 +43,16 @@ class _SellerHomeState extends State<SellerHome> {
       
     });
   }
-  
+  Future<void> _refreshData() async {
+    await Future.delayed(const Duration(seconds: 0)); // Simulate a delay
+    Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(
+            builder: (context) =>
+                Navigation(username: widget.username, temp: 2)),
+        (Route<dynamic> route) => false);
+  }
+
   // เริ่มต้นให้มันหาว่าตอนนี้ที่ login อยู่ user อะไร
   @override
   void initState() {
@@ -92,7 +101,9 @@ class _SellerHomeState extends State<SellerHome> {
     
     return allOrders == null
             ? const Center(child: CircularProgressIndicator()) :
-            MaterialApp(
+        RefreshIndicator(
+        onRefresh: _refreshData,
+        child: MaterialApp(
       theme: ThemeData(
         elevatedButtonTheme: ElevatedButtonThemeData(
           style: ButtonStyle(
@@ -409,7 +420,8 @@ class _SellerHomeState extends State<SellerHome> {
               ),
             ],
           )
-          ),
+        )
+      ),
     );
 
 

@@ -38,22 +38,7 @@ class _InboxScreenState extends State<InboxScreen> {
     super.dispose();
   }
 
-  Future<void> _refreshData() async {
-    await Future.delayed(const Duration(seconds: 0)); // Simulate a delay
-    widget.username['shoppingmode']
-        ? Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) => NavigationCustomer(
-                    email: widget.username['email'], temp: 3)),
-            (Route<dynamic> route) => false)
-        : Navigator.pushAndRemoveUntil(
-            context,
-            MaterialPageRoute(
-                builder: (context) =>
-                    Navigation(username: widget.username, temp: 3)),
-            (Route<dynamic> route) => false);
-  }
+
 
   Future<void> _initializeData() async {
     try {
@@ -183,142 +168,159 @@ class _InboxScreenState extends State<InboxScreen> {
     }
   }
 
-
-
+  Future<void> _refreshData() async {
+    await Future.delayed(const Duration(seconds: 0)); // Simulate a delay
+    widget.username['shoppingMode']
+        ? Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) => NavigationCustomer(
+                    email: widget.username['email'], temp: 3)),
+            (Route<dynamic> route) => false)
+        : Navigator.pushAndRemoveUntil(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    Navigation(username: widget.username, temp: 3)),
+            (Route<dynamic> route) => false);
+  }
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-      child: Scaffold(
-        appBar: AppBar(
-          title: const Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'MESSAGES',
-                style: TextStyle(fontWeight: FontWeight.bold),
-              ),
-              SizedBox(
-                height: 10,
-              ),
-              Divider(
-                color: Color.fromRGBO(38, 174, 236, 0.3),
-              )
-            ],
+    return RefreshIndicator(
+      onRefresh: _refreshData,
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+        child: Scaffold(
+          appBar: AppBar(
+            title: const Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'MESSAGES',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
+                SizedBox(
+                  height: 10,
+                ),
+                Divider(
+                  color: Color.fromRGBO(38, 174, 236, 0.3),
+                )
+              ],
+            ),
+            automaticallyImplyLeading: false,
           ),
-          automaticallyImplyLeading: false,
-        ),
-        body: chatRooms == null
-            ? const Center(child: CircularProgressIndicator())
-            : ListView.builder(
-                padding: const EdgeInsets.all(10),
-                itemCount: chatRooms!.length,
-                itemBuilder: (BuildContext context, int index) {
-                  // Map<String, dynamic> order =
-                  //     orders![index].data() as Map<String, dynamic>;
-                  Map<String, dynamic> chatRoom =
-                      chatRooms![index].data() as Map<String, dynamic>;
-                  // print('---------- length ');
-                  // print(chatRooms!.length);
-                  // print(chatRoom);
-                  // getUserByEmail(widget.username);
-                  String sellerName = widget.username['shoppingMode']
-                      ? (chatRoom['seller']['fname'] +
-                          " " +
-                          chatRoom['seller']['lname'])
-                      : chatRoom['customer']['fname'] +
-                          " " +
-                          chatRoom['customer']['lname'];
-                  String lastMessage = last_message![index]['message'] != null
-                      ? last_message![index]['message']
-                      : last_message![index]['link'] != null
-                          ? "Image"
-                          : "Map";
-
-                  String link_image = widget.username['shoppingMode']
-                      ? chatRoom['seller']['email']
-                      : chatRoom['customer']['email'];
-                  print('------- check');
-                  print(link_image);
-                  // print(sellerName);
-                  // print(order);
-                  return FutureBuilder(
-                      future: getUserByEmail(link_image),
-                      builder: (BuildContext context,
-                          AsyncSnapshot<dynamic> snapshot) {
-                        if (snapshot.connectionState ==
-                            ConnectionState.waiting) {
-                          // While the future is being resolved, you can display a loading indicator.
-                          return Center(child: CircularProgressIndicator());
-                        } else {
-                          if (snapshot.hasData && snapshot.data != null) {
-                            // If data is available, you can access it using snapshot.data.
-                            // Here, you can extract and display the user information.
-                            Map<String, dynamic>? userData = snapshot.data;
-                            // Example: Display user's name
-                            print(userData);
-
-                            return Column(children: [
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                      context,
-                                      MaterialPageRoute(
-                                          builder: (context) => ChatScreen(
-                                                username: widget.username,
-                                                order: chatRoom,
-                                                seller: sellerName,
-                                              )));
-                                },
-                                child: Card(
-                                  color: const Color.fromRGBO(242, 241, 236, 1),
-                                  surfaceTintColor: Colors.transparent,
-                                  shadowColor: Colors.transparent,
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(0)),
-                                  child: ListTile(
-                                    contentPadding: const EdgeInsets.all(10),
-                                    // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-                                    titleTextStyle: const TextStyle(
-                                        fontWeight: FontWeight.bold,
-                                        fontSize: 20,
-                                        color:
-                                            Color.fromRGBO(54, 91, 109, 1.0)),
-                                    // subtitleTextStyle: ,
-
-                                    leading: SizedBox(
-                                      width: 100,
-                                      height: 100,
-                                      child: ClipRRect(
-                                        borderRadius: const BorderRadius.all(Radius.circular(50)),
-                                        child: Container(
-                                          color: const Color.fromRGBO(219, 232, 231, 1),
-                                          child: ProfilePicture(user: userData!)
-                                        )
+          body: chatRooms == null
+              ? const Center(child: CircularProgressIndicator())
+              : ListView.builder(
+                  padding: const EdgeInsets.all(10),
+                  itemCount: chatRooms!.length,
+                  itemBuilder: (BuildContext context, int index) {
+                    // Map<String, dynamic> order =
+                    //     orders![index].data() as Map<String, dynamic>;
+                    Map<String, dynamic> chatRoom =
+                        chatRooms![index].data() as Map<String, dynamic>;
+                    // print('---------- length ');
+                    // print(chatRooms!.length);
+                    // print(chatRoom);
+                    // getUserByEmail(widget.username);
+                    String sellerName = widget.username['shoppingMode']
+                        ? (chatRoom['seller']['fname'] +
+                            " " +
+                            chatRoom['seller']['lname'])
+                        : chatRoom['customer']['fname'] +
+                            " " +
+                            chatRoom['customer']['lname'];
+                    String lastMessage = last_message![index]['message'] != null
+                        ? last_message![index]['message']
+                        : last_message![index]['link'] != null
+                            ? "Image"
+                            : "Map";
+      
+                    String link_image = widget.username['shoppingMode']
+                        ? chatRoom['seller']['email']
+                        : chatRoom['customer']['email'];
+                    print('------- check');
+                    print(link_image);
+                    // print(sellerName);
+                    // print(order);
+                    return FutureBuilder(
+                        future: getUserByEmail(link_image),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<dynamic> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            // While the future is being resolved, you can display a loading indicator.
+                            return Center(child: CircularProgressIndicator());
+                          } else {
+                            if (snapshot.hasData && snapshot.data != null) {
+                              // If data is available, you can access it using snapshot.data.
+                              // Here, you can extract and display the user information.
+                              Map<String, dynamic>? userData = snapshot.data;
+                              // Example: Display user's name
+                              print(userData);
+      
+                              return Column(children: [
+                                GestureDetector(
+                                  onTap: () {
+                                    Navigator.push(
+                                        context,
+                                        MaterialPageRoute(
+                                            builder: (context) => ChatScreen(
+                                                  username: widget.username,
+                                                  order: chatRoom,
+                                                  seller: sellerName,
+                                                )));
+                                  },
+                                  child: Card(
+                                    color: const Color.fromRGBO(242, 241, 236, 1),
+                                    surfaceTintColor: Colors.transparent,
+                                    shadowColor: Colors.transparent,
+                                    shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(0)),
+                                    child: ListTile(
+                                      contentPadding: const EdgeInsets.all(10),
+                                      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
+                                      titleTextStyle: const TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          fontSize: 20,
+                                          color:
+                                              Color.fromRGBO(54, 91, 109, 1.0)),
+                                      // subtitleTextStyle: ,
+      
+                                      leading: SizedBox(
+                                        width: 100,
+                                        height: 100,
+                                        child: ClipRRect(
+                                          borderRadius: const BorderRadius.all(Radius.circular(50)),
+                                          child: Container(
+                                            color: const Color.fromRGBO(219, 232, 231, 1),
+                                            child: ProfilePicture(user: userData!)
+                                          )
+                                        ),
                                       ),
+                                      title: Text(sellerName),
+                                      subtitle: Text(lastMessage),
                                     ),
-                                    title: Text(sellerName),
-                                    subtitle: Text(lastMessage),
                                   ),
                                 ),
-                              ),
-                              const Divider(
-                                height: BorderSide.strokeAlignOutside,
-                                color: Color.fromRGBO(38, 174, 236, 0.3),
-                              ),
-                              // const Divider(
-                              //   color: Color.fromRGBO(219, 241, 240, 1.0),
-                              // )
-                            ]);
-                          } else {
-                            // If there's no data, it might mean the user doesn't exist or there was an error.
-                            // You can display an appropriate message.
-                            return Text('User not found');
+                                const Divider(
+                                  height: BorderSide.strokeAlignOutside,
+                                  color: Color.fromRGBO(38, 174, 236, 0.3),
+                                ),
+                                // const Divider(
+                                //   color: Color.fromRGBO(219, 241, 240, 1.0),
+                                // )
+                              ]);
+                            } else {
+                              // If there's no data, it might mean the user doesn't exist or there was an error.
+                              // You can display an appropriate message.
+                              return Text('User not found');
+                            }
                           }
-                        }
-                      });
-                },
-              ),
+                        });
+                  },
+                ),
+        ),
       ),
     );
   }
