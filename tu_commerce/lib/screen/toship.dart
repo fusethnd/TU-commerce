@@ -251,7 +251,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     if (order['username'].containsKey('tokenNotice')){
                                                       await _notificationService.requestNotificationPermissions();
                                                       // print("Token: " + widget.username['tokenNotice']);
-                                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                      await sendNotificationToUser(order['username']['tokenNotice'], "TU Commerce", "Status update: On the way");
                                                       // await _notificationService.sendNotification(order['username']['tokenNotice'],'Hello');
                                                     }
                                                     setState(()  {
@@ -307,7 +307,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     if (order['username'].containsKey('tokenNotice')){
                                                       await _notificationService.requestNotificationPermissions();
                                                       // print("Token: " + widget.username['tokenNotice']);
-                                                      await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
+                                                      await sendNotificationToUser(order['username']['tokenNotice'], "TU Commerce", "Status update: At Place");
                                                       // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                     }
                                                     setState(()  {
@@ -405,8 +405,8 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                       if (widget.username.containsKey('tokenNotice')){
                                                         await _notificationService.requestNotificationPermissions();
                                                           // print("Token: " + widget.username['tokenNotice']);
-                                                        await sendNotificationToUser(order['username']['tokenNotice'], "Fuck You Anny", "Fuck You Anny");
-                                                        await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
+                                                        await sendNotificationToUser(order['username']['tokenNotice'], "TU Commerce", "Status update: Finish");
+                                                        // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                       }
                                                     }
                                                                                 
