@@ -191,6 +191,7 @@ class _AddProductState extends State<AddProduct> {
                             items: const [
                               DropdownMenuItem<String>(value: "normal",child: Text('ของใช้ทั่วไป'),),
                               DropdownMenuItem<String>(value: 'electric',child: Text('ของใช้ไฟฟ้า'),),
+                              DropdownMenuItem<String>(value: 'fashion',child: Text('ของแฟชั่น'),),
                             ],
                             onChanged: (value){
                               setState(() {

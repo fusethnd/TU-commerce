@@ -213,6 +213,12 @@ class CustomerHomeState extends State<CustomerHome> {
                         Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'electric',allItem: allItem)));
                       }, 
                       child: const Text('Electric Category')
+                    ),
+                    ElevatedButton(
+                      onPressed: () {
+                        Navigator.push(context, MaterialPageRoute(builder: (context) => NavigationCustomer(email: widget.username['email'],temp: 6,category: 'fashion',allItem: allItem)));
+                      }, 
+                      child: const Text('Fashion Category')
                     )
                   ],
                 ),
