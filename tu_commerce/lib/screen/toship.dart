@@ -180,7 +180,7 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                     // }
                                                     Map<String,dynamic> data = {
                                                       'status':'Get Order',
-                                                      'time' : FieldValue.serverTimestamp(),
+                                                      'time' : DateTime.now(),
                                                       'sellerName' : order['product']['seller']['username'],
                                                       'customer' : order['username']['username'],
                                                       'product':order['product']
