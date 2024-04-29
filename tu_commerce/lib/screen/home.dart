@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/widgets.dart';
 
 import 'login.dart';
 import 'registerScreen.dart';
@@ -8,13 +9,14 @@ class HomeScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       backgroundColor: Color.fromRGBO(98, 221, 214, 1.0),
       appBar: AppBar(
         title: Image.asset('assets/images/Logo.png'),
         backgroundColor: Color.fromRGBO(98, 221, 214, 1.0),
-        toolbarHeight: 600,
         automaticallyImplyLeading: false,
+        toolbarHeight: screenHeight*0.5,
         shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.vertical(
           bottom: Radius.circular(20),
@@ -46,7 +48,7 @@ class HomeScreen extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: 40),
+          const SizedBox(height: 30,),
           ElevatedButton(
             onPressed: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
