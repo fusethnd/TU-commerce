@@ -396,28 +396,28 @@ class _SellerHomeState extends State<SellerHome> {
                     )
                   ],
                 ),
-              // Text('data'),
+              // // Text('data'),
               
-              Positioned(
-                top: 50,
-                right: 20,
-                child: IconButton(
-                  icon: const Icon(Icons.notifications, size: 30,),
-                  color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Color.fromRGBO(54, 91, 109, 1.0),
-                  onPressed: () async{
-                    if (allNotice!['noticeList'].isEmpty == false) {
-                      print('in notice if ---------');
-                      await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
-                    }
-                    Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSeller(username: widget.username)));
-                    if (mounted){
-                      setState(() {
-                        _initializeData();
-                      });
-                    }
-                  },
-                )
-              ),
+              // Positioned(
+              //   top: 50,
+              //   right: 20,
+              //   child: IconButton(
+              //     icon: const Icon(Icons.notifications, size: 30,),
+              //     color:  (allNotice != null) && (allNotice!['length'] != allNotice!['noticeList'].length) ? Colors.red : Color.fromRGBO(54, 91, 109, 1.0),
+              //     onPressed: () async{
+              //       if (allNotice!['noticeList'].isEmpty == false) {
+              //         print('in notice if ---------');
+              //         await FirebaseFirestore.instance.collection('Notice').doc(widget.username['username']).update({'length':allNotice!['noticeList'].length});
+              //       }
+              //       Navigator.push(context, MaterialPageRoute(builder: (context) => NoticeSeller(username: widget.username)));
+              //       if (mounted){
+              //         setState(() {
+              //           _initializeData();
+              //         });
+              //       }
+              //     },
+              //   )
+              // ),
             ],
           )
         )

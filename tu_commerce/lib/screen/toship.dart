@@ -404,11 +404,11 @@ class _ToShipScreenState extends State<ToShipScreen> {
                                                         // await _notificationService.sendNotification(widget.username['tokenNotice'],'Hello');
                                                       }
                                                     }
-                                                                                
+                                                    if(mounted){                          
                                                     setState(() {
                                                                                 
                                                       _initializeData();
-                                                    });
+                                                    });}
                                                   },
                                                   color: status == 3 ? Colors.red : Colors.grey,
                                                   iconSize: 30,

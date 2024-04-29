@@ -105,8 +105,7 @@ class _NoticeSellerState extends State<NoticeSeller> {
                                                   notice['product']
                                                       ['prodName']),
                                               Text("@" +
-                                                  notice['product']['seller']
-                                                      ['username']),
+                                                  notice['customer']),
                                             ],
                                           ),
                                         ),
